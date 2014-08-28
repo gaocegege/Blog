@@ -140,7 +140,7 @@ footer, header, main {
         height: auto
     }
     .summer-blog-menu ul li a:hover {
-        border-bottom: .1875rem solid #4695D5
+        border-bottom: .1875rem solid #CD0000
     }
 }
 .summer-site-head .summer-site-head-menu {
@@ -181,7 +181,7 @@ footer, header, main {
 .summer-site-head .summer-site-head-content .summer-site-head-title-bg {
     display: inline-block;
     padding: .625rem;
-    background: #4B0082;
+    background: #CD0000;
     line-height: 1.1;
     font-family: Montserrat, sans-serif;
     font-size: 1.625rem;
@@ -276,7 +276,7 @@ footer, header, main {
     display: block;
     font-size: 3.25rem;
     font-weight: 800;
-    color: #4695D5;
+    color: #CD0000;
     font-family: Montserrat, sans-serif
 }
 .summer-content .summer-index-post .summer-post-meta .month-year {
@@ -339,8 +339,8 @@ footer, header, main {
     margin-bottom: .3125rem
 }
 .summer-content .summer-index-post .summer-index-post-tags a:hover {
-    color: #4695D5;
-    border: .0625rem solid #4695D5
+    color: #CD0000;
+    border: .0625rem solid #CD0000
 }
 @media only screen and (min-width: 40.063em) {
     .summer-content .summer-index-post .summer-index-post-tags {
@@ -369,7 +369,7 @@ footer, header, main {
     border-radius: .125rem
 }
 .summer-content .summer-index-post .summer-post-read-more:hover {
-    background-color: #4695D5
+    background-color: #CD0000
 }
 @media only screen and (min-width: 40.063em) {
     .summer-content .summer-index-post .summer-post-read-more {
@@ -393,8 +393,8 @@ nav.pagination .newer-posts, nav.pagination .older-posts, nav.pagination .page-n
     border: .125rem solid #000
 }
 nav.pagination .newer-posts:hover, nav.pagination .older-posts:hover {
-    border: .125rem solid #4695D5;
-    color: #4695D5
+    border: .125rem solid #CD0000;
+    color: #CD0000
 }
 nav.pagination .newer-posts.faded, nav.pagination .older-posts.faded {
     color: gray;
@@ -508,7 +508,7 @@ nav.pagination .older-posts .fa {
     text-align: center
 }
 .summer-tags-container .summer-tags-header .tag-name {
-    color: #4695D5;
+    color: #CD0000;
     text-transform: none
 }
 @media only screen and (min-width: 40.063em) {
