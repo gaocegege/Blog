@@ -15,53 +15,58 @@ Version: 1.1
 Description: Awesome dude, awesome life
 ====================================================
 -->
+
 <head>
-{% include head.html %}
+    {% include head.html %}
 </head>
+
 <body class="home-template" itemscope itemtype="http://schema.org/WebPage">
-<header class="summer-site-head">
-    <div class="summer-site-head-menu">
-        <a class="summer-blog-logo" href="{{ site.url }}"><img src="{{ site.url }}/images/{{ site.logo }}" alt="Blog Logo" /></a>
-        
-        
-        <div class="summer-blog-menu">      
-    <div class="summer-mobile-menu show-for-small">
-        <a href="#"><i class="fa fa-bars"></i></a>
-    </div>
-    <ul class="summer-menu">
-        <li class="summer-mobile-close-btn show-for-small text-right">
-            <a href="#"><i class="fa fa-times"></i></a>
-        </li>
-{% for link in site.links %}
-            <li>{% if link.external %}
-            <a href="{{ link.url }}">{{ link.title }}</a>
-            {% else %}
-            <a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
-            {% endif %} </li>
-{% endfor %}            
-           <li><a href="{{ site.url }}/feed.xml" title="Atom/RSS feed"><i class="icon-rss"></i> Feed</a></li>
-    </ul>
-</div>
-        <div class="clearfix"></div>
-    </div>
-    <div class="summer-site-head-content" >
-        <div class="summer-site-head-bg"></div>
-        <h1 class="summer-blog-title">
-            <span class="summer-site-head-title-bg">
-                {{ site.title }}
-            </span>
-        </h1>
-        <h2 class="summer-blog-description">{{ site.description }}</h2>
-    </div>
-</header>
+    <div class="summer-parallax-background" style="background-image:url({{ site.url }}/images/{{ site.background }})"></div>
+    <header class="summer-site-head">
+        <div class="summer-site-head-menu">
+            <a class="summer-blog-logo" href="{{ site.url }}">
+                <img src="{{ site.url }}/images/{{ site.logo }}" alt="Blog Logo" />
+            </a>
 
 
-<main class="summer-content" role="main">
+            <div class="summer-blog-menu">
+                <div class="summer-mobile-menu show-for-small">
+                    <a href="#"><i class="fa fa-bars"></i></a>
+                </div>
+                <ul class="summer-menu">
+                    <li class="summer-mobile-close-btn show-for-small text-right">
+                        <a href="#"><i class="fa fa-times"></i></a>
+                    </li>
+                    {% for link in site.links %}
+                    <li>{% if link.external %}
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                        {% else %}
+                        <a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
+                        {% endif %}</li>
+                    {% endfor %}
+                    <li><a href="{{ site.url }}/feed.xml" title="Atom/RSS feed"><i class="icon-rss"></i> Feed</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="summer-site-head-content">
+            <div class="summer-site-head-bg"></div>
+            <h1 class="summer-blog-title">
+                <span class="summer-site-head-title-bg">
+                    {{ site.title }}
+                </span>
+            </h1>
+            <h2 class="summer-blog-description">{{ site.description }}</h2>
+        </div>
+    </header>
 
-            {{ content }}
-</main>
-    {% include footer.html %}
 
-{% include scripts.html %}  
+    <main class="summer-content" role="main">
+
+        {{ content }}
+    </main>
+    {% include footer.html %} {% include scripts.html %}
 </body>
+
 </html>

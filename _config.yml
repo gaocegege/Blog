@@ -1,6 +1,7 @@
-title:            Notepad
-description:      "Blogging is fun"
+title:            CECE
+description:      "Done is better than perfect."
 logo:             logo.png
+background:       logo.jpg
 disqus_shortname: CECE
 share:            true
 # Change url to your domain. Leave localhost server or blank when working locally.
