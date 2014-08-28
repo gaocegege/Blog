@@ -181,8 +181,11 @@ footer, header, main {
 .summer-site-head .summer-site-head-content .summer-site-head-title-bg {
     display: inline-block;
     padding: .625rem;
-    background: #4695D5;
-    line-height: 1.1
+    background: #4B0082;
+    line-height: 1.1;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.625rem;
+    font-weight: 700
 }
 .summer-site-head .summer-site-head-content h1, .summer-site-head .summer-site-head-content h2 {
     margin: 0;
