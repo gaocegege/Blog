@@ -17,10 +17,10 @@ owner:
   # Use the coder's toolbox at http://coderstoolbox.net/string/#!encoding=xml&action=encode&charset=us_ascii to encode your description into XML string
   description:    人生艰难，长者续命
   # Social networking links used in footer. Update and remove as you like.
-  twitter:        gaocegege@hotmail.com
-  facebook:       gaocegege@hotmail.com
+  twitter:        
+  facebook:       gaocegege
   github:         gaocegege      
-  instagram:      None
+  instagram:      
   # For Google Authorship https://plus.google.com/authorship
   google_plus:    https://plus.google.com/u/0/109707369864071328013
 
