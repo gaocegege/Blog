@@ -45,7 +45,7 @@ links:
     url: /about
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-timezone:    Asia/Dhaka
+timezone:    Asia/Dili
 future:      true
 highlighter: pygments
 markdown:    kramdown
@@ -71,8 +71,8 @@ kramdown:
 
 prose:
   rooturl: '_posts'
-  siteurl: 'http://hmfaysal.github.io/Notepad/'
-  relativeLinks: 'http://hmfaysal.github.io/Notepad/links.jsonp'
+  siteurl: 'http://gaocegege.github.io/Blog'
+  relativeLinks: 'http://gaocegege.github.io/Blog/links.jsonp'
   media: 'images'
   metadata:
     _posts:
