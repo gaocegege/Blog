@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "更改Chrome Developer Tools的字体"
-description: 
+description: 修改chrome字体的方法
 headline: 
 modified: 2014-08-29
 category: 1080p

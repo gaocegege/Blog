@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "start.sh"
-description: 
+description: 迎接新博客
 headline: 
 modified: 2014-08-28
 category: 随笔
