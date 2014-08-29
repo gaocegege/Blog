@@ -19,11 +19,11 @@ featured: true
 
 最终把博客放在github上，也是经过很长时间的抉择的~一开始是在新浪上写博客，后来在点点轻博客里流连忘返，再后来选择CSDN记录自己的lab生涯，然后也尝试着在阿里云的服务器里用wordpress，最终还是选择了Jekyll。
 
-主要是因为自己挺习惯Markdown的语法方式，而且Jekyll放在Github上，都是静态的，还有版本控制。之前感觉CSDN什么都好，就是编辑器惨不忍睹。现在感觉要弃坑了。<blockquote>/*反正以后也没有Lab需要写啦！*/</blockquote>
+主要是因为自己挺习惯Markdown的语法方式，而且Jekyll放在Github上，都是静态的，还有版本控制。之前感觉CSDN什么都好，就是编辑器惨不忍睹。现在感觉要弃坑了。*/*反正以后也没有Lab需要写啦！*/*
 
 #	Jekyll主题
 
-为了方便行事，没有自己写界面<blockquote>/*明明是不会写吧*/</blockquote>，而是使用了[NotePad](https://github.com/hmfaysal/Notepad)，相当酷炫，只是访问起来速度有些慢。Theme里好多酷炫的事情都会使得速度慢的吓人，所以都不敢乱写了。这暂时是无解的事情，就先这样吧。
+为了方便行事，没有自己写界面*/*明明是不会写吧*/*，而是使用了[NotePad](https://github.com/hmfaysal/Notepad)，相当酷炫，只是访问起来速度有些慢。Theme里好多酷炫的事情都会使得速度慢的吓人，所以都不敢乱写了。这暂时是无解的事情，就先这样吧。
 
 #	定位
 
