@@ -1,6 +1,19 @@
         <div class="row text-center">
             <section class="summer-post-share">
+                <!--not completed-->
+                <a class="weibo-icon" href=""
+                    onclick="window.open(this.href, 'weibo-share', 'width=550,height=235');return false;" title="Share on weibo">
+                    <i class="fa fa-weibo"></i>
+                </a>
+                <a class="weibo-icon" href="http://widget.renren.com/dialog/share?link={{ site.baseurl }}{{ site.url }}{{ page.url }}"
+                    onclick="window.open(this.href, 'renren-share', 'width=550,height=235');return false;" title="Share on renren">
+                    <i class="fa fa-renren"></i>
+                </a>
                 <a class="renren-icon" href="http://widget.renren.com/dialog/share?link={{ site.baseurl }}{{ site.url }}{{ page.url }}"
+                    onclick="window.open(this.href, 'renren-share', 'width=550,height=235');return false;" title="Share on renren">
+                    <i class="fa fa-renren"></i>
+                </a>
+                <a class="weibo-icon" href="http://widget.renren.com/dialog/share?link={{ site.baseurl }}{{ site.url }}{{ page.url }}"
                     onclick="window.open(this.href, 'renren-share', 'width=550,height=235');return false;" title="Share on renren">
                     <i class="fa fa-renren"></i>
                 </a>
@@ -8,11 +21,11 @@
                     onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title="Share on Twitter">
                     <i class="fa fa-twitter"></i>
                 </a> -->
-                <a class="facebook-icon" href="https://www.facebook.com/sharer/sharer.php?u={{ site.url }}{{ page.url }}"
+                <a class="facebook-icon" href="https://www.facebook.com/sharer/sharer.php?u={{ site.baseurl }}{{ site.url }}{{ page.url }}"
                     onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title="Share on Facebook">
                     <i class="fa fa-facebook"></i>
                 </a>
-                <a class="google-icon" href="https://plus.google.com/share?url={{ site.url }}{{ page.url }}"
+                <a class="google-icon" href="https://plus.google.com/share?url={{ site.baseurl }}{{ site.url }}{{ page.url }}"
                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title="Share on Google+">
                     <i class="fa fa-google-plus"></i>
                 </a>
