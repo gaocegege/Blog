@@ -316,7 +316,7 @@ footer, header, main {
     margin: 0;
     font-size: 1.25rem
 }
-@media only screen and (max-width: 40.063em) {
+@media only screen and (min-width: 40.063em) {
     .summer-content .summer-index-post .summer-post-excerpt {
         text-align: left
     }
