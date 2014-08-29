@@ -2,7 +2,7 @@ title:            CECE
 description:      "Done is better than perfect."
 logo:             logo.png
 background:       DMC5.jpg
-disqus_shortname: CECE
+disqus_shortname: blogofcece
 share:            true
 # Change url to your domain. Leave localhost server or blank when working locally.
 # or use the hint from http://jekyllrb.com/docs/github-pages/ to keep this the same 
