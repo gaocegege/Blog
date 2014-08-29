@@ -1,9 +1,10 @@
-title:            CECE
-description:      "Done is better than perfect."
+title:            高策
+description:      个人博客，记录自己
 logo:             logo.png
 background:       DMC5.jpg
 disqus_shortname: blogofcece
 share:            true
+dropcap:          true
 # Change url to your domain. Leave localhost server or blank when working locally.
 # or use the hint from http://jekyllrb.com/docs/github-pages/ to keep this the same 
 # whether working locally or remotely. Start Jekyll with: jekyll serve --baseurl ''
@@ -12,7 +13,7 @@ url:              /Blog
 
 # Owner/author information
 owner:
-  name:           Gao Ce
+  name:           高策
   avatar:         gaocegege.jpg
   email:          gaocegege@hotmail.com
   # Use the coder's toolbox at http://coderstoolbox.net/string/#!encoding=xml&action=encode&charset=us_ascii to encode your description into XML string
