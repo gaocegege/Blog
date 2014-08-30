@@ -162,16 +162,18 @@ chart: true
     //get the post list
     {% assign post_list = site.posts %}
     {% assign last_time = post_list | first %}
+    {%post_list | first%}
+    {%post_list | first%}
     {% assign last_time = last_time.date %}
     {% assign count = 0 %}
     {% for post in post_list %}
       {% if post.date == last_time %}
         {% assign count = count | plus: 1 %}
       {% else %}
-      {
-        "date": "{{ last_time | date: "%Y-%M-%d" }}",
-        "count": "{{ count }}"
-      }
+    {
+      "date": "{{ last_time | date: "%Y-%M-%d" }}",
+      "count": "{{ count }}"
+    },
       {% assign last_time = post.date %}
       {% assign count = 0 %}
       {% endif %}
