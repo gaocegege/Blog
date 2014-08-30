@@ -168,16 +168,16 @@ chart: true
       {% if post.date == last_time %}
         {% assign count = count | plus: 1 %}
       {% else %}
-        {
-          "date": "{{ last_time | date: "%Y-%M-%d" }}",
-          "count": "{{ count }}"
-        }
-        {% assign last_time = post.date %}
-        {% assign count = 0 %}
+      {
+        "date": "{{ last_time | date: "%Y-%M-%d" }}",
+        "count": "{{ count }}"
+      }
+      {% assign last_time = post.date %}
+      {% assign count = 0 %}
       {% endif %}
     {% endfor %}
     {
-      "date": "{{ last_time | date: "%Y-%M-%d" }}",
+      "date": "{{ last_time | date: "%Y-%m-%d" }}",
       "count": "{{ count }}"
     }
     {% assign last_time = nil %}
