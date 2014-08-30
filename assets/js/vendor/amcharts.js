@@ -2133,7 +2133,7 @@ AmCharts.AmChart = AmCharts.Class({
                 c + this.plotAreaHeight;
             var f = "http://gaocegege.github.io/Blog/about/",
                 g = "关于我 | 高策",
-                h = "高策出品";
+                h = "Designed by cece";
             "ammap" == this.product && (f = "http://www.ammap.com/javascript-maps/", g = "Interactive JavaScript maps", h = "JS map by amCharts");
             var k = document.createElement("a"),
                 h = document.createTextNode(h);
