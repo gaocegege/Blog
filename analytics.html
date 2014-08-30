@@ -164,24 +164,15 @@ chart: true
     {% assign last_time = post_list | first %}
     {% assign last_time = last_time.date %}
     {% assign count = 0 %}
-    {% for post in post_list %}
-      {% if post.date == last_time %}
-        {% assign count = count | plus: 1 %}
-      {% else %}
+    {% for post in post_list %}{% if post.date == last_time %}{% assign count = count | plus: 1 %}{% else %}
     {
       "date": "{{ last_time | date: "%Y-%m-%d" }}",
       "count": "{{ count }}"
-    },
-      {% assign last_time = post.date %}
-      {% assign count = 0 %}
-      {% endif %}
-    {% endfor %}
+    },{% assign last_time = post.date %}{% assign count = 0 %}{% endif %}{% endfor %}
     {
       "date": "{{ last_time | date: "%Y-%m-%d" }}",
       "count": "{{ count }}"
-    },
-    {% assign last_time = nil %}
-    {% assign count = nil %}
+    },{% assign last_time = nil %}{% assign count = nil %}
     ]
 });
 </script>
