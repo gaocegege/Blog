@@ -121,58 +121,77 @@ chart: true
     }
   );
 
-  var chart = AmCharts.makeChart("date", {
-    "type": "serial",
-    "theme": "none",
-     "pathToImages": "http://www.amcharts.com/lib/3/images/",
-    "valueAxes": [{
-        "logarithmic": true,
-        "dashLength": 1,
-        "guides": [{
-            "dashLength": 6,
-            "inside": true,
-            "label": "average",
-            "lineAlpha": 1,
-            "value": 90.4
-        }],
-        "position": "left"
-    }],
-    "graphs": [{
-        "bullet": "round",
-        "id": "g1",
-        "bulletBorderAlpha": 1,
-        "bulletColor": "#FFFFFF",
-        "bulletSize": 7,
-        "lineThickness": 2,
-        "title": "count",
-        "type": "smoothedLine",
-        "useLineColorForBulletBorder": true,
-        "valueField": "count"
-    }],
-    "chartScrollbar": {},
-    "chartCursor": {
-        "cursorPosition": "mouse"
-    },
-    "dataDateFormat": "YYYY-MM-DD",
-    "categoryField": "date",
-    "categoryAxis": {
-        "parseDates": true
-    },
-    "dataProvider": [
-    //get the post list
-    {% assign post_list = site.posts %}
-    {% assign last_time = post_list | first %}
-    {% assign last_time = last_time.date %}
-    {% assign count = 1 %}
-    {% for post in post_list %}{% if post.date == last_time %}{% assign count = count | plus: 1 %}{% else %}
+var chart = AmCharts.makeChart("date",{
+  "type": "serial",
+  "categoryField": "category",
+  "graphs": [
     {
-      "date": "{{ last_time | date: "%Y-%m-%d" }}",
-      "count": "{{ count }}"
-    },{% assign last_time = post.date %}{% assign count = 1 %}{% endif %}{% endfor %}
+      "valueField": "value"
+    }
+  ],
+  "dataProvider": [
     {
-      "date": "{{ last_time | date: "%Y-%m-%d" }}",
-      "count": "{{ count }}"
-    },{% assign last_time = nil %}{% assign count = nil %}
-    ]
+      "category": "category 1",
+      "value": 8,
+    },
+    {
+      "category": "category 2",
+      "value": 4,
+    }
+  ]
 });
+//   var chart = AmCharts.makeChart("date", {
+//     "type": "serial",
+//     "theme": "none",
+//      "pathToImages": "http://www.amcharts.com/lib/3/images/",
+//     // "valueAxes": [{
+//     //     "logarithmic": true,
+//     //     "dashLength": 1,
+//     //     "guides": [{
+//     //         "dashLength": 6,
+//     //         "inside": true,
+//     //         "label": "average",
+//     //         "lineAlpha": 1,
+//     //         "value": 90.4
+//     //     }],
+//     //     "position": "left"
+//     // }],
+//     "graphs": [{
+//         "bullet": "round",
+//         "id": "g1",
+//         "bulletBorderAlpha": 1,
+//         "bulletColor": "#FFFFFF",
+//         "bulletSize": 7,
+//         "lineThickness": 2,
+//         "title": "count",
+//         "type": "smoothedLine",
+//         "useLineColorForBulletBorder": true,
+//         "valueField": "count"
+//     }],
+//     "chartScrollbar": {},
+//     "chartCursor": {
+//         "cursorPosition": "mouse"
+//     },
+//     "dataDateFormat": "YYYY-MM-DD",
+//     "categoryField": "date",
+//     "categoryAxis": {
+//         "parseDates": true
+//     },
+//     "dataProvider": [
+//     //get the post list
+//     {% assign post_list = site.posts %}
+//     {% assign last_time = post_list | first %}
+//     {% assign last_time = last_time.date %}
+//     {% assign count = 1 %}
+//     {% for post in post_list %}{% if post.date == last_time %}{% assign count = count | plus: 1 %}{% else %}
+//     {
+//       "date": "{{ last_time | date: "%Y-%m-%d" }}",
+//       "count": "{{ count }}"
+//     },{% assign last_time = post.date %}{% assign count = 1 %}{% endif %}{% endfor %}
+//     {
+//       "date": "{{ last_time | date: "%Y-%m-%d" }}",
+//       "count": "{{ count }}"
+//     },{% assign last_time = nil %}{% assign count = nil %}
+//     ]
+// });
 </script>
