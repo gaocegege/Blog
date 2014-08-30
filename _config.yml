@@ -37,15 +37,15 @@ bing_verify:
 # Links to include in footer navigation
 # For external links add external: true
 links:
-  - title: Home
+  - title: 主页
     url: /
     external: false
     icon: home
-  - title: Featured Posts
+  - title: 全部文章
     url: /featured
-  - title: Categories
+  - title: 分类
     url: /categories
-  - title: About
+  - title: 关于我
     url: /about
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
