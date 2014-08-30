@@ -169,7 +169,7 @@ chart: true
     {% for post in post_list %}
       // if the post has the same date as the former
       {% if post.date == last_time %}
-        {% count | plus: 1 %}
+        {% increment count %}
       // the post is older than the former
       {% else %}
         {
