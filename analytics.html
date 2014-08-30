@@ -77,13 +77,7 @@ chart: true
       "type": "pie",
       "pathToImages": "http://cdn.amcharts.com/lib/3/images/",
       "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-      "theme": "none",
-      "legend": {
-        "markerType": "circle",
-        "position": "right",
-        "marginRight": 80,    
-        "autoMargins": false
-      },
+      "theme": "light",
       "innerRadius": "40%",
       "labelRadius": 10,
       "labelRadiusField": "Not set",
@@ -97,10 +91,10 @@ chart: true
       "valueField": "number-of-posts",
       "allLabels": [],
       "balloon": {},
-      // "legend": {
-      //   "align": "center",
-      //   "markerType": "square"
-      // },
+      "legend": {
+        "align": "center",
+        "markerType": "square"
+      },
       "titles": [],
       "dataProvider": [
 {% assign tags_list = site.tags %}  
