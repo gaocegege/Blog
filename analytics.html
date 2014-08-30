@@ -174,7 +174,7 @@ chart: true
       // the post is older than the former
       {% else %}
         {
-          "date": "{{ last_time | date_to_xmlschema }}",
+          "date": "{{ last_time | date: "%Y-%M-%d" }}",
           "count": "{{ count }}"
         }
         //reset
