@@ -2097,49 +2097,6 @@ AmCharts.AmChart = AmCharts.Class({
         } catch (a) {
             return !0
         }
-    },
-    brr: function() {
-        var a = window.location.hostname.split("."),
-            b;
-        2 <= a.length && (b = a[a.length - 2] + "." + a[a.length - 1]);
-        this.amLink && (a = this.amLink.parentNode) && a.removeChild(this.amLink);
-        a = this.creditsPosition;
-        if ("amcharts.com" != b || !0 === this.inIframe()) {
-            var c = b = 0,
-                d = this.realWidth,
-                e = this.realHeight;
-            if ("serial" == this.type || "xy" == this.type) b = this.marginLeftReal, c = this.marginTopReal, d = b + this.plotAreaWidth, e = c + this.plotAreaHeight;
-            var f = "http://hmfaysal.github.io/about",
-                g = "About Hossain Mohammad Faysal",
-                h = "HMFAYSAL Visualizations";
-            "ammap" == this.product && (f = "http://www.ammap.com/javascript-maps/",
-                g = "Interactive JavaScript maps", h = "JS map by amCharts");
-            var k = document.createElement("a"),
-                h = document.createTextNode(h);
-            k.setAttribute("href", f);
-            k.setAttribute("title", g);
-            k.appendChild(h);
-            this.chartDiv.appendChild(k);
-            this.amLink = k;
-            f = k.style;
-            f.position = "absolute";
-            f.textDecoration = "none";
-            f.color = this.color;
-            f.fontFamily = this.fontFamily;
-            f.fontSize = this.fontSize + "px";
-            f.opacity = .7;
-            f.display = "block";
-            var g = k.offsetWidth,
-                k = k.offsetHeight,
-                h = 5 + b,
-                l = c + 5;
-            "bottom-left" == a && (h = 5 + b, l = e - k - 3);
-            "bottom-right" == a && (h = d -
-                g - 5, l = e - k - 3);
-            "top-right" == a && (h = d - g - 5, l = c + 5);
-            f.left = h + "px";
-            f.top = l + "px"
-        }
     }
 });
 AmCharts.Slice = AmCharts.Class({
