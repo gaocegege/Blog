@@ -171,7 +171,7 @@ chart: true
         {% assign count = count | plus: 1 %}
       {% else %}
     {
-      "date": "{{ last_time | date: "%Y-%M-%d" }}",
+      "date": "{{ last_time | date: "%Y-%m-%d" }}",
       "count": "{{ count }}"
     },
       {% assign last_time = post.date %}
