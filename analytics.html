@@ -162,7 +162,7 @@ chart: true
     //get the post list
     {% assign post_list = site.posts %}
     // get the current time 
-    {% assign last_time = post_list.first | first %}
+    {% assign last_time = post_list | first %}
     {% assign last_time = last_time.date %}
     // count set 0
     {% assign count = 0 %}
