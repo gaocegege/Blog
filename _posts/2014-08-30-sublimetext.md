@@ -3,7 +3,7 @@ layout: post
 title: "Sublime Text2 Sidebar的字体大小修改"
 description: 修改sublime text字体
 headline: 
-modified: 2014-08-29
+modified: 2014-08-30
 category: 1080p
 tags: [sublime text, font, 字体修改]
 imagefeature: 
