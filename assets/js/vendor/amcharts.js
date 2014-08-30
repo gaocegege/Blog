@@ -9,7 +9,8 @@ if (!AmCharts) var AmCharts = {
     uid: 0,
     lang: {},
     translations: {},
-    mapTranslations: {}
+    mapTranslations: {},
+    windows: {}
 };
 AmCharts.Class = function(a) {
     var b = function() {
@@ -58,9 +59,13 @@ AmCharts.getIEVersion = function() {
     } else "Netscape" == navigator.appName && (b = navigator.userAgent, c = /Trident\/.*rv:([0-9]{1,}[.0-9]{0,})/, null != c.exec(b) && (a = parseFloat(RegExp.$1)));
     return a
 };
-AmCharts.applyLang = function(a) {
-    var b = AmCharts.translations;
-    b && (a = b[a]) && (AmCharts.lang = a, a.monthNames && (AmCharts.dayNames = a.dayNames, AmCharts.shortDayNames = a.shortDayNames, AmCharts.monthNames = a.monthNames, AmCharts.shortMonthNames = a.shortMonthNames))
+AmCharts.applyLang = function(a, b) {
+    var c = AmCharts.translations;
+    b.dayNames = AmCharts.dayNames;
+    b.shortDayNames = AmCharts.shortDayNames;
+    b.monthNames = AmCharts.monthNames;
+    b.shortMonthNames = AmCharts.shortMonthNames;
+    c && (c = c[a]) && (AmCharts.lang = c, c.monthNames && (b.dayNames = c.dayNames, b.shortDayNames = c.shortDayNames, b.monthNames = c.monthNames, b.shortMonthNames = c.shortMonthNames))
 };
 AmCharts.IEversion = AmCharts.getIEVersion();
 9 > AmCharts.IEversion && 0 < AmCharts.IEversion && (AmCharts.isModern = !1, AmCharts.isIE = !0);
@@ -198,14 +203,15 @@ AmCharts.wrappedText = function(a, b, c, d, e, f, g, h, k) {
             l.remove();
             for (var l = [], p = 0; - 1 < (index = b.indexOf(" ", p));) l.push(index), p = index + 1;
             for (var q = Math.round(b.length / 2), r = 1E3, s, p = 0; p < l.length; p++) {
-                var v = Math.abs(l[p] - q);
-                v < r && (s = l[p], r = v)
+                var w = Math.abs(l[p] - q);
+                w < r && (s = l[p], r = w)
             }
             if (isNaN(s)) {
                 h = Math.ceil(n.width / h);
-                for (p = 1; p < h; p++) s = Math.round(b.length / h * p), b = b.substr(0, s) + m + b.substr(s);
-                return AmCharts.text(a, b, c, d, e, f,
-                    g)
+                if (0 == k)
+                    for (p = 1; p < h; p++) s = Math.round(b.length / h * p), b = b.substr(0, s) + m + b.substr(s);
+                return AmCharts.text(a, b,
+                    c, d, e, f, g)
             }
             b = b.substr(0, s) + m + b.substr(s + 1);
             return AmCharts.wrappedText(a, b, c, d, e, f, g, h, k + 1)
@@ -228,9 +234,10 @@ AmCharts.getURL = function(a, b) {
         if ("_self" != b && b)
             if ("_top" == b && window.top) window.top.location.href = a;
             else if ("_parent" == b && window.parent) window.parent.location.href = a;
+    else if ("_blank" == b) window.open(a);
     else {
         var c = document.getElementsByName(b)[0];
-        c ? c.src = a : window.open(a)
+        c ? c.src = a : (c = AmCharts.windows[b]) ? c.opener && !c.opener.closed ? c.location.href = a : AmCharts.windows[b] = window.open(a) : AmCharts.windows[b] = window.open(a)
     } else window.location.href = a
 };
 AmCharts.ifArray = function(a) {
@@ -854,99 +861,109 @@ AmCharts.ValueAxis = AmCharts.Class({
                 1 > this.step && -1 < this.step && (s = AmCharts.getDecimals(this.step));
                 this.integersOnly && (s = 0);
                 s > this.maxDecCount && (s = this.maxDecCount);
-                var v = this.precision;
-                isNaN(v) || (s = v);
+                var w = this.precision;
+                isNaN(w) || (s = w);
                 this.max = AmCharts.roundTo(this.max, this.maxDecCount);
                 this.min = AmCharts.roundTo(this.min, this.maxDecCount);
-                var w = {};
-                w.precision = s;
-                w.decimalSeparator = a.nf.decimalSeparator;
-                w.thousandsSeparator = a.nf.thousandsSeparator;
-                this.numberFormatter = w;
-                var t, u = this.guides,
-                    y = u.length;
-                if (0 < y) {
-                    c = this.fillAlpha;
-                    for (d = this.fillAlpha = 0; d < y; d++) {
-                        var E = u[d],
-                            A = NaN,
-                            z = E.above;
-                        isNaN(E.toValue) || (A = this.getCoordinate(E.toValue), t = new this.axisItemRenderer(this, A, "", !0, NaN, NaN, E), this.pushAxisItem(t, z));
-                        var K = NaN;
-                        isNaN(E.value) || (K = this.getCoordinate(E.value), t = new this.axisItemRenderer(this, K, E.label, !0, NaN, (A - K) / 2, E), this.pushAxisItem(t,
-                            z));
-                        isNaN(A - K) || (t = new this.guideFillRenderer(this, K, A, E), this.pushAxisItem(t, z), t = t.graphics(), E.graphics = t, E.balloonText && this.addEventListeners(t, E))
+                d = {};
+                d.precision = s;
+                d.decimalSeparator = a.nf.decimalSeparator;
+                d.thousandsSeparator = a.nf.thousandsSeparator;
+                this.numberFormatter = d;
+                var v, t = this.guides;
+                c = t.length;
+                if (0 < c) {
+                    var u = this.fillAlpha;
+                    for (d = this.fillAlpha = 0; d < c; d++) {
+                        var x = t[d],
+                            E = NaN,
+                            A = x.above;
+                        isNaN(x.toValue) || (E = this.getCoordinate(x.toValue), v = new this.axisItemRenderer(this, E, "", !0, NaN, NaN, x), this.pushAxisItem(v, A));
+                        var z = NaN;
+                        isNaN(x.value) || (z = this.getCoordinate(x.value), v = new this.axisItemRenderer(this, z, x.label, !0, NaN, (E - z) / 2, x), this.pushAxisItem(v,
+                            A));
+                        isNaN(E - z) || (v = new this.guideFillRenderer(this, z, E, x), this.pushAxisItem(v, A), v = v.graphics(), x.graphics = v, x.balloonText && this.addEventListeners(v, x))
                     }
-                    this.fillAlpha = c
+                    this.fillAlpha = u
                 }
-                u = !1;
-                for (d = p; d < q; d += n) y = AmCharts.roundTo(this.step * d + this.min, s), -1 != String(y).indexOf("e") && (u = !0, String(y).split("e"));
+                this.exponential = !1;
+                for (d = p; d < q; d += n) t = AmCharts.roundTo(this.step * d + this.min, s), -1 != String(t).indexOf("e") && (this.exponential = !0, String(t).split("e"));
                 this.duration && (this.maxInterval = AmCharts.getMaxInterval(this.max, this.duration));
                 var s = this.step,
-                    I, y = this.minorGridAlpha;
-                this.minorGridEnabled && (I = this.getMinorGridStep(s, this.stepWidth * s));
+                    H, t = this.minorGridAlpha;
+                this.minorGridEnabled && (H = this.getMinorGridStep(s, this.stepWidth *
+                    s));
                 for (d = p; d < q; d += n)
-                    if (p =
-                        s * d + this.min, h && this.max - this.min > 5 * this.min && (p -= this.min), p = AmCharts.roundTo(p, this.maxDecCount + 1), !this.integersOnly || Math.round(p) == p)
-                        if (isNaN(v) || Number(AmCharts.toFixed(p, v)) == p) {
-                            !0 === h && (0 === p && (p = this.minReal), r > this.logGridLimit && (p = Math.pow(10, d)), u = -1 != String(p).indexOf("e") ? !0 : !1);
-                            this.useScientificNotation && (u = !0);
-                            this.usePrefixes && (u = !1);
-                            u ? (t = -1 == String(p).indexOf("e") ? p.toExponential(15) : String(p), c = t.split("e"), t = Number(c[0]), c = Number(c[1]), t = AmCharts.roundTo(t, 14), 10 == t && (t = 1, c +=
-                                1), t = t + "e" + c, 0 === p && (t = "0"), 1 == p && (t = "1")) : (h && (t = String(p).split("."), t[1] ? (w.precision = t[1].length, 0 > d && (w.precision = Math.abs(d))) : w.precision = -1), t = this.usePrefixes ? AmCharts.addPrefix(p, a.prefixesOfBigNumbers, a.prefixesOfSmallNumbers, w, !0) : AmCharts.formatNumber(p, w, w.precision));
-                            this.duration && (t = AmCharts.formatDuration(p, this.duration, "", this.durationUnits, this.maxInterval, w));
-                            this.recalculateToPercents ? t += "%" : (c = this.unit) && (t = "left" == this.unitPosition ? c + t : t + c);
-                            Math.round(d / k) != d / k && (t = void 0);
-                            if (0 === d && !l || d == q - 1 && !m) t = " ";
+                    if (p = s * d + this.min, h && this.max - this.min > 5 * this.min && (p -= this.min), p = AmCharts.roundTo(p, this.maxDecCount + 1), !this.integersOnly || Math.round(p) == p)
+                        if (isNaN(w) || Number(AmCharts.toFixed(p, w)) == p) {
+                            !0 === h && (0 === p && (p = this.minReal), r > this.logGridLimit && (p = Math.pow(10, d)));
+                            v = this.formatValue(p, !1, d);
+                            Math.round(d / k) != d / k && (v = void 0);
+                            if (0 === d && !l || d == q - 1 && !m) v = " ";
                             c = this.getCoordinate(p);
-                            this.labelFunction && (t = this.labelFunction(p, t, this).toString());
-                            t = new this.axisItemRenderer(this, c, t, void 0, void 0, void 0, void 0, this.boldLabels);
-                            this.pushAxisItem(t);
+                            v = new this.axisItemRenderer(this, c, v, void 0, void 0, void 0, void 0, this.boldLabels);
+                            this.pushAxisItem(v);
                             if (p == this.baseValue && "radar" != a.type) {
-                                var F, H, z = this.viW,
+                                var F, G, x = this.viW,
                                     A = this.viH;
-                                t = this.viX;
-                                E = this.viY;
-                                "H" == this.orientation ? 0 <= c && c <= z + 1 && (F = [c, c, c + e], H = [A, 0, f]) : 0 <= c && c <= A + 1 && (F = [0, z, z + e], H = [c, c, c + f]);
-                                F && (c = AmCharts.fitToBounds(2 * this.gridAlpha, 0, 1), c = AmCharts.line(a.container, F, H, this.gridColor,
-                                    c, 1, this.dashLength), c.translate(t, E), this.grid0 = c, a.axesSet.push(c), c.toBack())
+                                v = this.viX;
+                                u = this.viY;
+                                "H" == this.orientation ? 0 <= c && c <= x + 1 && (F = [c, c, c + e], G = [A, 0, f]) : 0 <= c && c <= A + 1 && (F = [0, x, x + e], G = [c, c, c + f]);
+                                F && (c = AmCharts.fitToBounds(2 * this.gridAlpha, 0, 1), c = AmCharts.line(a.container, F, G, this.gridColor, c, 1, this.dashLength), c.translate(v, u), this.grid0 = c, a.axesSet.push(c), c.toBack())
                             }
-                            if (!isNaN(I) && 0 < y && d < q - 1) {
-                                t = this.gridAlpha;
+                            if (!isNaN(H) && 0 < t && d < q - 1) {
+                                v = this.gridAlpha;
                                 this.gridAlpha = this.minorGridAlpha;
-                                for (c = 1; c < s / I; c++) E = this.getCoordinate(p + I * c), E = new this.axisItemRenderer(this, E, "", !1, 0, 0, !1, !1, 0, !0), this.pushAxisItem(E);
-                                this.gridAlpha = t
+                                for (c = 1; c < s / H; c++) u = this.getCoordinate(p + H * c), u = new this.axisItemRenderer(this,
+                                    u, "", !1, 0, 0, !1, !1, 0, !0), this.pushAxisItem(u);
+                                this.gridAlpha = v
                             }
                         }
-                d = this.baseValue;
-                this.min > this.baseValue && this.max > this.baseValue && (d = this.min);
-                this.min < this.baseValue && this.max < this.baseValue && (d = this.max);
-                h && d < this.minReal && (d = this.minReal);
-                this.baseCoord = this.getCoordinate(d);
-                d = {
+                e = this.baseValue;
+                this.min > this.baseValue && this.max > this.baseValue && (e = this.min);
+                this.min < this.baseValue && this.max < this.baseValue && (e = this.max);
+                h && e < this.minReal && (e = this.minReal);
+                this.baseCoord = this.getCoordinate(e);
+                e = {
                     type: "axisChanged",
                     target: this,
                     chart: a
                 };
-                d.min = h ? this.minReal : this.min;
-                d.max = this.max;
-                this.fire("axisChanged", d);
+                e.min = h ? this.minReal : this.min;
+                e.max = this.max;
+                this.fire("axisChanged", e);
                 this.axisCreated = !0
             }
             h = this.axisLine.set;
-            d = this.labelsSet;
+            e = this.labelsSet;
             this.positionTitle();
-            "radar" != a.type ? (a = this.viX, e = this.viY, b.translate(a, e), d.translate(a, e)) : h.toFront();
-            !this.visible || g ? (b.hide(), h.hide(), d.hide()) : (b.show(), h.show(), d.show());
+            "radar" != a.type ? (a = this.viX, f =
+                this.viY, b.translate(a, f), e.translate(a, f)) : h.toFront();
+            !this.visible || g ? (b.hide(), h.hide(), e.hide()) : (b.show(), h.show(), e.show());
             this.axisY = this.y - this.viY;
             this.axisX = this.x - this.viX
         }
     },
+    formatValue: function(a, b, c) {
+        var d = this.exponential,
+            e = this.logarithmic,
+            f = this.numberFormatter,
+            g = this.chart;
+        !0 === this.logarithmic && (d = -1 != String(a).indexOf("e") ? !0 : !1);
+        this.useScientificNotation && (d = !0);
+        this.usePrefixes && (d = !1);
+        d ? (valueText = -1 == String(a).indexOf("e") ? a.toExponential(15) : String(a), c = valueText.split("e"),
+            b = Number(c[0]), c = Number(c[1]), b = AmCharts.roundTo(b, 14), 10 == b && (b = 1, c += 1), valueText = b + "e" + c, 0 === a && (valueText = "0"), 1 == a && (valueText = "1")) : (e && (d = String(a).split("."), d[1] ? (f.precision = d[1].length, 0 > c && (f.precision = Math.abs(c))) : f.precision = -1), valueText = this.usePrefixes ? AmCharts.addPrefix(a, g.prefixesOfBigNumbers, g.prefixesOfSmallNumbers, f, !b) : AmCharts.formatNumber(a, f, f.precision));
+        this.duration && (valueText = AmCharts.formatDuration(a, this.duration, "", this.durationUnits, this.maxInterval, f));
+        this.recalculateToPercents ?
+            valueText += "%" : (f = this.unit) && (valueText = "left" == this.unitPosition ? f + valueText : valueText + f);
+        this.labelFunction && (valueText = this.labelFunction(a, valueText, this).toString());
+        return valueText
+    },
     getMinorGridStep: function(a, b) {
         var c = [5, 4, 2];
         60 > b && c.shift();
-        for (var d = Math.floor(Math.log(Math.abs(a)) *
-            Math.LOG10E), e = 0; e < c.length; e++) {
+        for (var d = Math.floor(Math.log(Math.abs(a)) * Math.LOG10E), e = 0; e < c.length; e++) {
             var f = a / c[e],
                 g = Math.floor(Math.log(Math.abs(f)) * Math.LOG10E);
             if (!(0 < Math.abs(d - g)))
@@ -969,30 +986,33 @@ AmCharts.ValueAxis = AmCharts.Class({
             k, l, m, n, p = this.baseValue,
             q = !1;
         if ("line" == a || "step" == a || "smoothedLine" == a) q = !0;
-        if (q && ("regular" == b || "100%" ==
-            b))
+        if (q && ("regular" == b || "100%" == b))
             for (n = 0; n < h.length; n++) m = h[n], m.hidden || (l = m.type, m.chart == this.chart && m.valueAxis == this && a == l && m.stackable && (k && (m.stackGraph = k), k = m));
         for (k = this.start; k <= this.end; k++) {
             var r = 0;
             for (n = 0; n < h.length; n++)
-                if (m = h[n], m.hidden) m.newStack && (e[k] = NaN, d[k] = NaN);
-                else if (l = m.type, m.chart == this.chart && m.valueAxis == this && a == l && m.stackable && (l = this.data[k].axes[this.id].graphs[m.id], g = l.values.value, !isNaN(g))) {
-                var s = AmCharts.getDecimals(g);
-                r < s && (r = s);
-                isNaN(f[k]) ? f[k] = Math.abs(g) : f[k] += Math.abs(g);
-                f[k] = AmCharts.roundTo(f[k],
-                    r);
-                s = m.fillToGraph;
-                q && s && (s = this.data[k].axes[this.id].graphs[s.id]) && (l.values.open = s.values.value);
-                "regular" == b && (q && (isNaN(c[k]) ? (c[k] = g, l.values.close = g, l.values.open = this.baseValue) : (isNaN(g) ? l.values.close = c[k] : l.values.close = g + c[k], l.values.open = c[k], c[k] = l.values.close)), "column" != a || isNaN(g) || (m.newStack && (e[k] = NaN, d[k] = NaN), l.values.close = g, 0 > g ? (l.values.close = g, isNaN(d[k]) ? l.values.open = p : (l.values.close += d[k], l.values.open = d[k]), d[k] = l.values.close) : (l.values.close = g, isNaN(e[k]) ? l.values.open =
-                    p : (l.values.close += e[k], l.values.open = e[k]), e[k] = l.values.close)))
-            }
+                if (m =
+                    h[n], m.hidden) m.newStack && (e[k] = NaN, d[k] = NaN);
+                else if (l = m.type, m.chart == this.chart && m.valueAxis == this && a == l && m.stackable)
+                if (l = this.data[k].axes[this.id].graphs[m.id], g = l.values.value, isNaN(g)) m.newStack && (e[k] = NaN, d[k] = NaN);
+                else {
+                    var s = AmCharts.getDecimals(g);
+                    r < s && (r = s);
+                    isNaN(f[k]) ? f[k] = Math.abs(g) : f[k] += Math.abs(g);
+                    f[k] = AmCharts.roundTo(f[k], r);
+                    s = m.fillToGraph;
+                    q && s && (s = this.data[k].axes[this.id].graphs[s.id]) && (l.values.open = s.values.value);
+                    "regular" == b && (q && (isNaN(c[k]) ? (c[k] = g, l.values.close = g,
+                        l.values.open = this.baseValue) : (isNaN(g) ? l.values.close = c[k] : l.values.close = g + c[k], l.values.open = c[k], c[k] = l.values.close)), "column" == a && (m.newStack && (e[k] = NaN, d[k] = NaN), l.values.close = g, 0 > g ? (l.values.close = g, isNaN(d[k]) ? l.values.open = p : (l.values.close += d[k], l.values.open = d[k]), d[k] = l.values.close) : (l.values.close = g, isNaN(e[k]) ? l.values.open = p : (l.values.close += e[k], l.values.open = e[k]), e[k] = l.values.close)))
+                }
         }
         for (k = this.start; k <= this.end; k++)
-            for (n = 0; n < h.length; n++)(m = h[n], m.hidden) ? m.newStack && (e[k] = NaN, d[k] = NaN) : (l = m.type, m.chart == this.chart && m.valueAxis == this && a == l && m.stackable && (l = this.data[k].axes[this.id].graphs[m.id], g = l.values.value, isNaN(g) || (c = g / f[k] * 100, l.values.percents = c, l.values.total = f[k], m.newStack && (e[k] = NaN, d[k] = NaN), "100%" == b && (isNaN(d[k]) && (d[k] = 0), isNaN(e[k]) && (e[k] = 0), 0 > c ? (l.values.close = AmCharts.fitToBounds(c + d[k], -100, 100), l.values.open = d[k], d[k] = l.values.close) : (l.values.close = AmCharts.fitToBounds(c + e[k], -100, 100), l.values.open = e[k], e[k] = l.values.close)))))
+            for (n = 0; n < h.length; n++)(m = h[n], m.hidden) ? m.newStack && (e[k] =
+                NaN, d[k] = NaN) : (l = m.type, m.chart == this.chart && m.valueAxis == this && a == l && m.stackable && (l = this.data[k].axes[this.id].graphs[m.id], g = l.values.value, isNaN(g) || (c = g / f[k] * 100, l.values.percents = c, l.values.total = f[k], m.newStack && (e[k] = NaN, d[k] = NaN), "100%" == b && (isNaN(d[k]) && (d[k] = 0), isNaN(e[k]) && (e[k] = 0), 0 > c ? (l.values.close = AmCharts.fitToBounds(c + d[k], -100, 100), l.values.open = d[k], d[k] = l.values.close) : (l.values.close = AmCharts.fitToBounds(c + e[k], -100, 100), l.values.open = e[k], e[k] = l.values.close)))))
     },
     recalculate: function() {
-        var a = this.chart,
+        var a =
+            this.chart,
             b = a.graphs,
             c;
         for (c = 0; c < b.length; c++) {
@@ -1008,17 +1028,16 @@ AmCharts.ValueAxis = AmCharts.Class({
                 g = this.start;
                 d.compareFromStart && (g = 0);
                 if (!isNaN(a.startTime) && (l = a.categoryAxis)) {
-                    minDuration =
-                        l.minDuration();
+                    minDuration = l.minDuration();
                     var m = new Date(a.startTime + minDuration / 2),
                         n = AmCharts.resetDateToMin(new Date(a.startTime), l.minPeriod).getTime();
-                    AmCharts.resetDateToMin(new Date(m), l.minPeriod).getTime() > n && g++
+                    AmCharts.resetDateToMin(new Date(m),
+                        l.minPeriod).getTime() > n && g++
                 }
                 if (l = a.recalculateFromDate) a.dataDateFormat && (l = AmCharts.stringToDate(l, a.dataDateFormat)), g = a.getClosestIndex(a.chartData, "time", l.getTime(), !0, 0, a.chartData.length), h = a.chartData.length - 1;
                 for (l = g; l <= h && (g = this.data[l].axes[this.id].graphs[d.id], f = g.values[e], isNaN(f)); l++);
                 this.recBaseValue = f;
-                for (e = k; e <=
-                    h; e++) {
+                for (e = k; e <= h; e++) {
                     g = this.data[e].axes[this.id].graphs[d.id];
                     g.percents = {};
                     var k = g.values,
@@ -1040,35 +1059,35 @@ AmCharts.ValueAxis = AmCharts.Class({
         a && (0 < this.start && this.start--, this.end < this.data.length - 1 && this.end++);
         "serial" == b.type && (!0 !== b.categoryAxis.parseDates || a || this.end < this.data.length - 1 && this.end++);
         a = this.minMaxMultiplier;
-        this.min =
-            this.getMin(this.start, this.end);
+        this.min = this.getMin(this.start, this.end);
         this.max = this.getMax();
         a = (this.max - this.min) * (a - 1);
         this.min -= a;
         this.max += a;
         a = this.guides.length;
         if (this.includeGuidesInMinMax && 0 < a)
-            for (b = 0; b < a; b++) c = this.guides[b], c.toValue < this.min && (this.min = c.toValue), c.value < this.min && (this.min = c.value), c.toValue > this.max && (this.max = c.toValue), c.value > this.max && (this.max = c.value);
+            for (b =
+                0; b < a; b++) c = this.guides[b], c.toValue < this.min && (this.min = c.toValue), c.value < this.min && (this.min = c.value), c.toValue > this.max && (this.max = c.toValue), c.value > this.max && (this.max = c.value);
         isNaN(this.minimum) || (this.min = this.minimum);
         isNaN(this.maximum) || (this.max = this.maximum);
-        this.min > this.max && (a = this.max, this.max = this.min, this.min =
-            a);
+        this.min > this.max && (a = this.max, this.max = this.min, this.min = a);
         isNaN(this.minTemp) || (this.min = this.minTemp);
         isNaN(this.maxTemp) || (this.max = this.maxTemp);
         this.minReal = this.min;
         this.maxReal = this.max;
-        0 === this.min && 0 === this.max && (this.max = 9);
+        0 === this.min && 0 === this.max && (this.max =
+            9);
         this.min > this.max && (this.min = this.max - 1);
         a = this.min;
         b = this.max;
         c = this.max - this.min;
         d = 0 === c ? Math.pow(10, Math.floor(Math.log(Math.abs(this.max)) * Math.LOG10E)) / 10 : Math.pow(10, Math.floor(Math.log(Math.abs(c)) * Math.LOG10E)) / 10;
         isNaN(this.maximum) && isNaN(this.maxTemp) && (this.max = Math.ceil(this.max / d) * d + d);
-        isNaN(this.minimum) && isNaN(this.minTemp) &&
-            (this.min = Math.floor(this.min / d) * d - d);
+        isNaN(this.minimum) && isNaN(this.minTemp) && (this.min = Math.floor(this.min / d) * d - d);
         0 > this.min && 0 <= a && (this.min = 0);
         0 < this.max && 0 >= b && (this.max = 0);
-        "100%" == this.stackType && (this.min = 0 > this.min ? -100 : 0, this.max = 0 > this.max ? 0 : 100);
+        "100%" == this.stackType && (this.min = 0 > this.min ? -100 : 0, this.max =
+            0 > this.max ? 0 : 100);
         c = this.max - this.min;
         d = Math.pow(10, Math.floor(Math.log(Math.abs(c)) * Math.LOG10E)) / 10;
         this.step = Math.ceil(c / this.gridCountR / d) * d;
@@ -1078,27 +1097,26 @@ AmCharts.ValueAxis = AmCharts.Class({
         5 < d && (d = 10);
         5 >= d && 2 < d && (d = 5);
         this.step = Math.ceil(this.step / (c * d)) * c * d;
-        1 > c ? (this.maxDecCount =
-            Math.abs(Math.log(Math.abs(c)) * Math.LOG10E), this.maxDecCount = Math.round(this.maxDecCount), this.step = AmCharts.roundTo(this.step, this.maxDecCount + 1)) : this.maxDecCount = 0;
+        1 > c ? (this.maxDecCount = Math.abs(Math.log(Math.abs(c)) * Math.LOG10E), this.maxDecCount = Math.round(this.maxDecCount), this.step = AmCharts.roundTo(this.step, this.maxDecCount + 1)) : this.maxDecCount =
+            0;
         this.min = this.step * Math.floor(this.min / this.step);
         this.max = this.step * Math.ceil(this.max / this.step);
         0 > this.min && 0 <= a && (this.min = 0);
         0 < this.max && 0 >= b && (this.max = 0);
         1 < this.minReal && 1 < this.max - this.minReal && (this.minReal = Math.floor(this.minReal));
         c = Math.pow(10, Math.floor(Math.log(Math.abs(this.minReal)) * Math.LOG10E));
-        0 === this.min && (this.minReal =
-            c);
+        0 === this.min && (this.minReal = c);
         0 === this.min && 1 < this.minReal && (this.minReal = 1);
         0 < this.min && 0 < this.minReal - this.step && (this.minReal = this.min + this.step < this.minReal ? this.min + this.step : this.min);
         c = Math.log(b) * Math.LOG10E - Math.log(a) * Math.LOG10E;
-        this.logarithmic && (2 < c ? (this.minReal = this.min = Math.pow(10, Math.floor(Math.log(Math.abs(a)) * Math.LOG10E)), this.max = Math.pow(10, Math.ceil(Math.log(Math.abs(b)) * Math.LOG10E))) : (b = Math.pow(10, Math.floor(Math.log(Math.abs(this.min)) * Math.LOG10E)) / 10, a = Math.pow(10, Math.floor(Math.log(Math.abs(a)) *
-            Math.LOG10E)) / 10, b < a && (this.minReal = this.min = 10 * a)))
+        this.logarithmic && (2 < c ? (this.minReal = this.min = Math.pow(10, Math.floor(Math.log(Math.abs(a)) * Math.LOG10E)), this.max = Math.pow(10, Math.ceil(Math.log(Math.abs(b)) * Math.LOG10E))) : (b = Math.pow(10, Math.floor(Math.log(Math.abs(this.min)) * Math.LOG10E)) / 10, a = Math.pow(10, Math.floor(Math.log(Math.abs(a)) * Math.LOG10E)) / 10, b < a && (this.minReal = this.min = 10 * a)))
     },
     fixStepE: function(a) {
         a = a.toExponential(0).split("e");
         var b = Number(a[1]);
         9 == Number(a[0]) && b++;
-        return this.generateNumber(1, b)
+        return this.generateNumber(1,
+            b)
     },
     generateNumber: function(a, b) {
         var c = "",
@@ -1116,14 +1134,14 @@ AmCharts.ValueAxis = AmCharts.Class({
             for (f in e)
                 if (e.hasOwnProperty(f)) {
                     var g = this.chart.getGraphById(f);
-                    if (g.includeInMinMax &&
-                        (!g.hidden || this.includeHidden)) {
+                    if (g.includeInMinMax && (!g.hidden || this.includeHidden)) {
                         isNaN(c) && (c = Infinity);
                         this.foundGraphs = !0;
                         g = e[f].values;
                         this.recalculateToPercents && (g = e[f].percents);
                         var h;
-                        if (this.minMaxField) h = g[this.minMaxField], h < c && (c = h);
+                        if (this.minMaxField) h =
+                            g[this.minMaxField], h < c && (c = h);
                         else
                             for (var k in g) g.hasOwnProperty(k) && "percents" != k && "total" != k && (h = g[k], h < c && (c = h))
                     }
@@ -1140,13 +1158,13 @@ AmCharts.ValueAxis = AmCharts.Class({
                 if (c.hasOwnProperty(d)) {
                     var e = this.chart.getGraphById(d);
                     if (e.includeInMinMax && (!e.hidden || this.includeHidden)) {
-                        isNaN(a) &&
-                            (a = -Infinity);
+                        isNaN(a) && (a = -Infinity);
                         this.foundGraphs = !0;
                         e = c[d].values;
                         this.recalculateToPercents && (e = c[d].percents);
                         var f;
-                        if (this.minMaxField) f = e[this.minMaxField], f > a && (a = f);
+                        if (this.minMaxField) f = e[this.minMaxField],
+                            f > a && (a = f);
                         else
                             for (var g in e) e.hasOwnProperty(g) && "percents" != g && "total" != g && (f = e[g], f > a && (a = f))
                     }
@@ -1178,7 +1196,8 @@ AmCharts.ValueAxis = AmCharts.Class({
         c.chart = this.chart;
         c.valueAxis = this;
         c.multiplier = this.axisWidth / Math.abs(this.getCoordinate(b) - this.getCoordinate(a));
-        c.position = "V" == this.orientation ? this.reversed ? this.getCoordinate(a) : this.getCoordinate(b) : this.reversed ? this.getCoordinate(b) : this.getCoordinate(a);
+        c.position = "V" ==
+            this.orientation ? this.reversed ? this.getCoordinate(a) : this.getCoordinate(b) : this.reversed ? this.getCoordinate(b) : this.getCoordinate(a);
         this.fire(c.type, c)
     },
     coordinateToValue: function(a) {
@@ -1189,8 +1208,7 @@ AmCharts.ValueAxis = AmCharts.Class({
             e = this.rotate,
             f = this.min,
             g = this.minReal;
-        return !0 === this.logarithmic ? Math.pow(10, (e ? !0 === d ? (b - a) / c : a / c : !0 ===
-            d ? a / c : (b - a) / c) + Math.log(g) * Math.LOG10E) : !0 === d ? e ? f - (a - b) / c : a / c + f : e ? a / c + f : f - (a - b) / c
+        return !0 === this.logarithmic ? Math.pow(10, (e ? !0 === d ? (b - a) / c : a / c : !0 === d ? a / c : (b - a) / c) + Math.log(g) * Math.LOG10E) : !0 === d ? e ? f - (a - b) / c : a / c + f : e ? a / c + f : f - (a - b) / c
     },
     getCoordinate: function(a) {
         if (isNaN(a)) return NaN;
@@ -1255,68 +1273,69 @@ AmCharts.RecItem = AmCharts.Class({
         var r = a.chart.container,
             s = r.set();
         this.set = s;
-        var v = a.axisThickness,
-            w = a.axisColor,
+        var w = a.axisThickness,
+            v = a.axisColor,
             t = a.axisAlpha,
             u = a.tickLength,
-            y = a.gridAlpha,
+            x = a.gridAlpha,
             E = a.gridThickness,
             A = a.gridColor,
             z = a.dashLength,
-            K = a.fillColor,
-            I = a.fillAlpha,
-            F = a.labelsEnabled;
+            H = a.fillColor,
+            F = a.fillAlpha,
+            G = a.labelsEnabled;
         m = a.labelRotation;
-        var H = a.counter,
-            L = a.inside,
-            ha = a.labelOffset,
-            ba = a.dx,
-            $ = a.dy,
-            Ra = a.orientation,
+        var V = a.counter,
+            N = a.inside,
+            ia = a.labelOffset,
+            da = a.dx,
+            ba = a.dy,
+            Sa = a.orientation,
             na = a.position,
             ta = a.previousCoord,
-            V = a.viH,
-            X = a.viW,
-            Z = a.offset,
-            oa, R;
-        g ? (F = !0, isNaN(g.tickLength) || (u = g.tickLength), void 0 != g.lineColor && (A = g.lineColor), void 0 != g.color && (q = g.color), isNaN(g.lineAlpha) || (y = g.lineAlpha), isNaN(g.dashLength) || (z = g.dashLength), isNaN(g.lineThickness) || (E = g.lineThickness), !0 === g.inside && (L = !0), isNaN(g.labelRotation) || (m = g.labelRotation), isNaN(g.fontSize) || (p = g.fontSize), g.position && (na = g.position), void 0 !==
-            g.boldLabel && (h = g.boldLabel), isNaN(g.labelOffset) || (ha = g.labelOffset)) : "" === c && (u = 0);
-        R = "start";
-        e && (R = "middle");
-        var Y = m * Math.PI / 180,
-            qa, G = 0,
-            B = 0,
-            W = 0,
-            ca = qa = 0,
-            ja = 0;
-        "V" == Ra && (m = 0);
-        var x;
-        F && (x = a.autoWrap && 0 === m ? AmCharts.wrappedText(r, c, q, n, p, R, h, e, 0) : AmCharts.text(r, c, q, n, p, R, h), R = x.getBBox(), ca = R.width, ja = R.height);
-        if ("H" == Ra) {
-            if (0 <= b && b <= X + 1 && (0 < u && 0 < t && b + k <= X + 1 && (oa = AmCharts.line(r, [b + k, b + k], [0, u], w, t, E), s.push(oa)), 0 < y && (R = AmCharts.line(r, [b, b + ba, b + ba], [V, V + $, $], A, y, E, z), s.push(R))), B = 0, G = b, g && 90 == m &&
-                L && (G -= p), !1 === d ? (R = "start", B = "bottom" == na ? L ? B + u : B - u : L ? B - u : B + u, G += 3, e && (G += e / 2 - 3, R = "middle"), 0 < m && (R = "middle")) : R = "middle", 1 == H && 0 < I && !g && !l && ta < X && (d = AmCharts.fitToBounds(b, 0, X), ta = AmCharts.fitToBounds(ta, 0, X), qa = d - ta, 0 < qa && (fill = AmCharts.rect(r, qa, a.height, K, I), fill.translate(d - qa + ba, $), s.push(fill))), "bottom" == na ? (B += V + p / 2 + Z, L ? (0 < m ? (B = V - ca / 2 * Math.sin(Y) - u - 3, G += ca / 2 * Math.cos(Y) - 4 + 2) : 0 > m ? (B = V + ca * Math.sin(Y) - u - 3 + 2, G += -ca * Math.cos(Y) - ja * Math.sin(Y) - 4) : B -= u + p + 3 + 3, B -= ha) : (0 < m ? (B = V + ca / 2 * Math.sin(Y) + u +
-                    3, G -= ca / 2 * Math.cos(Y)) : 0 > m ? (B = V + u + 3 - ca / 2 * Math.sin(Y) + 2, G += ca / 2 * Math.cos(Y)) : B += u + v + 3 + 3, B += ha)) : (B += $ + p / 2 - Z, G += ba, L ? (0 < m ? (B = ca / 2 * Math.sin(Y) + u + 3, G -= ca / 2 * Math.cos(Y)) : B += u + 3, B += ha) : (0 < m ? (B = -(ca / 2) * Math.sin(Y) - u - 6, G += ca / 2 * Math.cos(Y)) : B -= u + p + 3 + v + 3, B -= ha)), "bottom" == na ? qa = (L ? V - u - 1 : V + v - 1) + Z : (W = ba, qa = (L ? $ : $ - u - v + 1) - Z), f && (G += f), f = G, 0 < m && (f += ca / 2 * Math.cos(Y)), x && (p = 0, L && (p = ca / 2 * Math.cos(Y)), f + p > X + 2 || 0 > f)) x.remove(), x = null
+            L = a.viH,
+            Y = a.viW,
+            $ = a.offset,
+            oa, W;
+        g ? (G = !0, isNaN(g.tickLength) || (u = g.tickLength), void 0 != g.lineColor && (A = g.lineColor), void 0 != g.color && (q = g.color), isNaN(g.lineAlpha) || (x = g.lineAlpha), isNaN(g.dashLength) || (z = g.dashLength), isNaN(g.lineThickness) || (E = g.lineThickness), !0 === g.inside && (N = !0), isNaN(g.labelRotation) || (m = g.labelRotation), isNaN(g.fontSize) || (p = g.fontSize), g.position && (na = g.position), void 0 !==
+            g.boldLabel && (h = g.boldLabel), isNaN(g.labelOffset) || (ia = g.labelOffset)) : "" === c && (u = 0);
+        W = "start";
+        e && (W = "middle");
+        var Z = m * Math.PI / 180,
+            pa, I = 0,
+            D = 0,
+            aa = 0,
+            S = pa = 0,
+            Ta = 0;
+        "V" == Sa && (m = 0);
+        var T;
+        G && (T = a.autoWrap && 0 === m ? AmCharts.wrappedText(r, c, q, n, p, W, h, e, 0) : AmCharts.text(r, c, q, n, p, W, h), W = T.getBBox(), S = W.width, Ta = W.height);
+        if ("H" == Sa) {
+            if (0 <= b && b <= Y + 1 && (0 < u && 0 < t && b + k <= Y + 1 && (oa = AmCharts.line(r, [b + k, b + k], [0, u], v, t, E), s.push(oa)), 0 < x && (W = AmCharts.line(r, [b, b + da, b + da], [L, L + ba, ba], A, x, E, z), s.push(W))), D = 0, I = b, g && 90 ==
+                m && N && (I -= p), !1 === d ? (W = "start", D = "bottom" == na ? N ? D + u : D - u : N ? D - u : D + u, I += 3, e && (I += e / 2 - 3, W = "middle"), 0 < m && (W = "middle")) : W = "middle", 1 == V && 0 < F && !g && !l && ta < Y && (d = AmCharts.fitToBounds(b, 0, Y), ta = AmCharts.fitToBounds(ta, 0, Y), pa = d - ta, 0 < pa && (fill = AmCharts.rect(r, pa, a.height, H, F), fill.translate(d - pa + da, ba), s.push(fill))), "bottom" == na ? (D += L + p / 2 + $, N ? (0 < m ? (D = L - S / 2 * Math.sin(Z) - u - 3, I += S / 2 * Math.cos(Z) - 4 + 2) : 0 > m ? (D = L + S * Math.sin(Z) - u - 3 + 2, I += -S * Math.cos(Z) - Ta * Math.sin(Z) - 4) : D -= u + p + 3 + 3, D -= ia) : (0 < m ? (D = L + S / 2 * Math.sin(Z) + u +
+                    3, I -= S / 2 * Math.cos(Z)) : 0 > m ? (D = L + u + 3 - S / 2 * Math.sin(Z) + 2, I += S / 2 * Math.cos(Z)) : D += u + w + 3 + 3, D += ia)) : (D += ba + p / 2 - $, I += da, N ? (0 < m ? (D = S / 2 * Math.sin(Z) + u + 3, I -= S / 2 * Math.cos(Z)) : D += u + 3, D += ia) : (0 < m ? (D = -(S / 2) * Math.sin(Z) - u - 6, I += S / 2 * Math.cos(Z)) : D -= u + p + 3 + w + 3, D -= ia)), "bottom" == na ? pa = (N ? L - u - 1 : L + w - 1) + $ : (aa = da, pa = (N ? ba : ba - u - w + 1) - $), f && (I += f), f = I, 0 < m && (f += S / 2 * Math.cos(Z)), T && (p = 0, N && (p = S / 2 * Math.cos(Z)), f + p > Y + 2 || 0 > f)) T.remove(), T = null
         } else {
-            0 <= b && b <= V + 1 && (0 < u && 0 < t && b + k <= V + 1 && (oa = AmCharts.line(r, [0, u], [b + k, b + k], w, t, E),
-                s.push(oa)), 0 < y && (R = AmCharts.line(r, [0, ba, X + ba], [b, b + $, b + $], A, y, E, z), s.push(R)));
-            R = "end";
-            if (!0 === L && "left" == na || !1 === L && "right" == na) R = "start";
-            B = b - p / 2;
-            1 == H && 0 < I && !g && !l && (d = AmCharts.fitToBounds(b, 0, V), ta = AmCharts.fitToBounds(ta, 0, V), Y = d - ta, fill = AmCharts.polygon(r, [0, a.width, a.width, 0], [0, 0, Y, Y], K, I), fill.translate(ba, d - Y + $), s.push(fill));
-            B += p / 2;
-            "right" == na ? (G += ba + X + Z, B += $, L ? (f || (B -= p / 2 + 3), G = G - (u + 4) - ha) : (G += u + 4 + v, B -= 2, G += ha)) : L ? (G += u + 4 - Z, f || (B -= p / 2 + 3), g && (G += ba, B += $), G += ha) : (G += -u - v - 4 - 2 - Z, B -= 2, G -= ha);
-            oa && ("right" == na ? (W += ba + Z + X, qa += $, W = L ? W - v : W + v) : (W -= Z, L || (W -= u + v)));
-            f && (B += f);
-            L = -3;
-            "right" == na && (L += $);
-            x && (B > V + 1 || B < L) && (x.remove(), x = null)
+            0 <= b && b <= L + 1 && (0 < u && 0 < t && b + k <= L + 1 && (oa = AmCharts.line(r, [0, u], [b + k, b + k], v, t, E), s.push(oa)),
+                0 < x && (W = AmCharts.line(r, [0, da, Y + da], [b, b + ba, b + ba], A, x, E, z), s.push(W)));
+            W = "end";
+            if (!0 === N && "left" == na || !1 === N && "right" == na) W = "start";
+            D = b - p / 2;
+            1 == V && 0 < F && !g && !l && (d = AmCharts.fitToBounds(b, 0, L), ta = AmCharts.fitToBounds(ta, 0, L), Z = d - ta, fill = AmCharts.polygon(r, [0, a.width, a.width, 0], [0, 0, Z, Z], H, F), fill.translate(da, d - Z + ba), s.push(fill));
+            D += p / 2;
+            "right" == na ? (I += da + Y + $, D += ba, N ? (f || (D -= p / 2 + 3), I = I - (u + 4) - ia) : (I += u + 4 + w, D -= 2, I += ia)) : N ? (I += u + 4 - $, f || (D -= p / 2 + 3), g && (I += da, D += ba), I += ia) : (I += -u - w - 4 - 2 - $, D -= 2, I -= ia);
+            oa &&
+                ("right" == na ? (aa += da + $ + Y, pa += ba, aa = N ? aa - w : aa + w) : (aa -= $, N || (aa -= u + w)));
+            f && (D += f);
+            N = -3;
+            "right" == na && (N += ba);
+            T && (D > L + 1 || D < N) && (T.remove(), T = null)
         }
-        oa && oa.translate(W, qa);
-        !1 === a.visible && (oa && oa.remove(), x && (x.remove(), x = null));
-        x && (x.attr({
-            "text-anchor": R
-        }), x.translate(G, B), 0 !== m && x.rotate(-m, a.chart.backgroundColor), a.allLabels.push(x), " " != c && (this.label = x));
-        l || (a.counter = 0 === H ? 1 : 0, a.previousCoord = b);
+        oa && oa.translate(aa, pa);
+        !1 === a.visible && (oa && oa.remove(), T && (T.remove(), T = null));
+        T && (T.attr({
+            "text-anchor": W
+        }), T.translate(I, D), 0 !== m && T.rotate(-m, a.chart.backgroundColor), a.allLabels.push(T), " " != c && (this.label = T));
+        l || (a.counter = 0 === V ? 1 : 0, a.previousCoord = b);
         0 === this.set.node.childNodes.length && this.set.remove()
     },
     graphics: function() {
@@ -1357,9 +1376,9 @@ AmCharts.RecFill = AmCharts.Class({
 AmCharts.AmChart = AmCharts.Class({
     construct: function(a) {
         this.theme = a;
-        this.version = "3.10.0C";
+        this.version = "3.11.0";
         AmCharts.addChart(this);
-        this.createEvents("dataUpdated", "init", "rendered", "drawn");
+        this.createEvents("dataUpdated", "init", "rendered", "drawn", "failed");
         this.height = this.width = "100%";
         this.dataChanged = !0;
         this.chartCreated = !1;
@@ -1371,9 +1390,9 @@ AmCharts.AmChart = AmCharts.Class({
         this.fontSize = 11;
         this.usePrefixes = !1;
         this.precision = -1;
-        this.percentPrecision = 2;
-        this.decimalSeparator =
-            ".";
+        this.percentPrecision =
+            2;
+        this.decimalSeparator = ".";
         this.thousandsSeparator = ",";
         this.labels = [];
         this.allLabels = [];
@@ -1395,9 +1414,9 @@ AmCharts.AmChart = AmCharts.Class({
         this.legendDiv = b;
         this.titleHeight = 0;
         this.hideBalloonTime = 150;
-        this.handDrawScatter = 2;
-        this.handDrawThickness =
-            1;
+        this.handDrawScatter =
+            2;
+        this.handDrawThickness = 1;
         this.prefixesOfBigNumbers = [{
             number: 1E3,
             prefix: "k"
@@ -1449,8 +1468,7 @@ AmCharts.AmChart = AmCharts.Class({
             prefix: "m"
         }];
         this.panEventsEnabled = !0;
-        AmCharts.bezierX =
-            3;
+        AmCharts.bezierX = 3;
         AmCharts.bezierY = 6;
         this.product = "amcharts";
         this.animations = [];
@@ -1492,9 +1510,10 @@ AmCharts.AmChart = AmCharts.Class({
                 isNaN(f) && (f = this.fontSize + 2);
                 isNaN(d.alpha);
                 var g = this.marginLeft,
-                    e = AmCharts.text(this.container, d.text, e, this.fontFamily,
-                        f);
+                    e = AmCharts.text(this.container,
+                        d.text, e, this.fontFamily, f);
                 e.translate(g + (this.realWidth - this.marginRight - g) / 2, b);
+                e.node.style.pointerEvents = "none";
                 g = !0;
                 void 0 !== d.bold && (g = d.bold);
                 g && e.attr({
@@ -1523,8 +1542,7 @@ AmCharts.AmChart = AmCharts.Class({
             var g, h = document.createElement("div");
             g = h.style;
             g.position = "relative";
-            this.containerDiv =
-                h;
+            this.containerDiv = h;
             a.appendChild(h);
             var k = this.exportConfig;
             k && AmCharts.AmExport && !this.AmExport && (this.AmExport = new AmCharts.AmExport(this, k));
@@ -1565,8 +1583,7 @@ AmCharts.AmChart = AmCharts.Class({
                     g.width = a.style.width;
                     g.height = a.style.height;
                     e.position = "absolute";
-                    f.position =
-                        "relative";
+                    f.position = "relative";
                     h.appendChild(b);
                     h.appendChild(c);
                     break;
@@ -1583,10 +1600,10 @@ AmCharts.AmChart = AmCharts.Class({
         this.freeLabelsSet.push(this.labelsSet)
     },
     initChart: function() {
-        AmCharts.applyLang(this.language);
+        AmCharts.applyLang(this.language, this);
         var a = this.numberFormatter;
-        a && (isNaN(a.precision) || (this.precision = a.precision), void 0 !== a.thousandsSeparator && (this.thousandsSeparator =
-            a.thousandsSeparator), void 0 !== a.decimalSeparator && (this.decimalSeparator = a.decimalSeparator));
+        a && (isNaN(a.precision) || (this.precision =
+            a.precision), void 0 !== a.thousandsSeparator && (this.thousandsSeparator = a.thousandsSeparator), void 0 !== a.decimalSeparator && (this.decimalSeparator = a.decimalSeparator));
         (a = this.percentFormatter) && !isNaN(a.precision) && (this.percentPrecision = a.precision);
         this.nf = {
             precision: this.precision,
@@ -1598,7 +1615,8 @@ AmCharts.AmChart = AmCharts.Class({
             thousandsSeparator: this.thousandsSeparator,
             decimalSeparator: this.decimalSeparator
         };
-        this.divIsFixed = AmCharts.findIfFixed(this.chartDiv);
+        this.divIsFixed =
+            AmCharts.findIfFixed(this.chartDiv);
         this.previousHeight = this.divRealHeight;
         this.previousWidth = this.divRealWidth;
         this.destroy();
@@ -1609,11 +1627,14 @@ AmCharts.AmChart = AmCharts.Class({
         var b = document.getElementsByTagName("html")[0];
         b && window.getComputedStyle && (b = window.getComputedStyle(b, null)) && (this.dmouseY = AmCharts.removePx(b.getPropertyValue("margin-top")), this.dmouseX = AmCharts.removePx(b.getPropertyValue("margin-left")));
         this.mouseMode = a;
-        (a = this.container) ? (a.container.innerHTML = "", this.chartDiv.appendChild(a.container), a.setSize(this.realWidth,
-            this.realHeight)) : a = new AmCharts.AmDraw(this.chartDiv, this.realWidth, this.realHeight, this);
-        if (AmCharts.VML || AmCharts.SVG) a.handDrawn = this.handDrawn, a.handDrawScatter = this.handDrawScatter, a.handDrawThickness = this.handDrawThickness, this.container = a, this.set && this.set.remove(), this.set = a.set(), this.gridSet && this.gridSet.remove(), this.gridSet = a.set(), this.cursorLineSet && this.cursorLineSet.remove(), this.cursorLineSet = a.set(), this.graphsBehindSet && this.graphsBehindSet.remove(), this.graphsBehindSet = a.set(),
-            this.bulletBehindSet && this.bulletBehindSet.remove(), this.bulletBehindSet = a.set(), this.columnSet && this.columnSet.remove(), this.columnSet = a.set(), this.graphsSet && this.graphsSet.remove(), this.graphsSet = a.set(), this.trendLinesSet && this.trendLinesSet.remove(), this.trendLinesSet = a.set(), this.axesLabelsSet && this.axesLabelsSet.remove(), this.axesLabelsSet = a.set(), this.axesSet && this.axesSet.remove(), this.axesSet = a.set(), this.cursorSet && this.cursorSet.remove(), this.cursorSet = a.set(), this.scrollbarsSet && this.scrollbarsSet.remove(),
-            this.scrollbarsSet = a.set(), this.bulletSet && this.bulletSet.remove(), this.bulletSet = a.set(), this.freeLabelsSet && this.freeLabelsSet.remove(), this.freeLabelsSet = a.set(), this.balloonsSet && this.balloonsSet.remove(), this.balloonsSet = a.set(), this.zoomButtonSet && this.zoomButtonSet.remove(), this.zoomButtonSet = a.set(), this.linkSet && this.linkSet.remove(), this.linkSet = a.set(), this.renderFix()
+        (a = this.container) ?
+            (a.container.innerHTML = "", this.chartDiv.appendChild(a.container), a.setSize(this.realWidth, this.realHeight)) : a = new AmCharts.AmDraw(this.chartDiv, this.realWidth, this.realHeight, this);
+        AmCharts.VML || AmCharts.SVG ? (a.handDrawn = this.handDrawn, a.handDrawScatter = this.handDrawScatter, a.handDrawThickness = this.handDrawThickness, this.container = a, this.set && this.set.remove(), this.set = a.set(), this.gridSet && this.gridSet.remove(), this.gridSet = a.set(), this.cursorLineSet && this.cursorLineSet.remove(), this.cursorLineSet =
+            a.set(), this.graphsBehindSet && this.graphsBehindSet.remove(), this.graphsBehindSet = a.set(), this.bulletBehindSet && this.bulletBehindSet.remove(), this.bulletBehindSet = a.set(), this.columnSet && this.columnSet.remove(), this.columnSet = a.set(), this.graphsSet && this.graphsSet.remove(), this.graphsSet = a.set(), this.trendLinesSet && this.trendLinesSet.remove(), this.trendLinesSet = a.set(), this.axesLabelsSet && this.axesLabelsSet.remove(), this.axesLabelsSet = a.set(), this.axesSet && this.axesSet.remove(), this.axesSet = a.set(),
+            this.cursorSet && this.cursorSet.remove(), this.cursorSet = a.set(), this.scrollbarsSet && this.scrollbarsSet.remove(), this.scrollbarsSet = a.set(), this.bulletSet && this.bulletSet.remove(), this.bulletSet = a.set(), this.freeLabelsSet && this.freeLabelsSet.remove(), this.freeLabelsSet = a.set(), this.balloonsSet && this.balloonsSet.remove(), this.balloonsSet = a.set(), this.zoomButtonSet && this.zoomButtonSet.remove(), this.zoomButtonSet = a.set(), this.linkSet && this.linkSet.remove(), this.linkSet = a.set(), this.renderFix()) : this.fire("failed", {
+            type: "failed",
+            chart: this
+        })
     },
     measure: function() {
         var a = this.div;
@@ -1622,8 +1643,7 @@ AmCharts.AmChart = AmCharts.Class({
                 c = a.offsetWidth,
                 d = a.offsetHeight,
                 e = this.container;
-            a.clientHeight &&
-                (c = a.clientWidth, d = a.clientHeight);
+            a.clientHeight && (c = a.clientWidth, d = a.clientHeight);
             var f = AmCharts.removePx(AmCharts.getStyle(a, "padding-left")),
                 g = AmCharts.removePx(AmCharts.getStyle(a, "padding-right")),
                 h = AmCharts.removePx(AmCharts.getStyle(a, "padding-top")),
@@ -1636,15 +1656,15 @@ AmCharts.AmChart = AmCharts.Class({
             a = f.width;
             f = f.height; - 1 != a.indexOf("px") && (c = AmCharts.removePx(a)); - 1 != f.indexOf("px") && (d = AmCharts.removePx(f));
             a = AmCharts.toCoordinate(this.width, c);
-            f = AmCharts.toCoordinate(this.height,
-                d);
+            f = AmCharts.toCoordinate(this.height, d);
             this.balloon = AmCharts.processObject(this.balloon, AmCharts.AmBalloon, this.theme);
             this.balloon.chart = this;
             (a != this.previousWidth || f != this.previousHeight) && 0 < a && 0 < f && (b.style.width = a + "px", b.style.height = f + "px", e && e.setSize(a, f));
             this.balloon.setBounds(2, 2, a - 2, f);
             this.realWidth = a;
             this.realHeight = f;
-            this.divRealWidth = c;
+            this.divRealWidth =
+                c;
             this.divRealHeight = d
         }
     },
@@ -1655,8 +1675,7 @@ AmCharts.AmChart = AmCharts.Class({
         this.interval = NaN
     },
     clearTimeOuts: function() {
-        var a =
-            this.timeOuts;
+        var a = this.timeOuts;
         if (a) {
             var b;
             for (b = 0; b < a.length; b++) clearTimeout(a[b])
@@ -1672,8 +1691,7 @@ AmCharts.AmChart = AmCharts.Class({
         a || AmCharts.removeChart(this)
     },
     setMouseCursor: function(a) {
-        "auto" ==
-            a && AmCharts.isNN && (a = "default");
+        "auto" == a && AmCharts.isNN && (a = "default");
         this.chartDiv.style.cursor = a;
         this.legendDiv.style.cursor = a
     },
@@ -1710,9 +1728,10 @@ AmCharts.AmChart = AmCharts.Class({
             c = AmCharts.text(this.container, c, f, this.fontFamily, e, d, k, h);
             c.translate(l, b);
             0 !== g && c.rotate(g);
-            a.url && (c.setAttr("cursor", "pointer"), c.click(function() {
+            a.url ? (c.setAttr("cursor", "pointer"), c.click(function() {
                 AmCharts.getURL(a.url)
-            }));
+            })) :
+                c.node.style.pointerEvents = "none";
             this.labelsSet.push(c);
             this.labels.push(c)
         }
@@ -1746,7 +1765,8 @@ AmCharts.AmChart = AmCharts.Class({
         if (b) {
             var c = this.legendDiv.offsetHeight,
                 b = b.position;
-            if ("top" == b || "bottom" == b) {
+            if ("top" == b || "bottom" ==
+                b) {
                 a -= c;
                 if (0 > a || isNaN(a)) a = 0;
                 this.chartDiv.style.height = a + "px"
@@ -1771,7 +1791,7 @@ AmCharts.AmChart = AmCharts.Class({
                 if (0 > a || isNaN(a)) a = 0;
                 g.width = a + "px";
                 "left" == c ? g.left = e + "px" : d.left = a + "px";
-                d.top = (b - f) / 2 + "px"
+                b > f && (d.top = (b - f) / 2 + "px")
             }
         }
         return a
@@ -1780,7 +1800,8 @@ AmCharts.AmChart = AmCharts.Class({
         var a = 0,
             b = this.titles;
         if (0 < b.length) {
-            var a = 15,
+            var a =
+                15,
                 c;
             for (c = 0; c < b.length; c++) {
                 var d = b[c].size;
@@ -1812,7 +1833,8 @@ AmCharts.AmChart = AmCharts.Class({
     },
     handleWheel: function(a) {
         if (this.mouseIsOver) {
-            var b = 0;
+            var b =
+                0;
             a || (a = window.event);
             a.wheelDelta ? b = a.wheelDelta / 120 : a.detail && (b = -a.detail / 3);
             b && this.handleWheelReal(b, a.shiftKey);
@@ -1832,17 +1854,17 @@ AmCharts.AmChart = AmCharts.Class({
             a.handleTouchEnd.call(a, b)
         }, !0)), b.addEventListener("mousedown", function(b) {
             a.handleMouseDown.call(a, b)
-        }, !0), b.addEventListener("mouseover",
-            function(b) {
-                a.handleMouseOver.call(a, b)
-            }, !0), b.addEventListener("mouseout", function(b) {
+        }, !0), b.addEventListener("mouseover", function(b) {
+            a.handleMouseOver.call(a, b)
+        }, !0), b.addEventListener("mouseout", function(b) {
             a.handleMouseOut.call(a, b)
         }, !0)) : (b.attachEvent("onmousedown", function(b) {
             a.handleMouseDown.call(a, b)
         }), b.attachEvent("onmouseover", function(b) {
             a.handleMouseOver.call(a, b)
         }), b.attachEvent("onmouseout", function(b) {
-            a.handleMouseOut.call(a, b)
+            a.handleMouseOut.call(a,
+                b)
         }))
     },
     dispDUpd: function() {
@@ -1899,8 +1921,9 @@ AmCharts.AmChart = AmCharts.Class({
         a.marginsUpdated = !1;
         clearTimeout(a.validateTO);
         var b = setTimeout(function() {
-            a.validateSize()
-        }, 5);
+                a.validateSize()
+            },
+            5);
         a.timeOuts.push(b);
         a.validateTO = b
     },
@@ -1908,7 +1931,7 @@ AmCharts.AmChart = AmCharts.Class({
         this.chartCreated && (this.dataChanged = !0, this.marginsUpdated = "xy" != this.type ? !1 : !0, this.initChart(a))
     },
     validateNow: function() {
-        this.chartRendered = this.listenersAdded = !1;
+        this.chartRendered = !1;
         this.write(this.div)
     },
     showItem: function(a) {
@@ -1974,8 +1997,7 @@ AmCharts.AmChart = AmCharts.Class({
                             var b = document.body,
                                 e, f;
                             b && (e = b.scrollLeft, y1 = b.scrollTop);
-                            if (b = document.documentElement) f = b.scrollLeft,
-                                y2 = b.scrollTop;
+                            if (b = document.documentElement) f = b.scrollLeft, y2 = b.scrollTop;
                             e = Math.max(e, f);
                             f = Math.max(y1, y2);
                             c += e;
@@ -2018,8 +2040,7 @@ AmCharts.AmChart = AmCharts.Class({
         this.listenTo(a, "clickMarker", c);
         this.listenTo(a, "rollOverItem", c);
         this.listenTo(a, "rollOutItem", c);
-        this.listenTo(a,
-            "rollOverMarker", c);
+        this.listenTo(a, "rollOverMarker", c);
         this.listenTo(a, "rollOutMarker", c);
         this.listenTo(a, "clickLabel", c);
         return a
@@ -2034,7 +2055,8 @@ AmCharts.AmChart = AmCharts.Class({
     },
     renderFix: function() {
         if (!AmCharts.VML) {
-            var a = this.container;
+            var a =
+                this.container;
             a && a.renderFix()
         }
     },
@@ -2042,8 +2064,7 @@ AmCharts.AmChart = AmCharts.Class({
         if (AmCharts.hasSVG) return this.container
     },
     animate: function(a, b, c, d, e, f, g) {
-        a["an_" + b] && AmCharts.removeFromArray(this.animations,
-            a["an_" + b]);
+        a["an_" + b] && AmCharts.removeFromArray(this.animations, a["an_" + b]);
         c = {
             obj: a,
             frame: 0,
@@ -2075,8 +2096,7 @@ AmCharts.AmChart = AmCharts.Class({
     updateAnimations: function() {
         var a;
         this.container && this.container.update();
-        for (a = this.animations.length -
-            1; 0 <= a; a--) {
+        for (a = this.animations.length - 1; 0 <= a; a--) {
             var b = this.animations[a],
                 c = 1E3 * b.time / AmCharts.updateRate,
                 d = b.frame + 1,
@@ -2088,7 +2108,8 @@ AmCharts.AmChart = AmCharts.Class({
                     h = Number(b.to) - g,
                     c = AmCharts[b.effect](0, d, g, h, c);
                 0 === h ? (this.animations.splice(a, 1), e.node.style[f] = Number(b.to) + b.suffix) : e.node.style[f] = c + b.suffix
-            } else e.node.style[f] = Number(b.to) + b.suffix, this.animations.splice(a, 1)
+            } else e.node.style[f] = Number(b.to) + b.suffix,
+                this.animations.splice(a, 1)
         }
     },
     inIframe: function() {
@@ -2096,6 +2117,49 @@ AmCharts.AmChart = AmCharts.Class({
             return window.self !== window.top
         } catch (a) {
             return !0
+        }
+    },
+    brr: function() {
+        var a = window.location.hostname.split("."),
+            b;
+        2 <= a.length && (b = a[a.length - 2] + "." + a[a.length - 1]);
+        this.amLink && (a = this.amLink.parentNode) && a.removeChild(this.amLink);
+        a = this.creditsPosition;
+        if ("amcharts.com" != b || !0 === this.inIframe()) {
+            var c = b = 0,
+                d = this.realWidth,
+                e = this.realHeight;
+            if ("serial" == this.type || "xy" == this.type) b = this.marginLeftReal, c = this.marginTopReal, d = b + this.plotAreaWidth, e =
+                c + this.plotAreaHeight;
+            var f = "http://gaocegege.github.io/Blog/about/",
+                g = "关于我 | 高策",
+                h = "高策出品";
+            "ammap" == this.product && (f = "http://www.ammap.com/javascript-maps/", g = "Interactive JavaScript maps", h = "JS map by amCharts");
+            var k = document.createElement("a"),
+                h = document.createTextNode(h);
+            k.setAttribute("href", f);
+            k.setAttribute("title", g);
+            k.appendChild(h);
+            this.chartDiv.appendChild(k);
+            this.amLink = k;
+            f = k.style;
+            f.position = "absolute";
+            f.textDecoration = "none";
+            f.color = this.color;
+            f.fontFamily =
+                this.fontFamily;
+            f.fontSize = this.fontSize + "px";
+            f.opacity = .7;
+            f.display = "block";
+            var g = k.offsetWidth,
+                k = k.offsetHeight,
+                h = 5 + b,
+                l = c + 5;
+            "bottom-left" == a && (h = 5 + b, l = e - k - 3);
+            "bottom-right" == a && (h = d - g - 5, l = e - k - 3);
+            "top-right" == a && (h = d - g - 5, l = c + 5);
+            f.left = h + "px";
+            f.top = l + "px"
         }
     }
 });
@@ -2314,433 +2378,438 @@ AmCharts.AmGraph = AmCharts.Class({
             r = this.columnCount,
             s = AmCharts.toCoordinate(this.cornerRadiusTop,
                 h / 2),
-            v = this.connect,
-            w = [],
+            w = this.connect,
+            v = [],
             t = [],
-            u, y, E, A, z = this.chart.graphs.length,
-            K, I = this.dx / this.tcc,
-            F = this.dy / this.tcc;
-        var H = f.stackType,
-            L = this.labelPosition,
-            ha = this.start,
-            ba = this.end,
-            $ = this.scrollbar,
-            Ra = this.categoryAxis,
+            u, x, E, A, z = this.chart.graphs.length,
+            H, F = this.dx / this.tcc,
+            G = this.dy / this.tcc,
+            V = f.stackType,
+            N = this.labelPosition,
+            ia = this.start,
+            da = this.end,
+            ba = this.scrollbar,
+            Sa = this.categoryAxis,
             na = this.baseCoord,
             ta = this.negativeBase,
-            V = this.columnIndex,
-            X = this.lineThickness,
-            Z = this.lineAlpha,
+            L = this.columnIndex,
+            Y = this.lineThickness,
+            $ = this.lineAlpha,
             oa = this.lineColorR,
-            R = this.dashLength,
-            Y = this.set,
-            qa = L,
-            G = this.getGradRotation(),
-            B = this.chart.columnSpacing,
-            W = Ra.cellWidth,
-            ca = (W * h - r) / r;
-        B > ca && (B = ca);
-        var ja, x, ab, jb = n + 1,
-            kb = m + 1,
-            bb =
-            0,
-            lb = 0,
-            mb, nb, cb, db, ob = this.fillColorsR,
+            W = this.dashLength,
+            Z = this.set,
+            pa, I = N,
+            D = this.getGradRotation(),
+            aa = this.chart.columnSpacing,
+            S = Sa.cellWidth,
+            Ta = (S * h - r) / r;
+        aa > Ta && (aa = Ta);
+        var T, y, bb, kb = n + 1,
+            lb = m + 1,
+            cb = 0,
+            mb = 0,
+            nb, ob, db, eb, pb =
+            this.fillColorsR,
             Da = this.negativeFillColors,
             wa = this.negativeLineColor,
-            Sa = this.fillAlphas,
-            Ta = this.negativeFillAlphas;
-        "object" == typeof Sa && (Sa = Sa[0]);
-        "object" == typeof Ta && (Ta = Ta[0]);
-        var eb = f.getCoordinate(f.min);
-        f.logarithmic && (eb = f.getCoordinate(f.minReal));
-        this.minCoord = eb;
+            Ua = this.fillAlphas,
+            Va = this.negativeFillAlphas;
+        "object" == typeof Ua && (Ua = Ua[0]);
+        "object" == typeof Va && (Va = Va[0]);
+        var fb = f.getCoordinate(f.min);
+        f.logarithmic && (fb = f.getCoordinate(f.minReal));
+        this.minCoord = fb;
         this.resetBullet && (this.bullet = "none");
-        if (!($ || "line" != g && "smoothedLine" != g && "step" != g || (1 == d.length && "step" != g && "none" == this.bullet && (this.bullet = "round", this.resetBullet = !0), !Da && void 0 == wa || l))) {
-            var La =
-                ta;
-            La > f.max && (La = f.max);
-            La < f.min && (La = f.min);
-            f.logarithmic && (La = f.minReal);
-            var Aa = f.getCoordinate(La),
-                Fb = f.getCoordinate(f.max);
-            q ? (jb = n, kb = Math.abs(Fb - Aa), mb = n, nb = Math.abs(eb - Aa), db = lb = 0, f.reversed ? (bb = 0, cb = Aa) : (bb = Aa, cb = 0)) : (kb = m, jb = Math.abs(Fb - Aa), nb = m, mb = Math.abs(eb - Aa), cb = bb = 0, f.reversed ? (db = p, lb = Aa) : db = Aa + 1)
+        if (!(ba || "line" != g && "smoothedLine" != g && "step" != g || (1 == d.length && "step" != g && "none" == this.bullet && (this.bullet = "round", this.resetBullet = !0), !Da && void 0 == wa || l))) {
+            var Na = ta;
+            Na > f.max && (Na = f.max);
+            Na < f.min && (Na = f.min);
+            f.logarithmic && (Na = f.minReal);
+            var Aa = f.getCoordinate(Na),
+                Hb = f.getCoordinate(f.max);
+            q ? (kb = n, lb = Math.abs(Hb - Aa), nb = n, ob = Math.abs(fb - Aa), eb = mb = 0, f.reversed ? (cb = 0, db = Aa) : (cb = Aa, db = 0)) : (lb = m, kb = Math.abs(Hb - Aa), ob = m, nb = Math.abs(fb - Aa), db = cb = 0, f.reversed ? (eb = p, mb = Aa) : eb = Aa + 1)
         }
         var Ba = Math.round;
-        this.pmx = Ba(bb);
-        this.pmy = Ba(lb);
-        this.pmh = Ba(jb);
-        this.pmw = Ba(kb);
-        this.nmx = Ba(cb);
-        this.nmy = Ba(db);
-        this.nmh = Ba(mb);
-        this.nmw = Ba(nb);
-        AmCharts.isModern || (this.nmy = this.nmx = 0,
-            this.nmh = this.height);
-        h = "column" == g ? (W * h - B * (r - 1)) / r : W * h;
+        this.pmx = Ba(cb);
+        this.pmy = Ba(mb);
+        this.pmh = Ba(kb);
+        this.pmw = Ba(lb);
+        this.nmx = Ba(db);
+        this.nmy = Ba(eb);
+        this.nmh = Ba(nb);
+        this.nmw = Ba(ob);
+        AmCharts.isModern || (this.nmy = this.nmx = 0, this.nmh = this.height);
+        this.clustered ||
+            (r = 1);
+        h = "column" == g ? (S * h - aa * (r - 1)) / r : S * h;
         1 > h && (h = 1);
         var J;
         if ("line" == g || "step" == g || "smoothedLine" == g) {
-            if (0 < ha) {
-                for (J = ha - 1; - 1 < J; J--)
-                    if (ja = d[J], x = ja.axes[f.id].graphs[b], ab = x.values.value, !isNaN(ab)) {
-                        ha = J;
+            if (0 < ia) {
+                for (J = ia - 1; - 1 < J; J--)
+                    if (T = d[J], y = T.axes[f.id].graphs[b], bb = y.values.value, !isNaN(bb)) {
+                        ia = J;
                         break
                     }
                 if (this.lineColorField)
-                    for (J = ha; - 1 < J; J--)
-                        if (ja = d[J], x = ja.axes[f.id].graphs[b], x.lineColor) {
-                            this.bulletColorSwitched = this.lineColorSwitched = x.lineColor;
+                    for (J = ia; - 1 < J; J--)
+                        if (T = d[J], y = T.axes[f.id].graphs[b], y.lineColor) {
+                            this.bulletColorSwitched = this.lineColorSwitched = y.lineColor;
                             break
                         }
                 if (this.fillColorsField)
-                    for (J = ha; - 1 < J; J--)
-                        if (ja = d[J], x = ja.axes[f.id].graphs[b], x.fillColors) {
-                            this.fillColorsSwitched = x.fillColors;
+                    for (J = ia; - 1 < J; J--)
+                        if (T = d[J], y = T.axes[f.id].graphs[b], y.fillColors) {
+                            this.fillColorsSwitched = y.fillColors;
                             break
                         }
                 if (this.dashLengthField)
-                    for (J = ha; - 1 < J; J--)
-                        if (ja = d[J], x = ja.axes[f.id].graphs[b], !isNaN(x.dashLength)) {
-                            this.dashLengthSwitched = x.dashLength;
+                    for (J =
+                        ia; - 1 < J; J--)
+                        if (T = d[J], y = T.axes[f.id].graphs[b], !isNaN(y.dashLength)) {
+                            this.dashLengthSwitched = y.dashLength;
                             break
                         }
             }
-            if (ba < d.length - 1)
-                for (J = ba + 1; J < d.length; J++)
-                    if (ja = d[J], x = ja.axes[f.id].graphs[b], ab = x.values.value, !isNaN(ab)) {
-                        ba = J;
+            if (da < d.length - 1)
+                for (J = da + 1; J < d.length; J++)
+                    if (T = d[J], y = T.axes[f.id].graphs[b], bb = y.values.value, !isNaN(bb)) {
+                        da = J;
                         break
                     }
         }
-        ba < d.length - 1 && ba++;
+        da < d.length - 1 && da++;
         var O = [],
             P = [],
             Ea = !1;
         if ("line" == g || "step" == g || "smoothedLine" == g)
-            if (this.stackable && "regular" == H || "100%" == H || this.fillToGraph) Ea = !0;
-        var Gb = this.noStepRisers,
-            fb = -1E3,
+            if (this.stackable && "regular" == V || "100%" == V || this.fillToGraph) Ea = !0;
+        var Ib = this.noStepRisers,
             gb = -1E3,
-            hb = this.minDistance,
-            Ma = !0,
-            Ua = !1;
-        for (J =
-            ha; J <= ba; J++) {
-            ja = d[J];
-            x = ja.axes[f.id].graphs[b];
-            x.index = J;
-            var Va, Na = NaN;
+            hb = -1E3,
+            ib = this.minDistance,
+            Fa = !0,
+            Wa = !1;
+        for (J = ia; J <= da; J++) {
+            T = d[J];
+            y = T.axes[f.id].graphs[b];
+            y.index = J;
+            var Xa, Ga = NaN;
             if (l && void 0 == this.openField)
-                for (var pb = J + 1; pb < d.length && (!d[pb] || !(Va = d[J + 1].axes[f.id].graphs[b]) || !Va.values || (Na = Va.values.value, isNaN(Na))); pb++);
-            var S, T, Q, da, la = NaN,
-                D = NaN,
+                for (var qb = J + 1; qb < d.length && (!d[qb] || !(Xa = d[J + 1].axes[f.id].graphs[b]) || !Xa.values || (Ga = Xa.values.value, isNaN(Ga))); qb++);
+            var X, Q, R, ea, la = NaN,
                 C = NaN,
-                N = NaN,
+                B = NaN,
                 M = NaN,
-                Fa = NaN,
+                K = NaN,
+                Ha = NaN,
                 xa = NaN,
-                Ga = NaN,
+                Ia = NaN,
                 ya = NaN,
-                aa = NaN,
-                ia = NaN,
-                ea = NaN,
+                ca = NaN,
+                ja = NaN,
                 fa = NaN,
+                ga = NaN,
                 U = NaN,
-                qb = NaN,
                 rb = NaN,
+                sb = NaN,
                 ka = NaN,
                 ra = void 0,
-                Ca = ob,
-                Wa = Sa,
+                Ca = pb,
+                Oa = Ua,
                 ua = oa,
-                pa, sa, Xa = this.pattern;
-            void 0 != x.pattern && (Xa = x.pattern);
-            void 0 != x.color && (Ca = x.color);
-            x.fillColors && (Ca = x.fillColors);
-            isNaN(x.alpha) ||
-                (Wa = x.alpha);
-            isNaN(x.dashLength) || (R = x.dashLength);
-            var va = x.values;
-            f.recalculateToPercents && (va = x.percents);
+                qa, sa, tb = this.proCandlesticks,
+                Ya = this.pattern;
+            void 0 != y.pattern && (Ya = y.pattern);
+            void 0 != y.color && (Ca = y.color);
+            y.fillColors && (Ca = y.fillColors);
+            isNaN(y.alpha) || (Oa = y.alpha);
+            isNaN(y.dashLength) || (W = y.dashLength);
+            var va = y.values;
+            f.recalculateToPercents && (va = y.percents);
             if (va) {
-                U = this.stackable && "none" != H && "3d" != H ? va.close : va.value;
-                if ("candlestick" == g || "ohlc" == g) U = va.close, rb = va.low, xa = f.getCoordinate(rb), qb = va.high, ya = f.getCoordinate(qb);
+                U = this.stackable && "none" != V && "3d" != V ? va.close : va.value;
+                if ("candlestick" == g || "ohlc" == g) U = va.close, sb = va.low, xa = f.getCoordinate(sb), rb = va.high, ya = f.getCoordinate(rb);
                 ka = va.open;
-                C = f.getCoordinate(U);
-                isNaN(ka) || (M = f.getCoordinate(ka), l && (Na = ka, ka = M = NaN));
-                l && (void 0 == this.openField ? Va && (Va.isNegative = Na < U ? !0 : !1) : x.isNegative = Na > U ? !0 : !1);
-                if (!$) switch (this.showBalloonAt) {
+                B = f.getCoordinate(U);
+                isNaN(ka) || (K = f.getCoordinate(ka), l && (Ga = ka, ka = K = NaN));
+                l && (void 0 == this.openField ? Xa && (Xa.isNegative = Ga < U ? !0 : !1, isNaN(Ga) && (y.isNegative = !Fa)) : y.isNegative = Ga > U ? !0 : !1);
+                if (!ba) switch (this.showBalloonAt) {
                     case "close":
-                        x.y = C;
+                        y.y =
+                            B;
                         break;
                     case "open":
-                        x.y = M;
+                        y.y = K;
                         break;
                     case "high":
-                        x.y = ya;
+                        y.y = ya;
                         break;
                     case "low":
-                        x.y = xa
+                        y.y = xa
                 }
-                var la = ja.x[Ra.id],
-                    Oa = this.periodSpan - 1,
-                    ma = Math.floor(W / 2) + Math.floor(Oa * W / 2),
+                var la = T.x[Sa.id],
+                    Pa = this.periodSpan - 1,
+                    ma = Math.floor(S / 2) + Math.floor(Pa * S / 2),
                     za = ma,
-                    Hb = 0;
-                "left" == this.stepDirection && (Hb = (2 * W + Oa * W) / 2, la -= Hb);
-                "start" == this.pointPosition && (la -= W / 2 + Math.floor(Oa * W / 2), ma = 0, za = Math.floor(W) + Math.floor(Oa * W));
-                "end" == this.pointPosition && (la += W / 2 + Math.floor(Oa * W / 2), ma = Math.floor(W) + Math.floor(Oa * W), za = 0);
-                if (Gb) {
-                    var sb = this.columnWidth;
-                    isNaN(sb) || (ma *= sb, za *= sb)
+                    Jb = 0;
+                "left" == this.stepDirection && (Jb = (2 * S + Pa * S) / 2, la -= Jb);
+                "start" == this.pointPosition && (la -= S / 2 + Math.floor(Pa * S / 2), ma = 0, za = Math.floor(S) + Math.floor(Pa * S));
+                "end" == this.pointPosition && (la += S / 2 + Math.floor(Pa * S / 2), ma = Math.floor(S) + Math.floor(Pa * S), za = 0);
+                if (Ib) {
+                    var ub = this.columnWidth;
+                    isNaN(ub) || (ma *= ub, za *= ub)
                 }
-                $ || (x.x = la); - 1E5 > la && (la = -1E5);
-                la > m +
-                    1E5 && (la = m + 1E5);
-                q ? (D = C, N = M, M = C = la, isNaN(ka) && !this.fillToGraph && (N = na), Fa = xa, Ga = ya) : (N = D = la, isNaN(ka) && !this.fillToGraph && (M = na));
-                U < ka && (x.isNegative = !0, Da && (Ca = Da), Ta && (Wa = Ta), void 0 != wa && (ua = wa));
-                Ua = !1;
-                isNaN(U) || (l ? U > Na ? (Ma && (Ua = !0), Ma = !1) : (Ma || (Ua = !0), Ma = !0) : x.isNegative = U < ta ? !0 : !1);
+                ba || (y.x = la); - 1E5 > la && (la = -1E5);
+                la >
+                    m + 1E5 && (la = m + 1E5);
+                q ? (C = B, M = K, K = B = la, isNaN(ka) && !this.fillToGraph && (M = na), Ha = xa, Ia = ya) : (M = C = la, isNaN(ka) && !this.fillToGraph && (K = na));
+                if (!tb && U < ka || tb && U < pa) y.isNegative = !0, Da && (Ca = Da), Va && (Oa = Va), void 0 != wa && (ua = wa);
+                Wa = !1;
+                isNaN(U) || (l ? U > Ga ? (Fa && (Wa = !0), Fa = !1) : (Fa || (Wa = !0), Fa = !0) : y.isNegative = U < ta ? !0 : !1, pa = U);
                 switch (g) {
                     case "line":
-                        if (isNaN(U)) v || (this.drawLineGraph(w, t, O, P), w = [], t = [], O = [], P = []);
+                        if (isNaN(U)) w || (this.drawLineGraph(v, t, O, P), v = [], t = [], O = [], P = []);
                         else {
-                            if (Math.abs(D - fb) >= hb || Math.abs(C - gb) >= hb) w.push(D), t.push(C), fb = D, gb = C;
-                            aa = D;
-                            ia = C;
-                            ea = D;
+                            if (Math.abs(C - gb) >= ib || Math.abs(B - hb) >= ib) v.push(C), t.push(B), gb = C, hb = B;
+                            ca = C;
+                            ja = B;
                             fa = C;
-                            !Ea || isNaN(M) || isNaN(N) || (O.push(N),
-                                P.push(M));
-                            if (Ua || void 0 != x.lineColor || void 0 != x.fillColors || !isNaN(x.dashLength)) this.drawLineGraph(w, t, O, P), w = [D], t = [C], O = [], P = [], !Ea || isNaN(M) || isNaN(N) || (O.push(N), P.push(M)), l ? Ma ? (this.lineColorSwitched = oa, this.fillColorsSwitched = ob) : (this.lineColorSwitched = wa, this.fillColorsSwitched = Da) : (this.lineColorSwitched = x.lineColor, this.fillColorsSwitched = x.fillColors), this.dashLengthSwitched = x.dashLength;
-                            x.gap && (this.drawLineGraph(w, t, O, P), w = [], t = [], O = [], P = [])
+                            ga = B;
+                            !Ea || isNaN(K) ||
+                                isNaN(M) || (O.push(M), P.push(K));
+                            if (Wa || void 0 != y.lineColor || void 0 != y.fillColors || !isNaN(y.dashLength)) this.drawLineGraph(v, t, O, P), v = [C], t = [B], O = [], P = [], !Ea || isNaN(K) || isNaN(M) || (O.push(M), P.push(K)), l ? Fa ? (this.lineColorSwitched = oa, this.fillColorsSwitched = pb) : (this.lineColorSwitched = wa, this.fillColorsSwitched = Da) : (this.lineColorSwitched = y.lineColor, this.fillColorsSwitched = y.fillColors), this.dashLengthSwitched = y.dashLength;
+                            y.gap && (this.drawLineGraph(v, t, O, P), v = [], t = [], O = [], P = [])
                         }
                         break;
                     case "smoothedLine":
-                        if (isNaN(U)) v ||
-                            (this.drawSmoothedGraph(w, t, O, P), w = [], t = [], O = [], P = []);
+                        if (isNaN(U)) w ||
+                            (this.drawSmoothedGraph(v, t, O, P), v = [], t = [], O = [], P = []);
                         else {
-                            if (Math.abs(D - fb) >= hb || Math.abs(C - gb) >= hb) w.push(D), t.push(C), fb = D, gb = C;
-                            aa = D;
-                            ia = C;
-                            ea = D;
+                            if (Math.abs(C - gb) >= ib || Math.abs(B - hb) >= ib) v.push(C), t.push(B), gb = C, hb = B;
+                            ca = C;
+                            ja = B;
                             fa = C;
-                            !Ea || isNaN(M) || isNaN(N) || (O.push(N), P.push(M));
-                            void 0 == x.lineColor && void 0 == x.fillColors && isNaN(x.dashLength) || (this.drawSmoothedGraph(w, t, O, P), w = [D], t = [C], O = [], P = [], !Ea || isNaN(M) || isNaN(N) || (O.push(N), P.push(M)), this.lineColorSwitched = x.lineColor, this.fillColorsSwitched = x.fillColors, this.dashLengthSwitched = x.dashLength);
-                            x.gap && (this.drawSmoothedGraph(w,
-                                t, O, P), w = [], t = [], O = [], P = [])
+                            ga = B;
+                            !Ea || isNaN(K) || isNaN(M) || (O.push(M), P.push(K));
+                            void 0 == y.lineColor && void 0 == y.fillColors && isNaN(y.dashLength) || (this.drawSmoothedGraph(v, t, O, P), v = [C], t = [B], O = [], P = [], !Ea || isNaN(K) || isNaN(M) || (O.push(M), P.push(K)), this.lineColorSwitched = y.lineColor, this.fillColorsSwitched = y.fillColors, this.dashLengthSwitched = y.dashLength);
+                            y.gap && (this.drawSmoothedGraph(v,
+                                t, O, P), v = [], t = [], O = [], P = [])
                         }
                         break;
                     case "step":
                         if (!isNaN(U)) {
-                            if (void 0 == x.lineColor && void 0 == x.fillColors && isNaN(x.dashLength) || (this.drawLineGraph(w, t, O, P), w = [], t = [], O = [], P = [], this.lineColorSwitched = x.lineColor, this.fillColorsSwitched = x.fillColors, this.dashLengthSwitched = x.dashLength), q ? (isNaN(u) || (w.push(u), t.push(C - ma)), t.push(C - ma), w.push(D), t.push(C + za), w.push(D), !Ea || isNaN(M) || isNaN(N) || (O.push(E), P.push(M - ma), O.push(N), P.push(M - ma), O.push(N), P.push(M + za))) : (isNaN(y) || (t.push(y), w.push(u), t.push(y),
-                                w.push(D - ma)), w.push(D - ma), t.push(C), w.push(D + za), t.push(C), !Ea || isNaN(M) || isNaN(N) || (O.push(N - ma), P.push(A), O.push(N - ma), P.push(M), O.push(N + za), P.push(M))), u = D, y = C, E = N, A = M, aa = D, ia = C, ea = D, fa = C, Ua && (this.drawLineGraph(w, t, O, P), w = [], t = [], O = [], P = [], l && (Ma ? (this.lineColorSwitched = oa, this.fillColorsSwitched = ob) : (this.lineColorSwitched = wa, this.fillColorsSwitched = Da))), Gb || x.gap) u = y = NaN, this.drawLineGraph(w, t, O, P), w = [], t = [], O = [], P = []
-                        } else if (!v) {
-                            if (1 >= this.periodSpan || 1 < this.periodSpan && D - u > ma + za) u = y = NaN;
-                            this.drawLineGraph(w, t, O, P);
-                            w = [];
+                            if (void 0 == y.lineColor && void 0 == y.fillColors && isNaN(y.dashLength) || (this.drawLineGraph(v, t, O, P), v = [], t = [], O = [], P = [], this.lineColorSwitched = y.lineColor, this.fillColorsSwitched = y.fillColors, this.dashLengthSwitched = y.dashLength), q ? (isNaN(u) || (v.push(u), t.push(B - ma)), t.push(B - ma), v.push(C), t.push(B + za), v.push(C), !Ea || isNaN(K) || isNaN(M) || (O.push(E), P.push(K - ma), O.push(M), P.push(K - ma), O.push(M), P.push(K + za))) : (isNaN(x) || (t.push(x), v.push(u), t.push(x),
+                                v.push(C - ma)), v.push(C - ma), t.push(B), v.push(C + za), t.push(B), !Ea || isNaN(K) || isNaN(M) || (O.push(M - ma), P.push(A), O.push(M - ma), P.push(K), O.push(M + za), P.push(K))), u = C, x = B, E = M, A = K, ca = C, ja = B, fa = C, ga = B, Wa && (this.drawLineGraph(v, t, O, P), v = [], t = [], O = [], P = [], l && (Fa ? (this.lineColorSwitched = oa, this.fillColorsSwitched = pb) : (this.lineColorSwitched = wa, this.fillColorsSwitched = Da))), Ib || y.gap) u = x = NaN, this.drawLineGraph(v, t, O, P), v = [], t = [], O = [], P = []
+                        } else if (!w) {
+                            if (1 >= this.periodSpan || 1 < this.periodSpan && C - u > ma + za) u = x = NaN;
+                            this.drawLineGraph(v, t, O, P);
+                            v = [];
                             t = [];
                             O = [];
                             P = []
                         }
                         break;
                     case "column":
-                        pa = ua;
-                        void 0 != x.lineColor && (pa = x.lineColor);
+                        qa = ua;
+                        void 0 != y.lineColor && (qa = y.lineColor);
+                        var Kb = this.topRadius;
                         if (!isNaN(U)) {
-                            l || (x.isNegative = U < ta ? !0 : !1);
-                            x.isNegative && (Da && (Ca = Da), void 0 != wa && (pa = wa));
-                            var Ib = f.min,
-                                Jb = f.max;
-                            if (!(U < Ib && ka < Ib || U > Jb && ka > Jb))
+                            l || (y.isNegative = U < ta ? !0 : !1);
+                            y.isNegative && (Da && (Ca = Da), void 0 != wa && (qa = wa));
+                            var Lb = f.min,
+                                Mb = f.max;
+                            if (!(U < Lb && ka < Lb || U > Mb && ka > Mb))
                                 if (q) {
-                                    "3d" == H ? (T = C - (r / 2 - this.depthCount + 1) * (h + B) + B / 2 + F * V, S = N + I * V) : (T = Math.floor(C - (r / 2 - V) * (h + B) + B / 2), S = N);
-                                    Q = h;
-                                    aa = D;
-                                    ia = T + h / 2;
-                                    ea = D;
-                                    fa = T + h / 2;
-                                    T + Q > n && (Q = n - T);
-                                    0 > T && (Q += T, T = 0);
-                                    da = D - N;
-                                    var Vb = S;
-                                    S = AmCharts.fitToBounds(S, 0, m);
-                                    da += Vb - S;
-                                    da = AmCharts.fitToBounds(da, -S, m - S + I * V);
-                                    T < n && 0 < Q && (ra = new AmCharts.Cuboid(e, da, Q, I - a.d3x, F - a.d3y, Ca, Wa, X, pa, Z, G, s, q, R, Xa), "bottom" != L && "inside" != L && "middle" != L && (L = f.reversed ? "left" : "right", 0 > U && (L = f.reversed ? "right" : "left")), "regular" == H || "100%" == H) && (aa += this.dx)
-                                } else {
-                                    "3d" == H ? (S = D - (r / 2 - this.depthCount + 1) * (h + B) + B / 2 + I * V, T = M + F * V) : (S = D - (r / 2 - V) * (h + B) + B / 2, T = M);
-                                    Q = h;
-                                    aa = S + h / 2;
-                                    ia = C;
-                                    ea = S + h / 2;
+                                    "3d" == V ? (Q = B - (r / 2 - this.depthCount + 1) * (h + aa) + aa / 2 + G * L, X = M + F * L) : (Q = Math.floor(B - (r / 2 - L) * (h + aa) + aa / 2), X = M);
+                                    R = h;
+                                    ca = C;
+                                    ja = Q + h / 2;
                                     fa = C;
-                                    S + Q > m + V * I && (Q = m - S + V * I);
-                                    0 > S && (Q += S, S = 0);
-                                    da = C - M;
-                                    var Wb = T;
-                                    T = AmCharts.fitToBounds(T, this.dy, n);
-                                    da += Wb - T;
-                                    da = AmCharts.fitToBounds(da, -T + F * V, n - T);
-                                    if (S < m + V * I && 0 < Q)
-                                        if (ra = new AmCharts.Cuboid(e, Q, da, I - a.d3x, F - a.d3y, Ca, Wa, X, pa, this.lineAlpha, G, s, q, R, Xa), 0 > U && "middle" != L && "inside" != L) L = "bottom";
-                                        else if (L = qa, "regular" == H || "100%" == H) ia += this.dy
+                                    ga = Q + h / 2;
+                                    Q + R > n + L * G && (R = n - Q + L * G);
+                                    Q < L * G && (R += Q, Q = L * G);
+                                    ea = C - M;
+                                    var Yb = X;
+                                    X = AmCharts.fitToBounds(X,
+                                        0, m);
+                                    ea += Yb - X;
+                                    ea = AmCharts.fitToBounds(ea, -X, m - X + F * L);
+                                    Q < n && 0 < R && (ra = new AmCharts.Cuboid(e, ea, R, F - a.d3x, G - a.d3y, Ca, Oa, Y, qa, $, D, s, q, W, Ya, Kb), "bottom" != N && "inside" != N && "middle" != N && (N = f.reversed ? "left" : "right", 0 > U && (N = f.reversed ? "right" : "left")), "regular" == V || "100%" == V) && (ca += this.dx)
+                                } else {
+                                    "3d" == V ? (X = C - (r / 2 - this.depthCount + 1) * (h + aa) + aa / 2 + F * L, Q = K + G * L) : (X = C - (r / 2 - L) * (h + aa) + aa / 2, Q = K);
+                                    R = h;
+                                    ca = X + h / 2;
+                                    ja = B;
+                                    fa = X + h / 2;
+                                    ga = B;
+                                    X + R > m + L * F && (R = m - X + L * F);
+                                    X < L * F && (R += X - L * F, X = L * F);
+                                    ea = B - K;
+                                    var Zb = Q;
+                                    Q = AmCharts.fitToBounds(Q, this.dy,
+                                        n);
+                                    ea += Zb - Q;
+                                    ea = AmCharts.fitToBounds(ea, -Q + G * L, n - Q);
+                                    if (X < m + L * F && 0 < R)
+                                        if (this.showOnAxis && (Q -= G / 2), ra = new AmCharts.Cuboid(e, R, ea, F - a.d3x, G - a.d3y, Ca, Oa, Y, qa, this.lineAlpha, D, s, q, W, Ya, Kb), 0 > U && "middle" != N && "inside" != N) N = "bottom";
+                                        else if (N = I, "regular" == V || "100%" == V) ja += this.dy
                                 }
-                            if (ra && (sa = ra.set, x.columnGraphics = sa, sa.translate(S, T), this.columnsSet.push(sa), (x.url || this.showHandOnHover) && sa.setAttr("cursor", "pointer"), !$)) {
-                                "none" == H && (K = q ? (this.end + 1 - J) * z - c : z * J + c);
-                                "3d" == H && (q ? (K = (this.end + 1 - J) * z - c - 1E3 * this.depthCount, aa += I * this.columnIndex, ea += I * this.columnIndex, x.y += I * this.columnIndex) :
-                                    (K = (z - c) * (J + 1) + 1E3 * this.depthCount, aa += 3, ia += F * this.columnIndex + 7, fa += F * this.columnIndex, x.y += F * this.columnIndex));
-                                if ("regular" == H || "100%" == H) "inside" != L && (L = "middle"), K = q ? 0 < va.value ? (this.end + 1 - J) * z + c : (this.end + 1 - J) * z - c : 0 < va.value ? z * J + c : z * J - c;
+                            if (ra && (sa = ra.set, y.columnGraphics = sa, sa.translate(X, Q), this.columnsSet.push(sa), (y.url || this.showHandOnHover) && sa.setAttr("cursor", "pointer"), !ba)) {
+                                "none" == V && (H = q ? (this.end + 1 - J) * z - c : z * J + c);
+                                "3d" == V && (q ? (H = (this.end + 1 - J) * z - c - 1E3 *
+                                    this.depthCount, ca += F * this.columnIndex, fa += F * this.columnIndex, y.y += F * this.columnIndex) : (H = (z - c) * (J + 1) + 1E3 * this.depthCount, ca += 3, ja += G * this.columnIndex + 7, ga += G * this.columnIndex, y.y += G * this.columnIndex));
+                                if ("regular" == V || "100%" == V) "inside" != N && (N = "middle"), H = q ? 0 < va.value ? (this.end + 1 - J) * z + c : (this.end + 1 - J) * z - c : 0 < va.value ? z * J + c : z * J - c;
                                 this.columnsArray.push({
                                     column: ra,
-                                    depth: K
+                                    depth: H
                                 });
-                                x.x = q ? T + Q / 2 : S + Q / 2;
+                                y.x = q ? Q + R / 2 : X + R / 2;
                                 this.ownColumns.push(ra);
-                                this.animateColumns(ra, J, D, N, C, M);
-                                this.addListeners(sa, x)
+                                this.animateColumns(ra, J, C, M, B, K);
+                                this.addListeners(sa, y)
                             }
                         }
                         break;
                     case "candlestick":
-                        if (!isNaN(ka) && !isNaN(U)) {
-                            var ib, tb;
-                            pa = ua;
-                            void 0 != x.lineColor && (pa = x.lineColor);
+                        if (!isNaN(ka) &&
+                            !isNaN(U)) {
+                            var jb, vb;
+                            qa = ua;
+                            void 0 != y.lineColor && (qa = y.lineColor);
                             if (q) {
-                                if (T =
-                                    C - h / 2, S = N, Q = h, T + Q > n && (Q = n - T), 0 > T && (Q += T, T = 0), T < n && 0 < Q) {
-                                    var ub, vb;
-                                    U > ka ? (ub = [D, Ga], vb = [N, Fa]) : (ub = [N, Ga], vb = [D, Fa]);
-                                    !isNaN(Ga) && !isNaN(Fa) && C < n && 0 < C && (ib = AmCharts.line(e, ub, [C, C], pa, Z, X), tb = AmCharts.line(e, vb, [C, C], pa, Z, X));
-                                    da = D - N;
-                                    ra = new AmCharts.Cuboid(e, da, Q, I, F, Ca, Sa, X, pa, Z, G, s, q, R, Xa)
+                                if (Q = B - h / 2, X = M, R = h, Q + R > n && (R = n - Q), 0 > Q && (R += Q, Q = 0), Q < n && 0 < R) {
+                                    var wb, xb;
+                                    U > ka ? (wb = [C, Ia], xb = [M, Ha]) : (wb = [M, Ia], xb = [C, Ha]);
+                                    !isNaN(Ia) && !isNaN(Ha) && B < n && 0 < B && (jb = AmCharts.line(e, wb, [B, B], qa, $, Y), vb = AmCharts.line(e, xb, [B, B], qa, $, Y));
+                                    ea = C - M;
+                                    ra = new AmCharts.Cuboid(e, ea, R, F, G, Ca, Ua, Y, qa, $, D, s, q, W, Ya)
                                 }
-                            } else if (S = D - h / 2, T = M + X / 2, Q = h, S + Q > m && (Q = m - S), 0 > S && (Q += S, S = 0), da = C - M, S < m && 0 < Q) {
-                                var ra = new AmCharts.Cuboid(e, Q, da, I, F, Ca, Wa, X, pa, Z, G, s, q, R, Xa),
-                                    wb, xb;
-                                U > ka ? (wb = [C, ya], xb = [M, xa]) : (wb = [M, ya], xb = [C, xa]);
-                                !isNaN(ya) && !isNaN(xa) &&
-                                    D < m && 0 < D && (ib = AmCharts.line(e, [D, D], wb, pa, Z, X), tb = AmCharts.line(e, [D, D], xb, pa, Z, X))
+                            } else if (X = C - h / 2, Q = K + Y / 2, R = h, X + R > m && (R = m - X), 0 > X && (R += X, X = 0), ea = B - K, X < m && 0 < R) {
+                                tb && U >= ka && (Oa = 0);
+                                var ra = new AmCharts.Cuboid(e, R, ea, F, G, Ca, Oa,
+                                        Y, qa, $, D, s, q, W, Ya),
+                                    yb, zb;
+                                U > ka ? (yb = [B, ya], zb = [K, xa]) : (yb = [K, ya], zb = [B, xa]);
+                                !isNaN(ya) && !isNaN(xa) && C < m && 0 < C && (jb = AmCharts.line(e, [C, C], yb, qa, $, Y), vb = AmCharts.line(e, [C, C], zb, qa, $, Y))
                             }
-                            ra && (sa = ra.set, x.columnGraphics = sa, Y.push(sa), sa.translate(S, T - X / 2), (x.url || this.showHandOnHover) && sa.setAttr("cursor", "pointer"), ib && (Y.push(ib), Y.push(tb)), aa = D, ia = C, q ? (fa = C, ea = D, "open" == k && (ea = N), "high" == k && (ea = Ga), "low" == k && (ea = Fa)) : (fa = C, "open" == k && (fa = M), "high" == k && (fa = ya), "low" == k && (fa = xa), ea = D), $ || (x.x = q ? T + Q / 2 : S + Q / 2, this.animateColumns(ra, J, D, N, C, M), this.addListeners(sa, x)))
+                            ra && (sa = ra.set, y.columnGraphics = sa, Z.push(sa), sa.translate(X, Q - Y / 2), (y.url || this.showHandOnHover) && sa.setAttr("cursor", "pointer"), jb && (Z.push(jb), Z.push(vb)), ca = C, ja = B, q ? (ga = B, fa = C, "open" == k && (fa = M), "high" == k && (fa = Ia), "low" == k && (fa = Ha)) : (ga = B, "open" == k && (ga = K), "high" == k && (ga = ya), "low" == k && (ga = xa), fa = C), ba || (y.x = q ? Q + R /
+                                2 : X + R / 2, this.animateColumns(ra, J, C, M, B, K), this.addListeners(sa, y)))
                         }
                         break;
                     case "ohlc":
-                        if (!(isNaN(ka) ||
-                            isNaN(qb) || isNaN(rb) || isNaN(U))) {
-                            U < ka && (x.isNegative = !0, void 0 != wa && (ua = wa));
-                            var yb, zb, Ab;
+                        if (!(isNaN(ka) || isNaN(rb) || isNaN(sb) || isNaN(U))) {
+                            U < ka && (y.isNegative = !0, void 0 != wa && (ua = wa));
+                            var Ab, Bb, Cb;
                             if (q) {
-                                var Bb = C - h / 2,
-                                    Bb = AmCharts.fitToBounds(Bb, 0, n),
-                                    Kb = AmCharts.fitToBounds(C, 0, n),
-                                    Cb = C + h / 2,
-                                    Cb = AmCharts.fitToBounds(Cb, 0, n);
-                                zb = AmCharts.line(e, [N, N], [Bb, Kb], ua, Z, X, R);
-                                0 < C && C < n && (yb = AmCharts.line(e, [Fa, Ga], [C, C], ua, Z, X, R));
-                                Ab = AmCharts.line(e, [D, D], [Kb, Cb], ua, Z, X, R);
-                                fa = C;
-                                ea = D;
-                                "open" == k && (ea = N);
-                                "high" == k && (ea = Ga);
-                                "low" == k && (ea = Fa)
-                            } else {
-                                var Db = D - h / 2,
-                                    Db = AmCharts.fitToBounds(Db, 0, m),
-                                    Lb = AmCharts.fitToBounds(D, 0, m),
-                                    Eb =
-                                    D + h / 2,
-                                    Eb = AmCharts.fitToBounds(Eb, 0, m);
-                                zb = AmCharts.line(e, [Db, Lb], [M, M], ua, Z, X, R);
-                                0 < D && D < m && (yb = AmCharts.line(e, [D, D], [xa, ya], ua, Z, X, R));
-                                Ab = AmCharts.line(e, [Lb, Eb], [C, C], ua, Z, X, R);
+                                var Db = B - h / 2,
+                                    Db = AmCharts.fitToBounds(Db, 0, n),
+                                    Nb = AmCharts.fitToBounds(B, 0, n),
+                                    Eb = B + h / 2,
+                                    Eb = AmCharts.fitToBounds(Eb, 0, n);
+                                Bb = AmCharts.line(e, [M, M], [Db, Nb], ua, $, Y, W);
+                                0 < B && B < n && (Ab = AmCharts.line(e, [Ha, Ia], [B, B], ua, $, Y, W));
+                                Cb = AmCharts.line(e, [C, C], [Nb, Eb], ua, $, Y, W);
+                                ga = B;
                                 fa = C;
                                 "open" == k && (fa = M);
-                                "high" == k && (fa = ya);
-                                "low" == k && (fa = xa);
-                                ea = D
+                                "high" == k && (fa = Ia);
+                                "low" == k && (fa = Ha)
+                            } else {
+                                var Fb = C - h / 2,
+                                    Fb = AmCharts.fitToBounds(Fb, 0, m),
+                                    Ob = AmCharts.fitToBounds(C, 0, m),
+                                    Gb = C + h / 2,
+                                    Gb = AmCharts.fitToBounds(Gb, 0, m);
+                                Bb = AmCharts.line(e, [Fb, Ob], [K, K], ua, $, Y, W);
+                                0 < C && C < m && (Ab = AmCharts.line(e, [C, C], [xa, ya], ua, $, Y, W));
+                                Cb = AmCharts.line(e, [Ob, Gb], [B, B], ua, $, Y, W);
+                                ga = B;
+                                "open" == k && (ga = K);
+                                "high" == k && (ga = ya);
+                                "low" == k && (ga = xa);
+                                fa = C
                             }
-                            Y.push(zb);
-                            Y.push(yb);
-                            Y.push(Ab);
-                            aa = D;
-                            ia = C
+                            Z.push(Bb);
+                            Z.push(Ab);
+                            Z.push(Cb);
+                            ca = C;
+                            ja = B
                         }
                 }
-                if (!$ && !isNaN(U)) {
-                    var Mb = this.hideBulletsCount;
-                    if (this.end - this.start <= Mb || 0 === Mb) {
-                        var Ha = this.createBullet(x, ea, fa, J);
-                        Ha || (Ha = 0);
-                        var Nb = this.labelText;
-                        if (Nb) {
-                            var ga = this.createLabel(x, 0, 0, Nb),
-                                Ia = 0,
-                                Ja = 0,
-                                Ob = ga.getBBox(),
-                                Pa = Ob.width,
-                                Ka = Ob.height;
-                            switch (L) {
+                if (!ba && !isNaN(U)) {
+                    var Pb = this.hideBulletsCount;
+                    if (this.end - this.start <= Pb || 0 === Pb) {
+                        var Ja = this.createBullet(y,
+                            fa, ga, J);
+                        Ja || (Ja = 0);
+                        var Qb = this.labelText;
+                        if (Qb) {
+                            var ha = this.createLabel(y, 0, 0, Qb),
+                                Ka = 0,
+                                La = 0,
+                                Rb = ha.getBBox(),
+                                Qa = Rb.width,
+                                Ma = Rb.height;
+                            switch (N) {
                                 case "left":
-                                    Ia = -(Pa / 2 + Ha / 2 + 3);
+                                    Ka = -(Qa / 2 + Ja / 2 + 3);
                                     break;
                                 case "top":
-                                    Ja = -(Ka / 2 + Ha / 2 + 3);
+                                    La = -(Ma / 2 + Ja / 2 + 3);
                                     break;
                                 case "right":
-                                    Ia = Ha / 2 + 2 + Pa / 2;
+                                    Ka = Ja / 2 + 2 + Qa / 2;
                                     break;
                                 case "bottom":
-                                    q && "column" == g ? (aa = na, 0 > U || 0 < U && f.reversed ? (Ia = -6, ga.attr({
+                                    q && "column" == g ? (ca = na, 0 > U || 0 < U && f.reversed ? (Ka = -6, ha.attr({
                                         "text-anchor": "end"
-                                    })) : (Ia = 6, ga.attr({
+                                    })) : (Ka = 6, ha.attr({
                                         "text-anchor": "start"
-                                    }))) : (Ja = Ha / 2 + Ka / 2, ga.x = -(Pa / 2 + 2));
+                                    }))) : (La = Ja / 2 + Ma / 2, ha.x = -(Qa / 2 + 2));
                                     break;
                                 case "middle":
-                                    "column" == g && (q ? (Ja = -(Ka / 2) + this.fontSize / 2, Ia = -(D - N) / 2 - I, Math.abs(D - N) < Pa && !this.showAllValueLabels && (ga.remove(), ga = null)) : (Ja = -(C - M) / 2 - F, Math.abs(C - M) < Ka && !this.showAllValueLabels &&
-                                        (ga.remove(), ga = null)));
+                                    "column" == g && (q ? (La = -(Ma / 2) + this.fontSize / 2, Ka = -(C - M) / 2 - F, Math.abs(C -
+                                        M) < Qa && !this.showAllValueLabels && (ha.remove(), ha = null)) : (La = -(B - K) / 2 - G, Math.abs(B - K) < Ma && !this.showAllValueLabels && (ha.remove(), ha = null)));
                                     break;
                                 case "inside":
-                                    q ? (Ja = -(Ka / 2) + this.fontSize / 2, Ia = 0 > da ? Pa / 2 + 6 : -Pa / 2 - 6) : Ja = 0 > da ? Ka : -Ka
+                                    q ? (La = -(Ma / 2) + this.fontSize / 2, Ka = 0 > ea ? Qa / 2 + 6 : -Qa / 2 - 6) : La = 0 > ea ? Ma : -Ma
                             }
-                            if (ga) {
-                                if (isNaN(ia) || isNaN(aa)) ga.remove(), ga = null;
-                                else if (aa += Ia, ia += Ja, ga.translate(aa, ia), q) {
-                                    if (0 > ia || ia > n) ga.remove(), ga = null
+                            if (ha) {
+                                if (isNaN(ja) || isNaN(ca)) ha.remove(), ha = null;
+                                else if (ca += Ka, ja += La, ha.translate(ca, ja), q) {
+                                    if (0 > ja || ja > n) ha.remove(), ha = null
                                 } else {
-                                    var Pb = 0;
-                                    "3d" == H && (Pb = I * V);
-                                    if (0 > aa || aa > m + Pb) ga.remove(), ga = null
+                                    var Sb = 0;
+                                    "3d" == V && (Sb = F * L);
+                                    if (0 > ca || ca > m + Sb) ha.remove(), ha = null
                                 }
-                                ga && this.allBullets.push(ga)
+                                ha && this.allBullets.push(ha)
                             }
                         }
-                        if ("regular" == H || "100%" == H) {
-                            var Qb = f.totalText;
-                            if (Qb) {
-                                var Qa = this.createLabel(x, 0, 0, Qb, f.totalTextColor);
-                                this.allBullets.push(Qa);
-                                var Rb = Qa.getBBox(),
-                                    Sb = Rb.width,
-                                    Tb = Rb.height,
-                                    Ya, Za, Ub = f.totals[J];
-                                Ub && Ub.remove();
-                                var $a = 0;
-                                "column" != g && ($a = Ha);
-                                q ? (Za = C, Ya = 0 > U ? D - Sb / 2 - 2 - $a : D + Sb / 2 + 3 + $a) : (Ya = D, Za = 0 > U ? C + Tb / 2 + $a : C - Tb / 2 - 3 - $a);
-                                Qa.translate(Ya, Za);
-                                f.totals[J] = Qa;
-                                q ? (0 > Za || Za > n) && Qa.remove() : (0 > Ya || Ya > m) && Qa.remove()
+                        if ("regular" == V || "100%" == V) {
+                            var Tb = f.totalText;
+                            if (Tb) {
+                                var Ra = this.createLabel(y, 0, 0, Tb, f.totalTextColor);
+                                this.allBullets.push(Ra);
+                                var Ub = Ra.getBBox(),
+                                    Vb = Ub.width,
+                                    Wb = Ub.height,
+                                    Za, $a, Xb = f.totals[J];
+                                Xb && Xb.remove();
+                                var ab = 0;
+                                "column" != g && (ab = Ja);
+                                q ? ($a = B, Za = 0 > U ? C - Vb / 2 - 2 - ab : C + Vb / 2 + 3 + ab) : (Za = C, $a = 0 > U ? B + Wb / 2 + ab : B - Wb / 2 - 3 - ab);
+                                Ra.translate(Za, $a);
+                                f.totals[J] = Ra;
+                                q ? (0 > $a || $a > n) && Ra.remove() : (0 > Za || Za > m) && Ra.remove()
                             }
                         }
                     }
                 }
             }
         }
-        if ("line" == g || "step" == g || "smoothedLine" == g) "smoothedLine" == g ? this.drawSmoothedGraph(w, t, O, P) : this.drawLineGraph(w, t, O, P), $ || this.launchAnimation();
+        if ("line" == g || "step" == g || "smoothedLine" == g) "smoothedLine" == g ? this.drawSmoothedGraph(v, t, O, P) : this.drawLineGraph(v, t, O, P), ba || this.launchAnimation();
         this.bulletsHidden && this.hideBullets()
     },
     animateColumns: function(a, b, c, d, e, f) {
@@ -2759,12 +2828,12 @@ AmCharts.AmGraph = AmCharts.Class({
         e = this.fontSize;
         void 0 === e && (this.fontSize = e = f.fontSize);
         var h = this.labelFunction;
-        d = f.formatString(d, a);
+        d = f.formatString(d,
+            a);
         d = AmCharts.cleanFromEmpty(d);
         h && (d = h(a, d));
         a = AmCharts.text(this.container, d, g, f.fontFamily, e);
-        a.node.style.pointerEvents =
-            "none";
+        a.node.style.pointerEvents = "none";
         a.translate(b, c);
         this.bulletSet.push(a);
         return a
@@ -2787,7 +2856,8 @@ AmCharts.AmGraph = AmCharts.Class({
             f.push(k);
             var m = e.lineAlpha,
                 n = e.lineThickness,
-                f = e.fillAlphas,
+                f =
+                e.fillAlphas,
                 p = e.lineColorR,
                 q = e.negativeLineAlpha;
             isNaN(q) && (q = m);
@@ -2796,34 +2866,34 @@ AmCharts.AmGraph = AmCharts.Class({
             var r = e.fillColorsR,
                 s = e.fillColorsSwitched;
             s && (r = s);
-            var v = e.dashLength;
-            (s = e.dashLengthSwitched) && (v = s);
+            var w = e.dashLength;
+            (s = e.dashLengthSwitched) && (w = s);
             var s = e.negativeLineColor,
-                w = e.negativeFillColors,
+                v = e.negativeFillColors,
                 t = e.negativeFillAlphas,
                 u = e.baseCoord;
             0 !== e.negativeBase && (u = e.valueAxis.getCoordinate(e.negativeBase));
-            m = AmCharts.line(h, a, b, p, m, n, v, !1, !0);
+            m = AmCharts.line(h, a, b, p, m, n, w, !1, !0);
             k.push(m);
             k.click(function(a) {
                 e.handleGraphEvent(a, "clickGraph")
             }).mouseover(function(a) {
-                e.handleGraphEvent(a, "rollOverGraph")
+                e.handleGraphEvent(a,
+                    "rollOverGraph")
             }).mouseout(function(a) {
                 e.handleGraphEvent(a, "rollOutGraph")
             });
-            void 0 === s || e.useNegativeColorIfDown || (n = AmCharts.line(h, a, b, s,
-                q, n, v, !1, !0), l.push(n));
+            void 0 === s || e.useNegativeColorIfDown || (n = AmCharts.line(h, a, b, s, q, n, w, !1, !0), l.push(n));
             if (0 < f || 0 < t)
-                if (n = a.join(";").split(";"), q = b.join(";").split(";"), m = g.type, "serial" == m ? 0 < c.length ? (c.reverse(), d.reverse(), n = a.concat(c), q = b.concat(d)) : e.rotate ? (q.push(q[q.length - 1]), n.push(u), q.push(q[0]), n.push(u), q.push(q[0]), n.push(n[0])) : (n.push(n[n.length - 1]), q.push(u), n.push(n[0]), q.push(u), n.push(a[0]), q.push(q[0])) : "xy" == m && (b = e.fillToAxis) && (AmCharts.isString(b) && (b = g.getValueAxisById(b)), "H" == b.orientation ? (u = "top" == b.position ? 0 : b.viH, n.push(n[n.length - 1]), q.push(u),
-                    n.push(n[0]), q.push(u), n.push(a[0]), q.push(q[0])) : (u = "left" == b.position ? 0 : b.viW, q.push(q[q.length - 1]), n.push(u), q.push(q[0]), n.push(u), q.push(q[0]), n.push(n[0]))), a = e.gradientRotation, 0 < f && (g = AmCharts.polygon(h, n, q, r, f, 1, "#000", 0, a), g.pattern(e.pattern), k.push(g)), w || void 0 !== s) isNaN(t) && (t = f), w || (w = s), h = AmCharts.polygon(h, n, q, w, t, 1, "#000", 0, a), h.pattern(e.pattern), l.push(h), l.click(function(a) {
-                    e.handleGraphEvent(a, "clickGraph")
-                }).mouseover(function(a) {
-                    e.handleGraphEvent(a, "rollOverGraph")
-                }).mouseout(function(a) {
-                    e.handleGraphEvent(a,
-                        "rollOutGraph")
-                });
+                if (n = a.join(";").split(";"), q = b.join(";").split(";"), m = g.type, "serial" == m ? 0 < c.length ? (c.reverse(), d.reverse(), n = a.concat(c), q = b.concat(d)) : e.rotate ? (q.push(q[q.length - 1]), n.push(u), q.push(q[0]), n.push(u), q.push(q[0]), n.push(n[0])) : (n.push(n[n.length - 1]), q.push(u), n.push(n[0]), q.push(u), n.push(a[0]), q.push(q[0])) : "xy" == m &&
+                    (b = e.fillToAxis) && (AmCharts.isString(b) && (b = g.getValueAxisById(b)), "H" == b.orientation ? (u = "top" == b.position ? 0 : b.viH, n.push(n[n.length - 1]), q.push(u), n.push(n[0]), q.push(u), n.push(a[0]), q.push(q[0])) : (u = "left" == b.position ? 0 : b.viW, q.push(q[q.length - 1]), n.push(u), q.push(q[0]), n.push(u), q.push(q[0]), n.push(n[0]))), a = e.gradientRotation, 0 < f && (g = AmCharts.polygon(h, n, q, r, f, 1, "#000", 0, a), g.pattern(e.pattern), k.push(g)), v || void 0 !== s) isNaN(t) && (t = f), v || (v = s), h = AmCharts.polygon(h, n, q, v, t, 1, "#000", 0, a), h.pattern(e.pattern),
+                    l.push(h), l.click(function(a) {
+                        e.handleGraphEvent(a, "clickGraph")
+                    }).mouseover(function(a) {
+                        e.handleGraphEvent(a, "rollOverGraph")
+                    }).mouseout(function(a) {
+                        e.handleGraphEvent(a, "rollOutGraph")
+                    });
             e.applyMask(l, k)
         }
     },
@@ -2848,17 +2918,17 @@ AmCharts.AmGraph = AmCharts.Class({
                 q = this.negativeLineColor,
                 r = this.negativeFillColors,
                 s = this.negativeFillAlphas,
-                v = this.baseCoord,
-                w = this.lineColorSwitched;
-            w && (n = w);
-            (w = this.fillColorsSwitched) && (p = w);
-            w = this.negativeLineAlpha;
-            isNaN(w) && (w = k);
+                w = this.baseCoord,
+                v = this.lineColorSwitched;
+            v && (n = v);
+            (v = this.fillColorsSwitched) && (p = v);
+            v = this.negativeLineAlpha;
+            isNaN(v) && (v = k);
             k = new AmCharts.Bezier(f, a, b, n, k, l, p, 0, e);
             g.push(k.path);
-            void 0 !== q && (l = new AmCharts.Bezier(f, a, b, q, w, l, p, 0, e), h.push(l.path));
-            0 < m && (k = a.join(";").split(";"), n = b.join(";").split(";"), l = "", 0 < c.length ? (c.push("M"), d.push("M"), c.reverse(), d.reverse(), k = a.concat(c), n = b.concat(d)) : (this.rotate ? (l += " L" + v + "," + b[b.length - 1], l += " L" + v + "," + b[0]) : (l += " L" + a[a.length - 1] + "," + v, l += " L" + a[0] + "," + v), l += " L" +
-                a[0] + "," + b[0]), c = new AmCharts.Bezier(f, k, n, NaN, 0, 0, p, m, e, l), c.path.pattern(this.pattern), g.push(c.path), r || void 0 !== q) && (s || (s = m), r || (r = q), a = new AmCharts.Bezier(f, a, b, NaN, 0, 0, r, s, e, l), a.path.pattern(this.pattern), h.push(a.path));
+            void 0 !== q && (l = new AmCharts.Bezier(f, a, b, q, v, l, p, 0, e), h.push(l.path));
+            0 < m && (k = a.join(";").split(";"), n = b.join(";").split(";"), l = "", 0 < c.length ? (c.push("M"), d.push("M"), c.reverse(),
+                d.reverse(), k = a.concat(c), n = b.concat(d)) : (this.rotate ? (l += " L" + w + "," + b[b.length - 1], l += " L" + w + "," + b[0]) : (l += " L" + a[a.length - 1] + "," + w, l += " L" + a[0] + "," + w), l += " L" + a[0] + "," + b[0]), c = new AmCharts.Bezier(f, k, n, NaN, 0, 0, p, m, e, l), c.path.pattern(this.pattern), g.push(c.path), r || void 0 !== q) && (s || (s = m), r || (r = q), a = new AmCharts.Bezier(f, a, b, NaN, 0, 0, r, s, e, l), a.path.pattern(this.pattern), h.push(a.path));
             this.applyMask(h, g)
         }
     },
@@ -2866,7 +2936,8 @@ AmCharts.AmGraph = AmCharts.Class({
         var a = this,
             b = a.chart.startDuration;
         if (0 < b && !a.animationPlayed) {
-            var c = a.set,
+            var c =
+                a.set,
                 d = a.bulletSet;
             AmCharts.VML || (c.attr({
                 opacity: a.startAlpha
@@ -2876,9 +2947,8 @@ AmCharts.AmGraph = AmCharts.Class({
             c.hide();
             d.hide();
             a.seqAn ? (b = setTimeout(function() {
-                    a.animateGraphs.call(a)
-                },
-                a.index * b * 1E3), a.timeOuts.push(b)) : a.animateGraphs()
+                a.animateGraphs.call(a)
+            }, a.index * b * 1E3), a.timeOuts.push(b)) : a.animateGraphs()
         }
     },
     animateGraphs: function() {
@@ -2893,7 +2963,8 @@ AmCharts.AmGraph = AmCharts.Class({
             a = a.startEffect;
         b && (this.rotate ? (b.translate(-1E3, e), c.translate(-1E3, e)) : (b.translate(d, -1E3), c.translate(d, -1E3)), b.animate({
             opacity: 1,
-            translate: d + "," + e
+            translate: d +
+                "," + e
         }, f, a), c.animate({
             opacity: 1,
             translate: d + "," + e
@@ -2919,49 +2990,50 @@ AmCharts.AmGraph = AmCharts.Class({
         return a
     },
     createBullet: function(a, b, c, d) {
-        d = this.container;
-        var e = this.bulletOffset,
-            f =
-            this.bulletSize;
-        isNaN(a.bulletSize) || (f = a.bulletSize);
-        var g = a.values.value,
-            h = this.maxValue,
-            k = this.minValue,
-            l = this.maxBulletSize,
-            m = this.minBulletSize;
-        isNaN(h) || (isNaN(g) || (f = (g - k) / (h - k) * (l - m) + m), k == h && (f = l));
-        h = f;
-        this.bulletAxis && (f = a.values.error, isNaN(f) || (g = f), f = this.bulletAxis.stepWidth * g);
-        f < this.minBulletSize && (f = this.minBulletSize);
-        this.rotate ? b = a.isNegative ? b - e : b + e : c = a.isNegative ? c + e : c - e;
-        var n, m = this.bulletColorR;
-        a.lineColor && (this.bulletColorSwitched = a.lineColor);
-        this.bulletColorSwitched && (m =
-            this.bulletColorSwitched);
-        a.isNegative && void 0 !== this.bulletColorNegative && (m = this.bulletColorNegative);
-        void 0 !== a.color && (m = a.color);
-        var p;
-        "xy" == this.chart.type && this.valueField && (p = this.pattern, a.pattern && (p = a.pattern));
-        e = this.bullet;
-        a.bullet && (e = a.bullet);
-        var g = this.bulletBorderThickness,
-            k = this.bulletBorderColorR,
-            l = this.bulletBorderAlpha,
-            q = this.bulletAlpha;
-        k || (k = m);
-        this.useLineColorForBulletBorder && (k = this.lineColorR);
-        var r = a.alpha;
-        isNaN(r) || (q = r);
-        if ("none" != this.bullet || a.bullet) n = AmCharts.bullet(d,
-            e, f, m, q, g, k, l, h, 0, p);
-        if (this.customBullet || a.customBullet) p = this.customBullet, a.customBullet && (p = a.customBullet), p && (n && n.remove(), "function" == typeof p ? (n = new p, n.chart = this.chart, a.bulletConfig && (n.availableSpace = c, n.graph = this, n.graphDataItem = a, n.bulletY = c, a.bulletConfig.minCoord = this.minCoord - c, n.bulletConfig = a.bulletConfig), n.write(d), n = n.set) : (this.chart.path && (p = this.chart.path + p), n = d.set(), d = d.image(p, 0, 0, f, f), n.push(d), this.centerCustomBullets && d.translate(-f / 2, -f / 2)));
-        n && ((a.url || this.showHandOnHover) &&
-            n.setAttr("cursor", "pointer"), "serial" == this.chart.type && (0 > b - 0 || b - 0 > this.width || c < -f / 2 || c - 0 > this.height) && (n.remove(), n = null), n && (this.bulletSet.push(n), n.translate(b, c), this.addListeners(n, a), this.allBullets.push(n)), a.bx = b, a.by = c);
-        a.bulletGraphics = n;
-        return f
+        if (!isNaN(b) && !isNaN(c)) {
+            d = this.container;
+            var e = this.bulletOffset,
+                f = this.bulletSize;
+            isNaN(a.bulletSize) || (f = a.bulletSize);
+            var g = a.values.value,
+                h = this.maxValue,
+                k = this.minValue,
+                l = this.maxBulletSize,
+                m = this.minBulletSize;
+            isNaN(h) || (isNaN(g) || (f = (g - k) / (h - k) * (l - m) + m), k == h && (f = l));
+            h = f;
+            this.bulletAxis && (f = a.values.error, isNaN(f) || (g = f), f = this.bulletAxis.stepWidth *
+                g);
+            f < this.minBulletSize && (f = this.minBulletSize);
+            this.rotate ? b = a.isNegative ? b - e : b + e : c = a.isNegative ? c + e : c - e;
+            var n, m = this.bulletColorR;
+            a.lineColor && (this.bulletColorSwitched = a.lineColor);
+            this.bulletColorSwitched && (m = this.bulletColorSwitched);
+            a.isNegative && void 0 !== this.bulletColorNegative && (m = this.bulletColorNegative);
+            void 0 !== a.color && (m = a.color);
+            var p;
+            "xy" == this.chart.type && this.valueField && (p = this.pattern, a.pattern && (p = a.pattern));
+            e = this.bullet;
+            a.bullet && (e = a.bullet);
+            var g = this.bulletBorderThickness,
+                k = this.bulletBorderColorR,
+                l = this.bulletBorderAlpha,
+                q = this.bulletAlpha;
+            k || (k = m);
+            this.useLineColorForBulletBorder && (k = this.lineColorR);
+            var r = a.alpha;
+            isNaN(r) || (q = r);
+            if ("none" != this.bullet || a.bullet) n = AmCharts.bullet(d, e, f, m, q, g, k, l, h, 0, p);
+            if (this.customBullet || a.customBullet) p = this.customBullet, a.customBullet && (p = a.customBullet), p && (n && n.remove(), "function" == typeof p ? (n = new p, n.chart = this.chart, a.bulletConfig && (n.availableSpace = c, n.graph = this, n.graphDataItem = a, n.bulletY = c, a.bulletConfig.minCoord = this.minCoord -
+                c, n.bulletConfig = a.bulletConfig), n.write(d), n = n.set) : (this.chart.path && (p = this.chart.path + p), n = d.set(), d = d.image(p, 0, 0, f, f), n.push(d), this.centerCustomBullets && d.translate(-f / 2, -f / 2)));
+            n && ((a.url || this.showHandOnHover) && n.setAttr("cursor", "pointer"), "serial" == this.chart.type && (0 > b - 0 || b - 0 > this.width || c < -f / 2 || c - 0 > this.height) && (n.remove(), n = null), n && (this.bulletSet.push(n), n.translate(b, c), this.addListeners(n, a), this.allBullets.push(n)), a.bx = b, a.by = c);
+            a.bulletGraphics = n;
+            return f
+        }
     },
     showBullets: function() {
-        var a = this.allBullets,
+        var a =
+            this.allBullets,
             b;
         this.bulletsHidden = !1;
         for (b = 0; b < a.length; b++) a[b].show()
@@ -2973,8 +3045,7 @@ AmCharts.AmGraph = AmCharts.Class({
         for (b = 0; b < a.length; b++) a[b].hide()
     },
     addListeners: function(a, b) {
-        var c =
-            this;
+        var c = this;
         a.mouseover(function(a) {
             c.handleRollOver(b, a)
         }).mouseout(function(a) {
@@ -2987,7 +3058,8 @@ AmCharts.AmGraph = AmCharts.Class({
         }).click(function(a) {
             c.handleClick(b, a)
         }).dblclick(function(a) {
-            c.handleDoubleClick(b, a)
+            c.handleDoubleClick(b,
+                a)
         }).contextmenu(function(a) {
             c.handleRightClick(b, a)
         })
@@ -3020,8 +3092,7 @@ AmCharts.AmGraph = AmCharts.Class({
                 var f = a.x,
                     g = a.y;
                 c.rotate && (f = a.y, g = a.x);
-                c.showBalloon(d, e, !0, f + c.marginLeftReal,
-                    g + c.marginTopReal)
+                c.showBalloon(d, e, !0, f + c.marginLeftReal, g + c.marginTopReal)
             }
         }
         this.handleGraphEvent(b, "rollOverGraph")
@@ -3041,7 +3112,8 @@ AmCharts.AmGraph = AmCharts.Class({
             this.fire("rollOutGraphItem", c);
             this.chart.fire("rollOutGraphItem", c)
         }
-        this.handleGraphEvent(b, "rollOutGraph")
+        this.handleGraphEvent(b,
+            "rollOutGraph")
     },
     handleClick: function(a, b) {
         if (a) {
@@ -3055,8 +3127,7 @@ AmCharts.AmGraph = AmCharts.Class({
                 event: b
             };
             this.fire("clickGraphItem", c);
-            this.chart.fire("clickGraphItem",
-                c);
+            this.chart.fire("clickGraphItem", c);
             AmCharts.getURL(a.url, this.urlTarget)
         }
         this.handleGraphEvent(b, "clickGraph")
@@ -3185,7 +3256,13 @@ AmCharts.ChartCursor = AmCharts.Class({
         c.fillAlpha = a.categoryBalloonAlpha;
         c.borderColor = d;
         c.color = a.color;
-        a.rotate && (c.pointerOrientation = "H");
+        d = a.valueLineAxis;
+        AmCharts.isString(d) && (d = b.getValueAxisById(d));
+        d || (d = b.valueAxes[0]);
+        a.valueLineAxis = d;
+        a.valueLineBalloonEnabled && (d = new AmCharts.AmBalloon, a.vaBalloon = d, AmCharts.copyProperties(c, d), d.animationDuration = 0, a.rotate || (d.pointerOrientation = "H"));
+        a.rotate && (c.pointerOrientation =
+            "H");
         a.extraWidth = 0;
         a.prevX = [];
         a.prevY = [];
@@ -3193,8 +3270,7 @@ AmCharts.ChartCursor = AmCharts.Class({
         a.prevTY = [];
         if (a.valueBalloonsEnabled)
             for (c = 0; c < b.graphs.length; c++) d = new AmCharts.AmBalloon, d.chart = b, AmCharts.copyProperties(b.balloon, d), b.graphs[c].valueBalloon = d;
-        "cursor" == a.type ? a.createCursor() :
-            a.createCrosshair();
+        "cursor" == a.type ? a.createCursor() : a.createCrosshair();
         a.interval = setInterval(function() {
             a.detectMovement.call(a)
         }, 40)
@@ -3209,24 +3285,20 @@ AmCharts.ChartCursor = AmCharts.Class({
         var a = this.chart,
             b = this.cursorAlpha,
             c = a.categoryAxis,
-            d = c.position,
-            e = c.inside,
-            f = c.axisThickness,
-            g = this.categoryBalloon,
-            h, k, l = a.dx,
-            m = a.dy,
-            n = this.x,
-            p = this.y,
-            q = this.width,
-            r = this.height,
-            a = a.rotate,
-            s = c.tickLength;
-        g.pointerWidth = s;
-        a ? (h = [0, q, q + l], k = [0, 0, m]) : (h = [l, 0, 0], k = [m, 0, r]);
-        this.line =
-            b = AmCharts.line(this.container, h, k, this.cursorColor, b, 1);
-        (h = this.fullRectSet) ? (h.push(b), h.translate(this.x, this.y)) : this.set.push(b);
-        a ? (e && (g.pointerWidth = 0), "right" == d ? e ? g.setBounds(n, p + m, n + q + l, p + r + m) : g.setBounds(n + q + l + f, p + m, n + q + 1E3, p + r + m) : e ? g.setBounds(n, p, q + n, r + p) : g.setBounds(-1E3, -1E3, n - s - f, p + r + 15)) : (g.maxWidth = q, c.parseDates && (s = 0, g.pointerWidth = 0), "top" == d ? e ? g.setBounds(n + l, p + m, q + l + n, r + p) : g.setBounds(n + l, -1E3, q + l + n, p + m - s - f) : e ? g.setBounds(n, p, q + n, r + p - s) : g.setBounds(n, p + r + s + f - 1, n + q, p + r + s + f));
+            d = this.categoryBalloon,
+            e, f, g, h;
+        g = a.dx;
+        h = a.dy;
+        var k = this.width,
+            l = this.height,
+            a = a.rotate;
+        d.pointerWidth = c.tickLength;
+        a ? (e = [0, k, k + g], f = [0, 0, h], g = [g, 0, 0], h = [h, 0, l]) : (e = [g, 0, 0], f = [h, 0, l], g = [0, k, k + g], h = [0, 0, h]);
+        this.line = e = AmCharts.line(this.container, e, f, this.cursorColor, b, 1);
+        (f = this.fullRectSet) ? (f.push(e), f.translate(this.x, this.y)) : this.set.push(e);
+        this.valueLineEnabled && (e = this.valueLineAlpha, isNaN(e) || (b = e), this.vLine = b = AmCharts.line(this.container, g, h, this.cursorColor, b, 1), this.set.push(b));
+        this.setBalloonBounds(d, c, a);
+        (c = this.vaBalloon) && this.setBalloonBounds(c, this.valueLineAxis, !a);
         this.hideCursor()
     },
     createCrosshair: function() {
@@ -3244,9 +3316,24 @@ AmCharts.ChartCursor = AmCharts.Class({
         var a = this.chart;
         if (a.mouseIsOver) {
             var b = a.mouseX - this.x,
-                c = a.mouseY - this.y; - .5 < b && b < this.width + 1 && 0 < c && c < this.height ? (this.drawing ? this.rolledOver || a.setMouseCursor("crosshair") : this.pan &&
-                (this.rolledOver || a.setMouseCursor("move")), this.rolledOver = !0, this.setPosition()) : this.rolledOver && (this.handleMouseOut(), this.rolledOver = !1)
+                c = a.mouseY - this.y; - .5 < b && b < this.width +
+                1 && 0 < c && c < this.height ? (this.drawing ? this.rolledOver || a.setMouseCursor("crosshair") : this.pan && (this.rolledOver || a.setMouseCursor("move")), this.rolledOver = !0, (this.valueLineEnabled || this.valueLineBalloonEnabled) && this.updateVLine(b, c), this.setPosition()) : this.rolledOver && (this.handleMouseOut(), this.rolledOver = !1)
         } else this.rolledOver && (this.handleMouseOut(), this.rolledOver = !1)
+    },
+    updateVLine: function(a, b) {
+        var c = this.vLine,
+            d = this.vaBalloon;
+        if ((c || d) && !this.panning && !this.drawing) {
+            c && c.show();
+            var e = this.valueLineAxis,
+                f, g = this.rotate;
+            g ? (c && c.translate(a, 0), e && (f = e.coordinateToValue(a)), c = a) : (c && c.translate(0, b), e && (f = e.coordinateToValue(b)), c = b - 1);
+            if (d && !isNaN(f) && this.prevLineValue != f) {
+                var h = e.formatValue(f, !0);
+                d && (this.setBalloonPosition(d, e, c, !g), d.showBalloon(h))
+            }
+            this.prevLineValue = f
+        }
     },
     getMousePosition: function() {
         var a, b = this.width,
@@ -3261,8 +3348,7 @@ AmCharts.ChartCursor = AmCharts.Class({
             c = a.mouseY - this.y,
             d = this.vLine,
             e = this.hLine,
-            b = AmCharts.fitToBounds(b,
-                0, this.width),
+            b = AmCharts.fitToBounds(b, 0, this.width),
             c = AmCharts.fitToBounds(c, 0, this.height);
         0 < this.cursorAlpha && (d.show(), e.show(), d.translate(b, 0), e.translate(0, c));
         this.zooming && (a.hideXScrollbar && (b = NaN), a.hideYScrollbar && (c = NaN), this.updateSelectionSize(b, c));
@@ -3278,7 +3364,8 @@ AmCharts.ChartCursor = AmCharts.Class({
         b.chart = a;
         b.zooming = this.zooming;
         b.x = a.mouseX - this.x;
-        b.y = a.mouseY - this.y;
+        b.y =
+            a.mouseY - this.y;
         this.fire("moved", b)
     },
     updateSelectionSize: function(a, b) {
@@ -3291,14 +3378,14 @@ AmCharts.ChartCursor = AmCharts.Class({
             h = this.height;
         isNaN(a) || (c > a && (e = a, g = c - a), c < a && (e = c, g = a - c), c == a && (e = a, g = 0), g += this.extraWidth, e -= this.extraWidth / 2);
         isNaN(b) || (d > b && (f = b, h = d - b), d < b && (f = d, h = b - d), d == b && (f = b, h = 0), h += this.extraWidth, f -= this.extraWidth / 2);
-        0 < g && 0 < h && (c = AmCharts.rect(this.container, g, h, this.cursorColor, this.selectionAlpha), c.translate(e + this.x, f + this.y), this.selection = c)
+        0 < g && 0 < h && (c = AmCharts.rect(this.container, g, h, this.cursorColor, this.selectionAlpha), c.translate(e + this.x, f + this.y),
+            this.selection = c)
     },
     arrangeBalloons: function() {
         var a = this.valueBalloons,
             b = this.x,
             c = this.y,
-            d = this.height +
-            c;
+            d = this.height + c;
         a.sort(this.compareY);
         var e;
         for (e = 0; e < a.length; e++) {
@@ -3322,12 +3409,12 @@ AmCharts.ChartCursor = AmCharts.Class({
         var b, c = this.x,
             d, e, f = a.length;
         for (e = 0; e < f; e++) {
-            var g = a[e].balloon;
+            var g =
+                a[e].balloon;
             b = g.bottom;
             var h = g.bottom - g.yPos,
                 k = f - e - 1;
-            0 < e && b - h < d + 3 && (g.setBounds(c, d + 3, c + this.width,
-                d + h + 3), g.prevX = this.prevX[k], g.prevY = this.prevY[k], g.prevTX = this.prevTX[k], g.prevTY = this.prevTY[k], g.draw());
+            0 < e && b - h < d + 3 && (g.setBounds(c, d + 3, c + this.width, d + h + 3), g.prevX = this.prevX[k], g.prevY = this.prevY[k], g.prevTX = this.prevTX[k], g.prevTY = this.prevTY[k], g.draw());
             g.set && g.set.show();
             this.prevX[k] = g.prevX;
             this.prevY[k] = g.prevY;
@@ -3345,7 +3432,8 @@ AmCharts.ChartCursor = AmCharts.Class({
         this.allBullets = b;
         var b = this.chart.graphs,
             c;
-        for (c = 0; c < b.length; c++) {
+        for (c =
+            0; c < b.length; c++) {
             var d = b[c];
             if (!d.hidden && d.balloonText) {
                 var e = this.data[this.index].axes[d.valueAxis.id].graphs[d.id],
@@ -3367,6 +3455,7 @@ AmCharts.ChartCursor = AmCharts.Class({
         this.selection = null;
         var a = this.categoryBalloon;
         a && a.destroy();
+        (a = this.vaBalloon) && a.destroy();
         this.destroyValueBalloons();
         AmCharts.remove(this.set)
     },
@@ -3377,8 +3466,7 @@ AmCharts.ChartCursor = AmCharts.Class({
         var a = this.valueBalloons;
         if (a) {
             var b;
-            for (b =
-                0; b < a.length; b++) a[b].balloon.hide()
+            for (b = 0; b < a.length; b++) a[b].balloon.hide()
         }
     },
     zoom: function(a, b, c, d) {
@@ -3397,8 +3485,8 @@ AmCharts.ChartCursor = AmCharts.Class({
         b = this.width;
         c = this.height;
         a = d.stepWidth;
-        this.fullWidth && (f = 1, d.parseDates && !d.equalSpacing && (f = d.minDuration()), e ? this.extraWidth = c = a * f : (this.extraWidth = b = a * f, this.categoryBalloon.minWidth = b), this.line &&
-            this.line.remove(), this.line = AmCharts.rect(this.container, b, c, this.cursorColor, this.cursorAlpha, 0), this.fullRectSet && this.fullRectSet.push(this.line));
+        this.fullWidth &&
+            (f = 1, d.parseDates && !d.equalSpacing && (f = d.minDuration()), e ? this.extraWidth = c = a * f : (this.extraWidth = b = a * f, this.categoryBalloon.minWidth = b), this.line && this.line.remove(), this.line = AmCharts.rect(this.container, b, c, this.cursorColor, this.cursorAlpha, 0), this.fullRectSet && this.fullRectSet.push(this.line));
         this.stepWidth = a;
         this.tempVal = this.valueBalloonsEnabled;
         this.valueBalloonsEnabled = !1;
@@ -3410,12 +3498,14 @@ AmCharts.ChartCursor = AmCharts.Class({
         a && a.hide()
     },
     hideCursor: function(a) {
-        void 0 === a && (a = !0);
+        void 0 ===
+            a && (a = !0);
         this.hideObj(this.set);
         this.hideObj(this.categoryBalloon);
         this.hideObj(this.line);
         this.hideObj(this.vLine);
         this.hideObj(this.hLine);
+        this.hideObj(this.vaBalloon);
         this.hideObj(this.allBullets);
         this.destroyValueBalloons();
         this.selectWithoutZooming || AmCharts.remove(this.selection);
@@ -3429,20 +3519,20 @@ AmCharts.ChartCursor = AmCharts.Class({
         this.normalizeBulletSize()
     },
     setPosition: function(a, b, c) {
-        void 0 === b && (b = !0);
+        void 0 ===
+            b && (b = !0);
         if ("cursor" == this.type) {
-            if (this.tempPosition = NaN, AmCharts.ifArray(this.data)) isNaN(a) && (a = this.getMousePosition()), (a != this.previousMousePosition || !0 === this.zoomed ||
-                this.oneBalloonOnly) && !isNaN(a) && ("mouse" == this.cursorPosition && (this.tempPosition = a), isNaN(c) && (c = this.chart.categoryAxis.xToIndex(a)), c != this.previousIndex || this.zoomed || "mouse" == this.cursorPosition || this.oneBalloonOnly) && (this.updateCursor(c, b), this.zoomed = !1), this.previousMousePosition = a
+            if (this.tempPosition = NaN, AmCharts.ifArray(this.data)) isNaN(a) && (a = this.getMousePosition()), (a != this.previousMousePosition || !0 === this.zoomed || this.oneBalloonOnly) && !isNaN(a) && ("mouse" == this.cursorPosition && (this.tempPosition = a), isNaN(c) && (c = this.chart.categoryAxis.xToIndex(a)), c != this.previousIndex || this.zoomed || "mouse" == this.cursorPosition || this.oneBalloonOnly) && (this.updateCursor(c, b), this.zoomed = !1), this.previousMousePosition = a
         } else this.updateCrosshair()
     },
     normalizeBulletSize: function() {
-        var a = this.resizedBullets;
+        var a =
+            this.resizedBullets;
         if (a)
             for (var b = 0; b < a.length; b++) {
                 var c = a[b],
                     d = c.bulletGraphics;
-                d && (d.translate(c.bx, c.by, 1), c = c.graph, isNaN(this.graphBulletAlpha) ||
-                    (d.setAttr("fill-opacity", c.bulletAlpha), d.setAttr("stroke-opacity", c.bulletBorderAlpha)))
+                d && (d.translate(c.bx, c.by, 1), c = c.graph, isNaN(this.graphBulletAlpha) || (d.setAttr("fill-opacity", c.bulletAlpha), d.setAttr("stroke-opacity", c.bulletBorderAlpha)))
             }
     },
     updateCursor: function(a, b) {
@@ -3450,7 +3540,9 @@ AmCharts.ChartCursor = AmCharts.Class({
             d = this.fullWidth,
             e = c.mouseX - this.x,
             f = c.mouseY - this.y;
-        this.drawingNow && (AmCharts.remove(this.drawingLine), this.drawingLine = AmCharts.line(this.container, [this.x + this.drawStartX, this.x + e], [this.y + this.drawStartY, this.y + f], this.cursorColor, 1, 1));
+        this.drawingNow && (AmCharts.remove(this.drawingLine), this.drawingLine = AmCharts.line(this.container, [this.x + this.drawStartX, this.x + e], [this.y + this.drawStartY, this.y +
+            f
+        ], this.cursorColor, 1, 1));
         if (this.enabled) {
             void 0 === b && (b = !0);
             this.index = a += this.adjustment;
@@ -3466,22 +3558,19 @@ AmCharts.ChartCursor = AmCharts.Class({
             if (q) {
                 var r = q.x[g.id],
                     s = c.rotate,
-                    v = g.inside,
                     w = this.stepWidth,
-                    t = this.categoryBalloon,
-                    u = this.firstTime,
-                    y = this.lastTime,
-                    E = this.cursorPosition,
-                    A = g.position,
-                    z = this.zooming,
-                    K = this.panning,
-                    I = c.graphs,
-                    F = g.axisThickness;
-                if (c.mouseIsOver || z || K || this.forceShow)
-                    if (this.forceShow = !1, K) {
+                    v = this.categoryBalloon,
+                    t = this.firstTime,
+                    u = this.lastTime,
+                    x = this.cursorPosition,
+                    E = this.zooming,
+                    A = this.panning,
+                    z = c.graphs;
+                if (c.mouseIsOver || E || A || this.forceShow)
+                    if (this.forceShow = !1, A) {
                         var h = this.panClickPos,
                             c = this.panClickEndTime,
-                            z = this.panClickStartTime,
+                            E = this.panClickStartTime,
                             H = this.panClickEnd,
                             l = this.panClickStart,
                             e = (s ? h - f : h - e) / w;
@@ -3489,95 +3578,125 @@ AmCharts.ChartCursor = AmCharts.Class({
                         0 !== e && (h = {
                             type: "zoomed",
                             target: this
-                        }, h.chart = this.chart, g.parseDates && !g.equalSpacing ? (c + e > y && (e = y - c), z + e < u && (e = u - z), h.start = Math.round(z + e), h.end = Math.round(c + e), this.fire(h.type, h)) : H + e >= this.data.length || 0 > l + e || (h.start = l + e, h.end = H + e, this.fire(h.type, h)))
+                        }, h.chart = this.chart, g.parseDates && !g.equalSpacing ? (c + e > u && (e = u - c), E + e < t && (e = t - E), h.start = Math.round(E + e), h.end = Math.round(c + e), this.fire(h.type, h)) : H + e >= this.data.length || 0 > l + e || (h.start = l + e, h.end = H + e, this.fire(h.type, h)))
                     } else {
-                        "start" == E ? r -= g.cellWidth / 2 : "mouse" == E && (c.mouseIsOver ? r = s ? f - 2 : e - 2 : isNaN(this.tempPosition) || (r = this.tempPosition - 2));
+                        "start" == x ? r -= g.cellWidth / 2 : "mouse" == x && (c.mouseIsOver ? r = s ? f - 2 : e - 2 : isNaN(this.tempPosition) || (r = this.tempPosition - 2));
                         if (s) {
                             if (0 > r)
-                                if (z) r = 0;
+                                if (E) r =
+                                    0;
                                 else {
                                     this.hideCursor();
                                     return
                                 }
                             if (r > p + 1)
-                                if (z) r = p + 1;
+                                if (E) r = p + 1;
                                 else {
                                     this.hideCursor();
                                     return
                                 }
                         } else {
                             if (0 > r)
-                                if (z) r =
-                                    0;
+                                if (E) r = 0;
                                 else {
                                     this.hideCursor();
                                     return
                                 }
                             if (r > n)
-                                if (z) r = n;
+                                if (E) r = n;
                                 else {
                                     this.hideCursor();
                                     return
                                 }
                         } if (0 < this.cursorAlpha) {
-                            var L = this.line;
-                            s ? (u = 0, y = r + k, d && (y -= g.cellWidth / 2)) : (u = r, y = 0, d && (u -= g.cellWidth / 2));
+                            var F = this.line;
+                            s ? (t = 0, u = r + k, d && (u -= g.cellWidth / 2)) : (t = r, u = 0, d && (t -= g.cellWidth / 2));
                             w = this.animationDuration;
-                            0 < w && !this.zooming ? isNaN(this.previousX) ? L.translate(u, y) : (L.translate(this.previousX, this.previousY), L.animate({
-                                translate: u + "," + y
-                            }, w, "easeOutSine")) : L.translate(u, y);
-                            this.previousX = u;
-                            this.previousY = y;
-                            L.show()
+                            0 < w && !this.zooming ? isNaN(this.previousX) ? F.translate(t, u) : (F.translate(this.previousX, this.previousY), F.animate({
+                                translate: t + "," + u
+                            }, w, "easeOutSine")) : F.translate(t, u);
+                            this.previousX = t;
+                            this.previousY =
+                                u;
+                            F.show()
                         }
                         this.linePos = s ? r + k : r;
-                        z && (d && L.hide(), s ? this.updateSelectionSize(NaN, r) : this.updateSelectionSize(r,
-                            NaN));
+                        E && (d && F.hide(), s ? this.updateSelectionSize(NaN, r) : this.updateSelectionSize(r, NaN));
                         w = !0;
-                        z && (w = !1);
-                        this.categoryBalloonEnabled && w ? (s ? (v && ("right" == A ? t.setBounds(l, m + k, l + n + h, m + r + k) : t.setBounds(l, m + k, l + n + h, m + r)), "right" == A ? v ? t.setPosition(l + n + h, m + r + k) : t.setPosition(l + n + h + F, m + r + k) : v ? t.setPosition(l, m + r) : t.setPosition(l - F, m + r)) : "top" == A ? v ? t.setPosition(l + r + h, m + k) : t.setPosition(l + r + h, m + k - F + 1) : v ? t.setPosition(l + r, m + p) : t.setPosition(l + r, m + p + F - 1), (u = this.categoryBalloonFunction) ? t.showBalloon(u(q.category)) : g.parseDates ? (g = AmCharts.formatDate(q.category, this.categoryBalloonDateFormat), -1 != g.indexOf("fff") && (g = AmCharts.formatMilliseconds(g, q.category)), t.showBalloon(g)) : t.showBalloon(AmCharts.fixNewLines(q.category))) : t.hide();
-                        I && this.bulletsEnabled && this.showBullets();
+                        E && (w = !1);
+                        this.categoryBalloonEnabled && w ? (this.setBalloonPosition(v, g, r, s), (t = this.categoryBalloonFunction) ? v.showBalloon(t(q.category)) : g.parseDates ? (g = AmCharts.formatDate(q.category, this.categoryBalloonDateFormat, c), -1 != g.indexOf("fff") && (g = AmCharts.formatMilliseconds(g, q.category)), v.showBalloon(g)) : v.showBalloon(AmCharts.fixNewLines(q.category))) : v.hide();
+                        z && this.bulletsEnabled &&
+                            this.showBullets();
                         if (this.oneBalloonOnly) {
-                            k = Infinity;
-                            for (g = 0; g < I.length; g++) u = I[g], u.showBalloon && !u.hidden && u.balloonText && (y = q.axes[u.valueAxis.id].graphs[u.id], t = y.y, isNaN(t) || (s ? Math.abs(e - t) < k && (k = Math.abs(e - t), H = u) : Math.abs(f - t) < k && (k = Math.abs(f - t), H = u)));
+                            r = Infinity;
+                            for (g = 0; g < z.length; g++) t = z[g], t.showBalloon && !t.hidden && t.balloonText && (u = q.axes[t.valueAxis.id].graphs[t.id], v = u.y, isNaN(v) || (s ? Math.abs(e - v) < r && (r = Math.abs(e - v), H = t) : Math.abs(f - v) < r && (r = Math.abs(f - v), H = t)));
                             this.mostCloseGraph && (H = this.mostCloseGraph)
                         }
-                        if (a != this.previousIndex ||
-                            H != this.previousMostCloseGraph)
-                            if (this.normalizeBulletSize(), this.destroyValueBalloons(), this.resizedBullets = [], I && this.valueBalloonsEnabled && w && c.balloon.enabled) {
-                                this.valueBalloons = w = [];
-                                for (g = 0; g < I.length; g++)
-                                    if (u = I[g], t = NaN, (!this.oneBalloonOnly || u == H) && u.showBalloon && !u.hidden && u.balloonText && ("step" == u.type && "left" == u.stepDirection && (q = this.data[a + 1]), q)) {
-                                        if (y = q.axes[u.valueAxis.id].graphs[u.id]) t = y.y;
-                                        if (this.showNextAvailable && isNaN(t) && a + 1 < this.data.length)
-                                            for (k = a + 1; k < this.data.length; k++)
-                                                if (r =
-                                                    this.data[k])
-                                                    if (y = r.axes[u.valueAxis.id].graphs[u.id], t = y.y, !isNaN(t)) break;
-                                        if (!isNaN(t)) {
-                                            r = y.x;
-                                            v = !0;
+                        if (a != this.previousIndex || H != this.previousMostCloseGraph)
+                            if (this.normalizeBulletSize(), this.destroyValueBalloons(), this.resizedBullets = [], z && this.valueBalloonsEnabled && w && c.balloon.enabled) {
+                                this.valueBalloons =
+                                    w = [];
+                                for (g = 0; g < z.length; g++)
+                                    if (t = z[g], v = NaN, (!this.oneBalloonOnly || t == H) && t.showBalloon && !t.hidden && t.balloonText && ("step" == t.type && "left" == t.stepDirection && (q = this.data[a + 1]), q)) {
+                                        if (u = q.axes[t.valueAxis.id].graphs[t.id]) v = u.y;
+                                        if (this.showNextAvailable && isNaN(v) && a + 1 < this.data.length)
+                                            for (r = a + 1; r < this.data.length; r++)
+                                                if (d = this.data[r])
+                                                    if (u = d.axes[t.valueAxis.id].graphs[t.id], v = u.y, !isNaN(v)) break;
+                                        if (!isNaN(v)) {
+                                            d = u.x;
+                                            k = !0;
                                             if (s) {
-                                                if (k = t, 0 > r || r > p) v = !1
-                                            } else if (k = r, r = t, 0 > k || k > n + h + 1) v = !1;
-                                            v && (1 != this.graphBulletSize && AmCharts.isModern && (v = y.bulletGraphics) && (v.getBBox(), v.translate(y.bx, y.by, this.graphBulletSize), this.resizedBullets.push(y), A = this.graphBulletAlpha, isNaN(A) || (v.setAttr("fill-opacity", A), v.setAttr("stroke-opacity", A))), v = u.valueBalloon, A = c.getBalloonColor(u, y), v.setBounds(l, m, l + n, m + p), v.pointerOrientation = "H",
-                                                F = this.balloonPointerOrientation, "vertical" == F && (v.pointerOrientation = "V"), "horizontal" == F && (v.pointerOrientation = "H"), v.changeColor(A), void 0 !== u.balloonAlpha && (v.fillAlpha = u.balloonAlpha), void 0 !== u.balloonTextColor && (v.color = u.balloonTextColor), v.setPosition(k + l, r + m), k = c.formatString(u.balloonText, y, !0), (r = u.balloonFunction) && (k = r(y, u).toString()), "" !== k && (s ? v.showBalloon(k) : (v.text = k, v.show = !0), w.push({
-                                                    yy: t,
-                                                    balloon: v
-                                                })), !s && v.set && (v.set.hide(), u = v.textDiv) && (u.style.visibility = "hidden"))
+                                                if (r = v, 0 > d || d > p) k = !1
+                                            } else if (r = d, d = v, 0 > r || r > n + h + 1) k = !1;
+                                            k && (k = this.graphBulletSize,
+                                                F = this.graphBulletAlpha, 1 == k && isNaN(F) || !AmCharts.isModern || !(x = u.bulletGraphics) || (x.getBBox(), x.translate(u.bx, u.by, k), this.resizedBullets.push(u), isNaN(F) || (x.setAttr("fill-opacity", F), x.setAttr("stroke-opacity", F))), k = t.valueBalloon, F = c.getBalloonColor(t, u), k.setBounds(l, m, l + n, m + p), k.pointerOrientation = "H", x = this.balloonPointerOrientation, "vertical" == x && (k.pointerOrientation = "V"), "horizontal" == x && (k.pointerOrientation = "H"), k.changeColor(F), void 0 !== t.balloonAlpha && (k.fillAlpha = t.balloonAlpha),
+                                                void 0 !== t.balloonTextColor && (k.color = t.balloonTextColor), k.setPosition(r + l, d + m), r = c.formatString(t.balloonText, u, !0), (d = t.balloonFunction) && (r = d(u, t).toString()), "" !== r && (s ? k.showBalloon(r) : (k.text = r, k.show = !0), w.push({
+                                                    yy: v,
+                                                    balloon: k
+                                                })), !s && k.set && (k.set.hide(), t = k.textDiv) && (t.style.visibility = "hidden"))
                                         }
                                     }
-                                this.avoidBalloonOverlapping &&
-                                    this.arrangeBalloons()
+                                this.avoidBalloonOverlapping && this.arrangeBalloons()
                             }
                         b ? (h = {
                             type: "changed"
-                        }, h.index = a, h.chart = this.chart, h.zooming = z, h.mostCloseGraph = H, h.position = s ? f : e, h.target = this, c.fire("changed", h), this.fire("changed", h), this.skipZoomDispatch = !1) : (this.skipZoomDispatch = !0, c.updateLegendValues(a));
+                        }, h.index = a, h.chart = this.chart, h.zooming = E, h.mostCloseGraph = H, h.position = s ? f : e, h.target = this, c.fire("changed", h), this.fire("changed",
+                            h), this.skipZoomDispatch = !1) : (this.skipZoomDispatch = !0, c.updateLegendValues(a));
                         this.previousIndex = a;
                         this.previousMostCloseGraph = H
                     }
             }
         } else this.hideCursor()
+    },
+    setBalloonPosition: function(a, b, c, d) {
+        var e = b.position,
+            f = b.inside;
+        b = b.axisThickness;
+        var g = this.chart,
+            h = g.dx,
+            g = g.dy,
+            k = this.x,
+            l = this.y,
+            m = this.width,
+            n = this.height;
+        d ? (f && ("right" == e ? a.setBounds(k, l + g, k + m + h, l + c + g) : a.setBounds(k, l + g, k + m + h, l + c)), "right" == e ? f ? a.setPosition(k + m + h, l + c + g) : a.setPosition(k + m + h + b, l + c + g) : f ? a.setPosition(k, l + c) : a.setPosition(k -
+            b, l + c)) : "top" == e ? f ? a.setPosition(k + c + h, l + g) : a.setPosition(k + c + h, l + g - b + 1) : f ? a.setPosition(k + c, l + n) : a.setPosition(k + c, l + n + b - 1)
+    },
+    setBalloonBounds: function(a, b, c) {
+        var d = b.position,
+            e = b.inside,
+            f = b.axisThickness,
+            g = b.tickLength,
+            h = this.chart,
+            k = h.dx,
+            h = h.dy,
+            l = this.x,
+            m = this.y,
+            n = this.width,
+            p = this.height;
+        c ? (e && (a.pointerWidth = 0), "right" == d ? e ? a.setBounds(l, m + h, l + n + k, m + p + h) : a.setBounds(l + n + k + f, m + h, l + n + 1E3, m + p + h) : e ? a.setBounds(l, m, n + l, p + m) : a.setBounds(-1E3, -1E3, l - g - f, m + p + 15)) : (a.maxWidth = n, b.parseDates && (g = 0, a.pointerWidth =
+            0), "top" == d ? e ? a.setBounds(l + k, m + h, n + k + l, p + m) : a.setBounds(l + k, -1E3, n + k + l, m + h - g - f) : e ? a.setBounds(l, m, n + l, p + m - g) : a.setBounds(l, m + p + g + f - 1, l + n, m + p + g + f))
     },
     enableDrawing: function(a) {
         this.enabled = !a;
@@ -3587,8 +3706,7 @@ AmCharts.ChartCursor = AmCharts.Class({
     },
     isZooming: function(a) {
         a && a != this.zooming && this.handleMouseDown("fake");
-        a ||
-            a == this.zooming || this.handleMouseUp()
+        a || a == this.zooming || this.handleMouseUp()
     },
     handleMouseOut: function() {
         if (this.enabled)
@@ -3619,8 +3737,7 @@ AmCharts.ChartCursor = AmCharts.Class({
                 this.drawingNow = !1;
                 AmCharts.remove(this.drawingLine);
                 c = this.drawStartX;
-                var f =
-                    this.drawStartY;
+                var f = this.drawStartY;
                 if (2 < Math.abs(c - d) || 2 < Math.abs(f - e)) c = {
                     type: "draw",
                     target: this,
@@ -3641,13 +3758,12 @@ AmCharts.ChartCursor = AmCharts.Class({
                     };
                     c.target = this;
                     c.chart = a;
-                    if ("cursor" == this.type) this.rotate ? this.selectionPosY = e : this.selectionPosX = e = d, 2 > Math.abs(e - this.initialMouse) && this.fromIndex == this.index || (this.index < this.fromIndex ? (c.end =
-                        this.fromIndex, c.start = this.index) : (c.end = this.index, c.start = this.fromIndex), e = a.categoryAxis, e.parseDates && !e.equalSpacing && (c.start = b[c.start].time, c.end = a.getEndTime(b[c.end].time)), this.skipZoomDispatch || this.fire(c.type, c));
+                    if ("cursor" == this.type) this.rotate ? this.selectionPosY = e : this.selectionPosX = e = d, 2 > Math.abs(e - this.initialMouse) && this.fromIndex == this.index || (this.index < this.fromIndex ? (c.end = this.fromIndex, c.start = this.index) : (c.end = this.index, c.start = this.fromIndex), e = a.categoryAxis, e.parseDates && !e.equalSpacing && (c.start = b[c.start].time, c.end = a.getEndTime(b[c.end].time)), this.skipZoomDispatch ||
+                        this.fire(c.type, c));
                     else {
                         var g = this.initialMouseX,
                             h = this.initialMouseY;
-                        3 > Math.abs(d - g) && 3 > Math.abs(e - h) || (b = Math.min(g, d), f = Math.min(h, e), d = Math.abs(g - d), e = Math.abs(h - e), a.hideXScrollbar && (b = 0, d = this.width), a.hideYScrollbar && (f = 0, e = this.height), c.selectionHeight = e, c.selectionWidth = d, c.selectionY =
-                            f, c.selectionX = b, this.skipZoomDispatch || this.fire(c.type, c))
+                        3 > Math.abs(d - g) && 3 > Math.abs(e - h) || (b = Math.min(g, d), f = Math.min(h, e), d = Math.abs(g - d), e = Math.abs(h - e), a.hideXScrollbar && (b = 0, d = this.width), a.hideYScrollbar && (f = 0, e = this.height), c.selectionHeight = e, c.selectionWidth = d, c.selectionY = f, c.selectionX = b, this.skipZoomDispatch || this.fire(c.type, c))
                     }
                     this.selectWithoutZooming || AmCharts.remove(this.selection)
                 }
@@ -3656,7 +3772,8 @@ AmCharts.ChartCursor = AmCharts.Class({
         }
     },
     showCursorAt: function(a) {
-        var b = this.chart.categoryAxis;
+        var b =
+            this.chart.categoryAxis;
         a = b.parseDates ? b.dateToCoordinate(a) : b.categoryToCoordinate(a);
         this.previousMousePosition = NaN;
         this.forceShow = !0;
@@ -3671,8 +3788,9 @@ AmCharts.ChartCursor = AmCharts.Class({
                 c = this.chart,
                 d = c.mouseX - this.x,
                 e = c.mouseY - this.y;
-            if (0 < d && d < this.width && 0 < e && e < this.height || "fake" == a) this.setPosition(), this.selectWithoutZooming && AmCharts.remove(this.selection), this.drawing ? (this.drawStartY = e, this.drawStartX = d, this.drawingNow = !0) : this.pan ? (this.zoomable = !1, c.setMouseCursor("move"), this.panning = !0, this.panClickPos = b ? e : d, this.panClickStart = this.start, this.panClickEnd = this.end, this.panClickStartTime = this.startTime, this.panClickEndTime = this.endTime) : this.zoomable && ("cursor" == this.type ?
-                (this.fromIndex = this.index, b ? (this.initialMouse = e, this.selectionPosY = this.linePos) : (this.initialMouse = d, this.selectionPosX = this.linePos)) : (this.initialMouseX = d, this.initialMouseY = e, this.selectionPosX = d, this.selectionPosY = e), this.zooming = !0)
+            if (0 < d && d < this.width && 0 < e && e < this.height || "fake" == a) this.setPosition(), this.selectWithoutZooming && AmCharts.remove(this.selection), this.drawing ? (this.drawStartY =
+                e, this.drawStartX = d, this.drawingNow = !0) : this.pan ? (this.zoomable = !1, c.setMouseCursor("move"), this.panning = !0, this.panClickPos = b ? e : d, this.panClickStart = this.start, this.panClickEnd = this.end, this.panClickStartTime = this.startTime, this.panClickEndTime = this.endTime) : this.zoomable && ("cursor" == this.type ? (this.fromIndex = this.index, b ? (this.initialMouse = e, this.selectionPosY = this.linePos) : (this.initialMouse = d, this.selectionPosX = this.linePos)) : (this.initialMouseX = d, this.initialMouseY = e, this.selectionPosX = d, this.selectionPosY =
+                e), this.zooming = !0)
         }
     }
 });
@@ -3815,8 +3933,13 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
             q = m.mouseX,
             r = m.mouseY;
         a = this.initialMouse;
-        m.mouseIsOver && (this.dragging && (m = this.initialCoord, l ? (a = m + (r - a), 0 > a && (a = 0), m = p - h, a > m && (a = m), g.setAttr("y", a)) : (a = m + (q - a), 0 > a && (a = 0), m = n - k, a > m && (a = m), g.setAttr("x", a))), this.resizingRight &&
-            (l ? (a = r - d, a + d > p + f && (a = p - d + f), 0 > a ? (this.resizingRight = !1, b = this.resizingLeft = !0) : (0 === a && (a = .1), g.setAttr("height", a))) : (a = q - c, a + c > n + e && (a = n - c + e), 0 > a ? (this.resizingRight = !1, b = this.resizingLeft = !0) : (0 === a && (a = .1), g.setAttr("width", a)))), this.resizingLeft && (l ? (c = d, d = r, d < f && (d = f), d > p + f && (d = p + f), a = !0 === b ? c - d : h + c - d, 0 > a ? (this.resizingRight = !0, this.resizingLeft = !1, g.setAttr("y", c + h - f)) : (0 === a && (a = .1), g.setAttr("y", d - f), g.setAttr("height", a))) : (d = q, d < e && (d = e), d > n + e && (d = n + e), a = !0 === b ? c - d : k + c - d, 0 > a ? (this.resizingRight = !0, this.resizingLeft = !1, g.setAttr("x", c + k - e)) : (0 === a && (a = .1), g.setAttr("x", d - e), g.setAttr("width", a)))), this.clipDragger(!0))
+        this.forceClip && this.clipDragger(!0);
+        m.mouseIsOver && (this.dragging && (m = this.initialCoord, l ? (a = m + (r - a), 0 > a && (a = 0), m = p - h, a > m && (a = m), g.setAttr("y", a)) : (a = m + (q - a), 0 > a && (a = 0), m = n - k,
+            a > m && (a = m), g.setAttr("x", a)), this.clipDragger(!0)), this.resizingRight && (l ? (a = r - d, a + d > p + f && (a = p - d + f), 0 > a ? (this.resizingRight = !1, b = this.resizingLeft = !0) : (0 === a && (a = .1), g.setAttr("height", a))) : (a = q - c, a + c > n + e && (a = n - c + e), 0 > a ? (this.resizingRight = !1, b = this.resizingLeft = !0) : (0 === a && (a = .1), g.setAttr("width", a))), this.clipDragger(!0)), this.resizingLeft && (l ? (c = d, d = r, d < f && (d = f), d > p + f && (d = p + f), a = !0 === b ? c - d : h + c - d, 0 > a ? (this.resizingRight = !0, this.resizingLeft = !1, g.setAttr("y", c + h - f)) : (0 === a && (a = .1), g.setAttr("y",
+            d - f), g.setAttr("height", a))) : (d = q, d < e && (d = e), d > n + e && (d = n + e), a = !0 === b ? c - d : k + c - d, 0 > a ? (this.resizingRight = !0, this.resizingLeft = !1, g.setAttr("x", c + k - e)) : (0 === a && (a = .1), g.setAttr("x", d - e), g.setAttr("width", a))), this.clipDragger(!0)))
+    },
+    stopForceClip: function() {
+        this.forceClip = !1
     },
     clipDragger: function(a) {
         var b = this.getDBox();
@@ -3833,8 +3956,7 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
         }
     },
     maskGraphs: function() {},
-    clipAndUpdate: function(a, b,
-        c, d) {
+    clipAndUpdate: function(a, b, c, d) {
         this.clipX = a;
         this.clipY = b;
         this.clipW = c;
@@ -3853,7 +3975,8 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
                 d = b.y,
                 e = b.width,
                 b = b.height;
-            this.rotate ? (c = d, e = this.height / b) : e = this.width / e;
+            this.rotate ? (c = d, e = this.height / b) : e = this.width /
+                e;
             a = {
                 type: "zoomed",
                 position: c,
@@ -3866,8 +3989,7 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
     },
     updateDragIconPositions: function() {
         var a = this.getDBox(),
-            b =
-            a.x,
+            b = a.x,
             c = a.y,
             d = this.iconLeft,
             e = this.iconRight,
@@ -3875,11 +3997,11 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
         this.rotate ? (f = this.dragIconWidth, g = this.dragIconHeight, d.translate(this.x + (h - g) / 2, this.y + c - f / 2), e.translate(this.x + (h - g) / 2, this.y + c + a.height - f / 2)) : (f = this.dragIconHeight, g = this.dragIconWidth, d.translate(this.x + b - g / 2, this.y + (h - f) / 2), e.translate(this.x + b - g / 2 + a.width, this.y + (h - f) / 2))
     },
     showDragIcons: function() {
-        this.resizeEnabled && (this.iconLeft.show(), this.iconRight.show())
+        this.resizeEnabled &&
+            (this.iconLeft.show(), this.iconRight.show())
     },
     hideDragIcons: function() {
-        if (!this.resizingLeft && !this.resizingRight &&
-            !this.dragging) {
+        if (!this.resizingLeft && !this.resizingRight && !this.dragging) {
             if (this.hideResizeGrips || !this.resizeEnabled) this.iconLeft.hide(), this.iconRight.hide();
             this.removeCursors()
         }
@@ -3913,7 +4035,8 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
     handleDragStop: function() {
         this.updateOnReleaseOnly && (this.updateScrollbar(), this.skipEvent = !1, this.dispatchScrollbarEvent());
         this.dragging = !1;
-        this.mouseIsOver && this.removeCursors();
+        this.mouseIsOver &&
+            this.removeCursors();
         this.updateScrollbar()
     },
     handleDraggerOver: function() {
@@ -3941,31 +4064,35 @@ AmCharts.SimpleChartScrollbar = AmCharts.Class({
         this.removeCursors()
     },
     iconRollOver: function() {
-        this.rotate ? this.chart.setMouseCursor("n-resize") : this.chart.setMouseCursor("e-resize");
+        this.rotate ?
+            this.chart.setMouseCursor("n-resize") : this.chart.setMouseCursor("e-resize");
         this.handleMouseOver()
     },
     getDBox: function() {
         if (this.dragger) return this.dragger.getBBox()
     },
     handleBgClick: function() {
-        if (!this.resizingRight && !this.resizingLeft) {
-            this.zooming = !0;
-            var a, b, c = this.scrollDuration,
-                d = this.dragger;
-            a = this.getDBox();
-            var e = a.height,
-                f = a.width;
-            b = this.chart;
-            var g = this.y,
-                h = this.x,
-                k = this.rotate;
-            k ? (a = "y", b = b.mouseY - e / 2 - g, b = AmCharts.fitToBounds(b, 0, this.height - e)) : (a = "x", b = b.mouseX - f / 2 - h, b = AmCharts.fitToBounds(b, 0, this.width - f));
-            this.updateOnReleaseOnly ? (this.skipEvent = !1, d.setAttr(a, b), this.dispatchScrollbarEvent(), this.clipDragger()) : (b = Math.round(b), k ? d.animate({
-                    y: b
-                }, c,
-                ">") : d.animate({
-                x: b
-            }, c, ">"))
+        var a = this;
+        if (!a.resizingRight && !a.resizingLeft) {
+            a.zooming = !0;
+            var b, c, d = a.scrollDuration,
+                e = a.dragger;
+            b = a.getDBox();
+            var f = b.height,
+                g = b.width;
+            c = a.chart;
+            var h = a.y,
+                k = a.x,
+                l = a.rotate;
+            l ? (b = "y", c = c.mouseY - f / 2 - h, c = AmCharts.fitToBounds(c, 0, a.height - f)) : (b = "x", c = c.mouseX - g / 2 - k, c = AmCharts.fitToBounds(c, 0, a.width - g));
+            a.updateOnReleaseOnly ?
+                (a.skipEvent = !1, e.setAttr(b, c), a.dispatchScrollbarEvent(), a.clipDragger()) : (c = Math.round(c), l ? e.animate({
+                y: c
+            }, d, ">") : e.animate({
+                x: c
+            }, d, ">"), a.forceClip = !0, clearTimeout(a.forceTO), a.forceTO = setTimeout(function() {
+                a.stopForceClip.call(a)
+            }, 3E3 * d))
         }
     },
     updateOnRelease: function() {
@@ -4098,9 +4225,9 @@ AmCharts.ChartScrollbar = AmCharts.Class({
                     s;
                 for (s in r)
                     if (r.hasOwnProperty(s) && "percents" != s && "total" != s) {
-                        var v = r[s];
-                        v < f && (f = v);
-                        v > g && (g = v)
+                        var w = r[s];
+                        w < f && (f = w);
+                        w > g && (g = w)
                     }
             }
             Infinity != f && (n.minimum = f); - Infinity != g && (n.maximum = g + .1 * (g - f));
@@ -4212,28 +4339,28 @@ AmCharts.ChartScrollbar = AmCharts.Class({
                 b, c, d = this.dragger.getBBox();
             b = d.x;
             var e = d.y,
-                f = d.width;
-            c = d.height;
-            d = this.chart;
-            this.rotate ? b = e : c = f;
+                f = d.width,
+                d = d.height,
+                g = this.chart;
+            this.rotate ? (b = e, c = d) : c = f;
             f = {
                 type: "zoomed",
                 target: this
             };
-            f.chart = d;
-            var g = this.categoryAxis,
-                h = this.stepWidth,
-                e = d.minSelectedTime;
-            if (g.parseDates && !g.equalSpacing) {
-                if (a = d.lastTime, d = d.firstTime, g.minDuration(), g = Math.round(b / h) + d, b = this.dragging ? g + this.timeDifference : Math.round((b + c) / h) + d, g > b && (g = b), 0 < e && b - g < e && (b = Math.round(g + (b - g) / 2), c = Math.round(e / 2), g = b - c, b += c), b > a && (b = a), b - e < g && (g = b - e), g < d && (g = d), g + e > b && (b = g + e), g != this.startTime || b != this.endTime) this.startTime = g, this.endTime = b, f.start = g, f.end = b, f.startDate = new Date(g), f.endDate = new Date(b),
-                    this.fire(f.type, f)
-            } else if (g.startOnAxis || (b += h / 2), c -= this.stepWidth / 2, e = g.xToIndex(b), b = g.xToIndex(b + c), e != this.start || this.end != b) g.startOnAxis && (this.resizingRight && e == b && b++, this.resizingLeft && e == b && (0 < e ? e-- : b = 1)), this.start = e, this.end = this.dragging ? this.start + this.difference : b, f.start = this.start, f.end = this.end, g.parseDates && (a[this.start] && (f.startDate = new Date(a[this.start].time)), a[this.end] && (f.endDate = new Date(a[this.end].time))), this.fire(f.type, f)
+            f.chart = g;
+            var h = this.categoryAxis,
+                k = this.stepWidth,
+                e = g.minSelectedTime,
+                d = !1;
+            if (h.parseDates && !h.equalSpacing) {
+                if (a = g.lastTime, g = g.firstTime, h.minDuration(), h = Math.round(b / k) + g, b = this.dragging ? h + this.timeDifference : Math.round((b + c) / k) + g, h > b && (h = b), 0 < e && b - h < e && (b = Math.round(h + (b - h) / 2), d = Math.round(e / 2), h = b - d, b += d, d = !0), b > a && (b = a), b - e < h && (h = b - e), h < g && (h = g), h + e > b && (b = h + e), h != this.startTime || b != this.endTime) this.startTime = h, this.endTime = b, f.start = h, f.end = b, f.startDate = new Date(h),
+                    f.endDate = new Date(b), this.fire(f.type, f)
+            } else if (h.startOnAxis || (b += k / 2), c -= this.stepWidth / 2, e = h.xToIndex(b), b = h.xToIndex(b + c), e != this.start || this.end != b) h.startOnAxis && (this.resizingRight && e == b && b++, this.resizingLeft && e == b && (0 < e ? e-- : b = 1)), this.start = e, this.end = this.dragging ? this.start + this.difference : b, f.start = this.start, f.end = this.end, h.parseDates && (a[this.start] && (f.startDate = new Date(a[this.start].time)), a[this.end] && (f.endDate = new Date(a[this.end].time))), this.fire(f.type, f);
+            d && this.zoomScrollbar()
         }
-        this.zoomScrollbar()
     },
     zoomScrollbar: function() {
-        var a,
-            b;
+        var a, b;
         a = this.chart;
         var c = a.chartData,
             d = this.categoryAxis;
@@ -4247,7 +4374,8 @@ AmCharts.ChartScrollbar = AmCharts.Class({
     },
     handleDragStart: function() {
         AmCharts.ChartScrollbar.base.handleDragStart.call(this);
-        this.difference = this.end - this.start;
+        this.difference =
+            this.end - this.start;
         this.timeDifference = this.endTime - this.startTime;
         0 > this.timeDifference && (this.timeDifference = 0)
     },
@@ -4317,12 +4445,12 @@ AmCharts.AmBalloon = AmCharts.Class({
                 void 0 != m && (this.adjustBorderColor ? q = p = m : n = m);
                 var r = this.horizontalPadding,
                     s = this.verticalPadding,
-                    v = this.pointerWidth,
-                    w = this.pointerOrientation,
+                    w = this.pointerWidth,
+                    v = this.pointerOrientation,
                     t = this.cornerRadius,
                     u = c.fontFamily,
-                    y = this.fontSize;
-                void 0 == y && (y = c.fontSize);
+                    x = this.fontSize;
+                void 0 == x && (x = c.fontSize);
                 var m = document.createElement("div"),
                     E = m.style;
                 E.pointerEvents = "none";
@@ -4331,48 +4459,48 @@ AmCharts.AmBalloon = AmCharts.Class({
                     z = "";
                 isNaN(A) ||
                     (z = "min-width:" + (A - 2 * r) + "px; ");
-                m.innerHTML = '<div style="text-align:' + this.textAlign + "; " + z + "max-width:" + this.maxWidth + "px; font-size:" + y + "px; color:" + this.color + "; font-family:" + u + '">' + this.text + "</div>";
+                m.innerHTML = '<div style="text-align:' + this.textAlign + "; " + z + "max-width:" + this.maxWidth + "px; font-size:" + x + "px; color:" + this.color + "; font-family:" + u + '">' + this.text + "</div>";
                 c.chartDiv.appendChild(m);
                 this.textDiv = m;
-                y = m.offsetWidth;
+                x = m.offsetWidth;
                 u = m.offsetHeight;
-                m.clientHeight && (y = m.clientWidth, u = m.clientHeight);
+                m.clientHeight && (x = m.clientWidth, u = m.clientHeight);
                 u += 2 * s;
-                z = y + 2 * r;
+                z = x + 2 * r;
                 !isNaN(A) && z < A && (z = A);
                 window.opera && (u += 2);
-                var K = !1,
-                    y = this.offsetY;
-                c.handDrawn && (y += c.handDrawScatter + 2);
-                "H" != w ? (A = a - z / 2, b < h + u + 10 && "down" != w ? (K = !0, d && (b += y),
-                    y = b + v, this.deltaSignY = -1) : (d && (b -= y), y = b - u - v, this.deltaSignY = 1)) : (2 * v > u && (v = u / 2), y = b - u / 2, a < g + (k - g) / 2 ? (A = a + v, this.deltaSignX = -1) : (A = a - z - v, this.deltaSignX = 1));
-                y + u >= l && (y = l - u);
-                y < h && (y = h);
+                var H = !1,
+                    x = this.offsetY;
+                c.handDrawn && (x += c.handDrawScatter + 2);
+                "H" != v ? (A = a - z / 2, b < h + u + 10 && "down" != v ? (H = !0, d && (b += x),
+                    x = b + w, this.deltaSignY = -1) : (d && (b -= x), x = b - u - w, this.deltaSignY = 1)) : (2 * w > u && (w = u / 2), x = b - u / 2, a < g + (k - g) / 2 ? (A = a + w, this.deltaSignX = -1) : (A = a - z - w, this.deltaSignX = 1));
+                x + u >= l && (x = l - u);
+                x < h && (x = h);
                 A < g && (A = g);
                 A + z > k && (A = k - z);
-                var h = y + s,
+                var h = x + s,
                     l = A + r,
                     s = this.shadowAlpha,
-                    I = this.shadowColor,
+                    F = this.shadowColor,
                     r = this.borderThickness,
-                    F = this.bulletSize,
-                    H;
-                0 < t || 0 === v ? (0 < s && (a = AmCharts.rect(e, z, u, n, 0, r + 1, I, s, this.cornerRadius), AmCharts.isModern ? a.translate(1, 1) : a.translate(4, 4), f.push(a)), n = AmCharts.rect(e, z, u, n, this.fillAlpha, r, p, this.borderAlpha,
-                    this.cornerRadius), this.showBullet && (H = AmCharts.circle(e, F, q, this.fillAlpha), f.push(H))) : (q = [], t = [], "H" != w ? (g = a - A, g > z - v && (g = z - v), g < v && (g = v), q = [0, g - v, a - A, g + v, z, z, 0, 0], t = K ? [0, 0, b - y, 0, 0, u, u, 0] : [u, u, b - y, u, u, 0, 0, u]) : (q = b - y, q > u - v && (q = u - v), q < v && (q = v), t = [0, q - v, b - y, q + v, u, u, 0, 0], q = a < g + (k - g) / 2 ? [0, 0, A < a ? 0 : a - A, 0, 0, z, z, 0] : [z, z, A + z > a ? z : a - A, z, z, 0, 0, z]), 0 < s && (a = AmCharts.polygon(e, q, t, n, 0, r, I, s), a.translate(1, 1), f.push(a)), n = AmCharts.polygon(e, q, t, n, this.fillAlpha, r, p, this.borderAlpha));
+                    G = this.bulletSize,
+                    V;
+                0 < t || 0 === w ? (0 < s && (a = AmCharts.rect(e, z, u, n, 0, r + 1, F, s, this.cornerRadius), AmCharts.isModern ? a.translate(1, 1) : a.translate(4, 4), f.push(a)), n = AmCharts.rect(e, z, u, n, this.fillAlpha, r, p, this.borderAlpha,
+                    this.cornerRadius), this.showBullet && (V = AmCharts.circle(e, G, q, this.fillAlpha), f.push(V))) : (q = [], t = [], "H" != v ? (g = a - A, g > z - w && (g = z - w), g < w && (g = w), q = [0, g - w, a - A, g + w, z, z, 0, 0], t = H ? [0, 0, b - x, 0, 0, u, u, 0] : [u, u, b - x, u, u, 0, 0, u]) : (q = b - x, q > u - w && (q = u - w), q < w && (q = w), t = [0, q - w, b - x, q + w, u, u, 0, 0], q = a < g + (k - g) / 2 ? [0, 0, A < a ? 0 : a - A, 0, 0, z, z, 0] : [z, z, A + z > a ? z : a - A, z, z, 0, 0, z]), 0 < s && (a = AmCharts.polygon(e, q, t, n, 0, r, F, s), a.translate(1, 1), f.push(a)), n = AmCharts.polygon(e, q, t, n, this.fillAlpha, r, p, this.borderAlpha));
                 this.bg = n;
                 f.push(n);
                 n.toFront();
                 e = 1 * this.deltaSignX;
                 E.left = l + "px";
                 E.top = h + "px";
-                f.translate(A - e, y);
+                f.translate(A - e, x);
                 n = n.getBBox();
-                this.bottom = y + u + 1;
-                this.yPos = n.y + y;
-                H && H.translate(this.pointToX - A + e, b - y);
+                this.bottom = x + u + 1;
+                this.yPos = n.y + x;
+                V && V.translate(this.pointToX - A + e, b - x);
                 b = this.animationDuration;
                 0 < this.animationDuration && !d && !isNaN(this.prevX) && (f.translate(this.prevX, this.prevY), f.animate({
-                    translate: A - e + "," + y
+                    translate: A - e + "," + x
                 }, b, "easeOutSine"), m && (E.left = this.prevTX + "px", E.top = this.prevTY + "px", this.xAnim = c.animate({
                     node: m
                 }, "left", this.prevTX, l, b, "easeOutSine", "px"), this.yAnim = c.animate({
@@ -4380,7 +4508,7 @@ AmCharts.AmBalloon = AmCharts.Class({
                     }, "top", this.prevTY, h, b, "easeOutSine",
                     "px")));
                 this.prevX = A - e;
-                this.prevY = y;
+                this.prevY = x;
                 this.prevTX = l;
                 this.prevTY = h
             }
@@ -4539,8 +4667,8 @@ AmCharts.AmCoordinateChart = AmCharts.Class({
                 m = b.period, n = b.count, q = AmCharts.getPeriodDuration(m, n));
             var r = {};
             this.lookupTable = r;
-            var s, v = this.dataDateFormat,
-                w = {};
+            var s, w = this.dataDateFormat,
+                v = {};
             for (s = 0; s < e.length; s++) {
                 var t = {},
                     u = e[s];
@@ -4550,38 +4678,38 @@ AmCharts.AmCoordinateChart = AmCharts.Class({
                 k && (t.forceShow = u[k]);
                 l && (t.labelColor = u[l]);
                 r[u[d]] = t;
-                if (f && (b = h.categoryFunction ? h.categoryFunction(b, u, h) : b instanceof Date ? AmCharts.newDate(b, h.minPeriod) : v ? AmCharts.stringToDate(b, v) : new Date(b), b = AmCharts.resetDateToMin(b, m, n, h.firstDayOfWeek), t.category = b, t.time = b.getTime(),
+                if (f && (b = h.categoryFunction ? h.categoryFunction(b, u, h) : b instanceof Date ? AmCharts.newDate(b, h.minPeriod) : w ? AmCharts.stringToDate(b, w) : new Date(b), b = AmCharts.resetDateToMin(b, m, n, h.firstDayOfWeek), t.category = b, t.time = b.getTime(),
                     isNaN(t.time))) continue;
-                var y = this.valueAxes;
+                var x = this.valueAxes;
                 t.axes = {};
                 t.x = {};
                 var E;
-                for (E = 0; E < y.length; E++) {
-                    var A = y[E].id;
+                for (E = 0; E < x.length; E++) {
+                    var A = x[E].id;
                     t.axes[A] = {};
                     t.axes[A].graphs = {};
                     var z;
                     for (z = 0; z < a.length; z++) {
                         b = a[z];
-                        var K = b.id,
-                            I = b.periodValue;
+                        var H = b.id,
+                            F = b.periodValue;
                         if (b.valueAxis.id == A) {
-                            t.axes[A].graphs[K] = {};
-                            var F = {};
-                            F.index = s;
-                            var H = u;
-                            b.dataProvider && (H = c);
-                            F.values = this.processValues(H, b, I);
-                            !b.connect && w && w[K] && t.time - p[K] > 1.1 * q && (w[K].gap = !0);
-                            this.processFields(b, F, H);
-                            F.category = t.category;
-                            F.serialDataItem = t;
-                            F.graph = b;
-                            t.axes[A].graphs[K] = F
+                            t.axes[A].graphs[H] = {};
+                            var G = {};
+                            G.index = s;
+                            var V = u;
+                            b.dataProvider && (V = c);
+                            G.values = this.processValues(V, b, F);
+                            !b.connect && v && v[H] && t.time - p[H] > 1.1 * q && (v[H].gap = !0);
+                            this.processFields(b, G, V);
+                            G.category = t.category;
+                            G.serialDataItem = t;
+                            G.graph = b;
+                            t.axes[A].graphs[H] = G;
+                            p[H] = t.time;
+                            v[H] =
+                                G
                         }
-                        p[K] = t.time;
-                        w[K] =
-                            F
                     }
                 }
                 this.chartData[s] = t
@@ -4869,29 +4997,31 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         this.drawChart()
     },
     handleLegendEvent: function(a) {
-        var b = a.type;
-        a = a.dataItem;
-        if (!this.legend.data && a) {
-            var c = a.hidden;
+        var b = a.type,
+            c = a.dataItem,
+            d = this.legend;
+        if (!d.data && c) {
+            var e = c.hidden;
+            a = a.event;
             switch (b) {
                 case "clickMarker":
-                    c || this.clickSlice(a);
+                    e || d.switchable || this.clickSlice(c, a);
                     break;
                 case "clickLabel":
-                    c || this.clickSlice(a);
+                    e ||
+                        this.clickSlice(c, a, !1);
                     break;
                 case "rollOverItem":
-                    c ||
-                        this.rollOverSlice(a, !1);
+                    e || this.rollOverSlice(c, !1, a);
                     break;
                 case "rollOutItem":
-                    c || this.rollOutSlice(a);
+                    e || this.rollOutSlice(c, a);
                     break;
                 case "hideItem":
-                    this.hideSlice(a);
+                    this.hideSlice(c, a);
                     break;
                 case "showItem":
-                    this.showSlice(a)
+                    this.showSlice(c, a)
             }
         }
     },
@@ -4908,11 +5038,11 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         }).mouseout(function(a) {
             c.rollOutSlice(b, a)
         }).touchend(function(a) {
-            c.rollOverSlice(b, a);
+            c.rollOverSlice(b,
+                a);
             c.panEventsEnabled && c.clickSlice(b, a)
         }).touchstart(function(a) {
-            c.rollOverSlice(b,
-                a)
+            c.rollOverSlice(b, a)
         }).click(function(a) {
             c.clickSlice(b, a)
         }).contextmenu(function(a) {
@@ -4925,10 +5055,10 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         a = AmCharts.massReplace(a, {
             "[[title]]": b.title,
             "[[description]]": b.description
-        }); - 1 != a.indexOf("[[") && (a = AmCharts.formatDataContextValue(a, b.dataContext));
+        }); - 1 != a.indexOf("[[") && (a = AmCharts.formatDataContextValue(a,
+            b.dataContext));
         a = c ? AmCharts.fixNewLines(a) : AmCharts.fixBrakes(a);
-        return a =
-            AmCharts.cleanFromEmpty(a)
+        return a = AmCharts.cleanFromEmpty(a)
     },
     startSlices: function() {
         var a;
@@ -4946,7 +5076,8 @@ AmCharts.AmSlicedChart = AmCharts.Class({
             c;
         for (c = 0; c < b.length; c++) {
             var d = b[c];
-            d.pulled && this.pullSlice(d, 1, a)
+            d.pulled &&
+                this.pullSlice(d, 1, a)
         }
     },
     startSequenced: function() {
@@ -4980,7 +5111,8 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         }
     },
     showSlice: function(a) {
-        isNaN(a) ? a.hidden = !1 : this.chartData[a].hidden = !1;
+        isNaN(a) ?
+            a.hidden = !1 : this.chartData[a].hidden = !1;
         this.invalidateVisibility()
     },
     hideSlice: function(a) {
@@ -4999,7 +5131,8 @@ AmCharts.AmSlicedChart = AmCharts.Class({
             var d = a.balloonX,
                 e = a.balloonY;
             a.pulled && (d += a.pullX, e += a.pullY);
-            var f = this.formatString(this.balloonText, a, !0),
+            var f = this.formatString(this.balloonText,
+                    a, !0),
                 g = this.balloonFunction;
             g && (f = g(a, f));
             g = AmCharts.adjustLuminosity(a.color, -.15);
@@ -5027,17 +5160,17 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         };
         this.fire(c.type, c)
     },
-    clickSlice: function(a, b) {
+    clickSlice: function(a, b, c) {
         isNaN(a) || (a = this.chartData[a]);
         a.pulled ? this.pullSlice(a, 0) : this.pullSlice(a, 1);
-        AmCharts.getURL(a.url, this.urlTarget);
-        var c = {
+        AmCharts.getURL(a.url,
+            this.urlTarget);
+        c || (a = {
             type: "clickSlice",
             dataItem: a,
             chart: this,
             event: b
-        };
-        this.fire(c.type, c)
+        }, this.fire(a.type, a))
     },
     handleRightClick: function(a, b) {
         isNaN(a) || (a = this.chartData[a]);
@@ -5063,12 +5196,12 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         }
     },
     initialStart: function() {
-        var a = this,
+        var a =
+            this,
             b = a.startDuration,
             c = setTimeout(function() {
-                    a.showLabels.call(a)
-                }, 1E3 *
-                b);
+                a.showLabels.call(a)
+            }, 1E3 * b);
         a.timeOuts.push(c);
         a.chartCreated ? a.pullSlices(!0) : (a.startSlices(), 0 < b ? (b = setTimeout(function() {
             a.pullSlices.call(a)
@@ -5110,7 +5243,8 @@ AmCharts.AmSlicedChart = AmCharts.Class({
             var c = b.length,
                 d = 0,
                 e, f, g;
-            for (e = 0; e < c; e++) {
+            for (e = 0; e <
+                c; e++) {
                 f = {};
                 var h = b[e];
                 f.dataContext = h;
@@ -5128,7 +5262,8 @@ AmCharts.AmSlicedChart = AmCharts.Class({
                 f.pattern = g;
                 f.visibleInLegend = AmCharts.toBoolean(h[this.visibleInLegendField], !0);
                 g = h[this.alphaField];
-                f.alpha = void 0 !== g ? Number(g) : this.alpha;
+                f.alpha = void 0 !== g ? Number(g) :
+                    this.alpha;
                 g = h[this.colorField];
                 void 0 !== g && (f.color = AmCharts.toColor(g));
                 f.labelColor = AmCharts.toColor(h[this.labelColorField]);
@@ -5150,8 +5285,7 @@ AmCharts.AmSlicedChart = AmCharts.Class({
                 dataContext: {}
             }));
             c = this.baseColor;
-            c || (c =
-                this.pieBaseColor);
+            c || (c = this.pieBaseColor);
             d = this.brightnessStep;
             d || (d = this.pieBrightnessStep);
             for (e = 0; e < a.length; e++) c ? g = AmCharts.adjustLuminosity(c, e * d / 100) : (g = this.colors[e], void 0 === g && (g = AmCharts.randomColor())), void 0 === a[e].color && (a[e].color = g);
@@ -5166,8 +5300,7 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         for (c = 0; c < a.length; c++) d = this.chartData[c], d.percents = !d.hidden && 0 < d.value ? 100 * d.value / b : 0
     },
     removeSmallSlices: function() {
-        var a =
-            this.chartData,
+        var a = this.chartData,
             b;
         for (b = a.length - 1; 0 <= b; b--) a[b].percents < this.groupPercent && (this.groupValue += a[b].value, a.splice(b, 1))
     },
@@ -5186,13 +5319,13 @@ AmCharts.AmSlicedChart = AmCharts.Class({
         }, 1200 * b), a.timeOuts.push(b)) : a.pullSlices()
     },
     measureMaxLabel: function() {
-        var a = this.chartData,
+        var a =
+            this.chartData,
             b = 0,
             c;
         for (c = 0; c < a.length; c++) {
             var d = a[c],
-                e = this.formatString(this.labelText,
-                    d),
+                e = this.formatString(this.labelText, d),
                 f = this.labelFunction;
             f && (e = f(d, e));
             d = AmCharts.text(this.container, e, this.color, this.fontFamily, this.fontSize);
@@ -5583,13 +5716,13 @@ AmCharts.TrendLine = AmCharts.Class({
             q = a.valueAxisX,
             r = a.initialXValue,
             s = a.finalXValue,
-            v = a.initialValue,
-            w = a.finalValue,
+            w = a.initialValue,
+            v = a.finalValue,
             t = p.recalculateToPercents,
             u = b.dataDateFormat;
         h && (k && (k instanceof Date || (k = u ? AmCharts.stringToDate(k, u) : new Date(k)), a.initialDate = k, d = h.dateToCoordinate(k)), l && (d = h.categoryToCoordinate(l)), m && (m instanceof Date || (m = u ? AmCharts.stringToDate(m, u) : new Date(m)), a.finalDate = m, e = h.dateToCoordinate(m)), n && (e = h.categoryToCoordinate(n)));
         q && !t && (isNaN(r) || (d = q.getCoordinate(r)), isNaN(s) || (e = q.getCoordinate(s)));
-        p && !t && (isNaN(v) || (f = p.getCoordinate(v)), isNaN(w) || (g = p.getCoordinate(w)));
+        p && !t && (isNaN(w) || (f = p.getCoordinate(w)), isNaN(v) || (g = p.getCoordinate(v)));
         isNaN(d) || isNaN(e) ||
             isNaN(f) || isNaN(f) || (b.rotate ? (h = [f, g], e = [d, e]) : (h = [d, e], e = [f, g]), f = a.lineColor, d = AmCharts.line(c, h, e, f, a.lineAlpha, a.lineThickness, a.dashLength), g = h, k = e, n = h[1] - h[0], p = e[1] - e[0], 0 === n && (n = .01), 0 === p && (p = .01), l = n / Math.abs(n), m = p / Math.abs(p), p = n * p / Math.abs(n * p) * Math.sqrt(Math.pow(n, 2) + Math.pow(p, 2)), n = Math.asin(n / p), p = 90 * Math.PI / 180 - n, n = Math.abs(5 * Math.cos(p)), p = Math.abs(5 * Math.sin(p)), g.push(h[1] - l * p, h[0] - l * p), k.push(e[1] + m * n, e[0] + m * n), h = AmCharts.polygon(c, g, k, f, .005, 0), c = c.set([h, d]), c.translate(b.marginLeftReal,
                 b.marginTopReal), b.trendLinesSet.push(c), a.line = d, a.set = c, h.mouseup(function() {
@@ -5625,7 +5758,7 @@ AmCharts.TrendLine = AmCharts.Class({
         AmCharts.remove(this.set)
     }
 });
-AmCharts.circle = function(a, b, c, d, e, f, g, h) {
+AmCharts.circle = function(a, b, c, d, e, f, g, h, k) {
     if (void 0 == e || 0 === e) e = .01;
     void 0 === f && (f = "#000000");
     void 0 === g && (g = 0);
@@ -5636,7 +5769,7 @@ AmCharts.circle = function(a, b, c, d, e, f, g, h) {
         "stroke-width": e,
         "stroke-opacity": g
     };
-    a = a.circle(0, 0, b).attr(d);
+    a = isNaN(k) ? a.circle(0, 0, b).attr(d) : a.ellipse(0, 0, b, k).attr(d);
     h && a.gradient("radialGradient", [c, AmCharts.adjustLuminosity(c, -.6)]);
     return a
 };
@@ -5827,35 +5960,35 @@ AmCharts.wedge = function(a, b, c, d, e, f, g, h, k, l, m, n) {
         s = 359.5 + f / 100;
     359.94 < s && (s = 359.94);
     e >= s && (e = s);
-    var v = 1 / 180 * Math.PI,
-        s = b + Math.sin(d * v) * h,
-        w = c - Math.cos(d * v) * q,
-        t = b + Math.sin(d * v) * f,
-        u = c - Math.cos(d * v) * g,
-        y = b + Math.sin((d + e) * v) * f,
-        E = c - Math.cos((d + e) * v) * g,
-        A = b + Math.sin((d + e) * v) * h,
-        v = c - Math.cos((d + e) * v) * q,
+    var w = 1 / 180 * Math.PI,
+        s = b + Math.sin(d * w) * h,
+        v = c - Math.cos(d * w) * q,
+        t = b + Math.sin(d * w) * f,
+        u = c - Math.cos(d * w) * g,
+        x = b + Math.sin((d + e) * w) * f,
+        E = c - Math.cos((d + e) * w) * g,
+        A = b + Math.sin((d + e) * w) * h,
+        w = c - Math.cos((d + e) * w) * q,
         z = {
             fill: AmCharts.adjustLuminosity(l.fill, -.2),
             "stroke-opacity": 0,
             "fill-opacity": l["fill-opacity"]
         },
-        K = 0;
-    180 < Math.abs(e) && (K = 1);
+        H = 0;
+    180 < Math.abs(e) && (H = 1);
     d = a.set();
-    var I;
-    r && (s = p(10 * s), t = p(10 * t), y = p(10 * y), A = p(10 * A), w = p(10 * w), u = p(10 * u), E = p(10 * E), v = p(10 * v), b = p(10 * b), k = p(10 * k), c = p(10 * c), f *= 10, g *= 10, h *= 10, q *= 10, 1 > Math.abs(e) && 1 >= Math.abs(y - t) && 1 >= Math.abs(E - u) && (I = !0));
-    e = "";
     var F;
+    r && (s = p(10 * s), t = p(10 * t), x = p(10 * x), A = p(10 * A), v = p(10 * v), u = p(10 * u), E = p(10 * E), w = p(10 * w), b = p(10 * b), k = p(10 * k), c = p(10 * c), f *= 10, g *= 10, h *= 10, q *= 10, 1 > Math.abs(e) && 1 >= Math.abs(x - t) && 1 >= Math.abs(E - u) && (F = !0));
+    e = "";
+    var G;
     n && (z["fill-opacity"] = 0, z["stroke-opacity"] = l["stroke-opacity"] / 2, z.stroke = l.stroke);
-    0 < k && (r ? (F = " M" + s + "," + (w + k) + " L" + t + "," + (u + k), I || (F += " A" + (b - f) + "," + (k + c - g) + "," + (b + f) + "," + (k + c + g) + "," + t + "," + (u + k) + "," + y + "," + (E + k)), F += " L" + A + "," + (v + k), 0 < h && (I || (F += " B" + (b - h) + "," + (k + c - q) + "," + (b + h) + "," + (k + c + q) +
-        "," + A + "," + (k + v) + "," + s + "," + (k + w)))) : (F = " M" + s + "," + (w + k) + " L" + t + "," + (u + k) + (" A" + f + "," + g + ",0," + K + ",1," + y + "," + (E + k) + " L" + A + "," + (v + k)), 0 < h && (F += " A" + h + "," + q + ",0," + K + ",0," + s + "," + (w + k))), F += " Z", F = a.path(F, void 0, void 0, "1000,1000").attr(z), d.push(F), F = a.path(" M" + s + "," + w + " L" + s + "," + (w + k) + " L" + t + "," + (u + k) + " L" + t + "," + u + " L" + s + "," + w + " Z", void 0, void 0, "1000,1000").attr(z), k = a.path(" M" + y + "," + E + " L" + y + "," + (E + k) + " L" + A + "," + (v + k) + " L" + A + "," + v + " L" + y + "," + E + " Z", void 0, void 0, "1000,1000").attr(z), d.push(F), d.push(k));
-    r ? (I || (e = " A" + p(b - f) + "," + p(c - g) + "," + p(b + f) + "," + p(c + g) + "," + p(t) + "," + p(u) + "," + p(y) + "," + p(E)), f = " M" + p(s) + "," + p(w) + " L" + p(t) + "," + p(u) + e + " L" + p(A) + "," + p(v)) : f = " M" + s + "," + w + " L" + t + "," + u + (" A" + f + "," + g + ",0," + K + ",1," + y + "," + E) + " L" + A + "," + v;
-    0 < h && (r ? I || (f += " B" + (b - h) + "," + (c - q) + "," + (b + h) + "," + (c + q) + "," + A + "," + v + "," + s + "," + w) : f += " A" + h + "," + q + ",0," + K + ",0," + s + "," + w);
-    a.handDrawn && (b = AmCharts.line(a, [s, t], [w, u], l.stroke, l.thickness * Math.random() * a.handDrawThickness, l["stroke-opacity"]), d.push(b));
-    a = a.path(f + " Z", void 0,
-        void 0, "1000,1000").attr(l);
+    0 < k && (G = " M" + s + "," + (v + k) + " L" + t + "," + (u + k), r ? (F || (G += " A" + (b - f) + "," + (k + c - g) + "," + (b + f) + "," + (k + c + g) + "," + t + "," + (u + k) + "," + x + "," + (E + k)), G += " L" + A + "," + (w + k), 0 < h && (F || (G += " B" + (b - h) + "," + (k + c - q) + "," + (b + h) + "," + (k + c + q) +
+        "," + A + "," + (k + w) + "," + s + "," + (k + v)))) : (G += " A" + f + "," + g + ",0," + H + ",1," + x + "," + (E + k) + " L" + A + "," + (w + k), 0 < h && (G += " A" + h + "," + q + ",0," + H + ",0," + s + "," + (v + k))), G = a.path(G + " Z", void 0, void 0, "1000,1000").attr(z), d.push(G), G = a.path(" M" + s + "," + v + " L" + s + "," + (v + k) + " L" + t + "," + (u + k) + " L" + t + "," + u + " L" + s + "," + v + " Z", void 0, void 0, "1000,1000").attr(z), k = a.path(" M" + x + "," + E + " L" + x + "," + (E + k) + " L" + A + "," + (w + k) + " L" + A + "," + w + " L" + x + "," + E + " Z", void 0, void 0, "1000,1000").attr(z), d.push(G), d.push(k));
+    r ? (F || (e = " A" + p(b - f) + "," + p(c - g) +
+        "," + p(b + f) + "," + p(c + g) + "," + p(t) + "," + p(u) + "," + p(x) + "," + p(E)), f = " M" + p(s) + "," + p(v) + " L" + p(t) + "," + p(u) + e + " L" + p(A) + "," + p(w)) : f = " M" + s + "," + v + " L" + t + "," + u + (" A" + f + "," + g + ",0," + H + ",1," + x + "," + E) + " L" + A + "," + w;
+    0 < h && (r ? F || (f += " B" + (b - h) + "," + (c - q) + "," + (b + h) + "," + (c + q) + "," + A + "," + w + "," + s + "," + v) : f += " A" + h + "," + q + ",0," + H + ",0," + s + "," + v);
+    a.handDrawn && (b = AmCharts.line(a, [s, t], [v, u], l.stroke, l.thickness * Math.random() * a.handDrawThickness, l["stroke-opacity"]), d.push(b));
+    a = a.path(f + " Z", void 0, void 0, "1000,1000").attr(l);
     if (m) {
         b = [];
         for (c = 0; c < m.length; c++) b.push(AmCharts.adjustLuminosity(l.fill, m[c]));
@@ -6032,6 +6165,17 @@ AmCharts.AmDraw = AmCharts.Class({
         this.addToContainer(e.node, d);
         return e
     },
+    ellipse: function(a, b, c, d, e) {
+        var f = new AmCharts.AmDObject("ellipse", this);
+        f.attr({
+            rx: c,
+            ry: d,
+            cx: a,
+            cy: b
+        });
+        this.addToContainer(f.node, e);
+        return f
+    },
     setSize: function(a, b) {
         0 < a && 0 < b && (this.container.style.width = a + "px", this.container.style.height = b + "px")
     },
@@ -6039,7 +6183,8 @@ AmCharts.AmDraw = AmCharts.Class({
         var h = new AmCharts.AmDObject("rect", this);
         AmCharts.VML && (e = 100 * e / Math.min(c, d), c += 2 * f, d += 2 * f, h.bw = f, h.node.style.marginLeft = -f, h.node.style.marginTop = -f);
         1 > c && (c = 1);
-        1 > d && (d = 1);
+        1 > d && (d =
+            1);
         h.attr({
             x: a,
             y: b,
@@ -6053,8 +6198,7 @@ AmCharts.AmDraw = AmCharts.Class({
         return h
     },
     image: function(a, b, c, d, e, f) {
-        var g = new AmCharts.AmDObject("image",
-            this);
+        var g = new AmCharts.AmDObject("image", this);
         g.attr({
             x: b,
             y: c,
@@ -6097,8 +6241,7 @@ AmCharts.AmDraw = AmCharts.Class({
         }
     },
     renderFix: function() {
-        var a =
-            this.container,
+        var a = this.container,
             b = a.style,
             c;
         try {
@@ -6268,6 +6411,7 @@ AmCharts.VMLRenderer = AmCharts.Class({
         this.D = a;
         this.cNames = {
             circle: "oval",
+            ellipse: "oval",
             rect: "roundrect",
             path: "shape"
         };
@@ -6285,10 +6429,10 @@ AmCharts.VMLRenderer = AmCharts.Class({
         var c;
         if ("group" == b) c = document.createElement("div"), a.type = "div";
         else if ("text" == b) c = document.createElement("div"), a.type = "text";
-        else if ("image" == b) c = document.createElement("img"), a.type = "image";
+        else if ("image" == b) c = document.createElement("img"), a.type =
+            "image";
         else {
-            a.type =
-                "shape";
+            a.type = "shape";
             a.shapeType = this.cNames[b];
             c = document.createElement("amvml:" + this.cNames[b]);
             var d = document.createElement("amvml:stroke");
@@ -6317,14 +6461,16 @@ AmCharts.VMLRenderer = AmCharts.Class({
                 f = a.type,
                 g = e.style;
             "r" == b && (g.width = 2 * c, g.height = 2 * c);
+            "rx" == b && (g.width = 2 * c);
+            "ry" == b && (g.height = 2 * c);
             "roundrect" != a.shapeType || "width" != b && "height" != b || (c -= 1);
             "cursor" == b && (g.cursor = c);
             "cx" == b && (g.left = c - AmCharts.removePx(g.width) / 2);
             "cy" == b && (g.top = c - AmCharts.removePx(g.height) / 2);
             var h = this.styleMap[b];
             void 0 !== h && (g[h] = c);
-            "text" == f && ("text-anchor" == b && (a.anchor = c, h = e.clientWidth, "end" == c && (g.marginLeft = -h + "px"), "middle" == c && (g.marginLeft = -(h / 2) + "px", g.textAlign = "center"), "start" == c && (g.marginLeft = "0px")), "fill" == b && (g.color = c), "font-weight" == b && (g.fontWeight =
-                c));
+            "text" == f && ("text-anchor" == b && (a.anchor = c, h = e.clientWidth, "end" == c && (g.marginLeft = -h + "px"), "middle" == c && (g.marginLeft = -(h / 2) + "px", g.textAlign = "center"), "start" ==
+                c && (g.marginLeft = "0px")), "fill" == b && (g.color = c), "font-weight" == b && (g.fontWeight = c));
             if (g = a.children)
                 for (h = 0; h < g.length; h++) g[h].setAttr(b, c);
             if ("shape" == f) {
@@ -6335,9 +6481,9 @@ AmCharts.VMLRenderer = AmCharts.Class({
                 a = a.fill;
                 "stroke" == b && (d ? f.color = c : f.setAttribute("color", c));
                 "stroke-width" == b && (d ? f.weight = c : f.setAttribute("weight", c));
-                "stroke-opacity" == b && (d ? f.opacity = c : f.setAttribute("opacity", c));
-                "stroke-dasharray" == b && (g = "solid", 0 < c && 3 > c && (g = "dot"),
-                    3 <= c && 6 >= c && (g = "dash"), 6 < c && (g = "longdash"), d ? f.dashstyle = g : f.setAttribute("dashstyle", g));
+                "stroke-opacity" == b && (d ? f.opacity = c : f.setAttribute("opacity",
+                    c));
+                "stroke-dasharray" == b && (g = "solid", 0 < c && 3 > c && (g = "dot"), 3 <= c && 6 >= c && (g = "dash"), 6 < c && (g = "longdash"), d ? f.dashstyle = g : f.setAttribute("dashstyle", g));
                 if ("fill-opacity" == b || "opacity" == b) 0 === c ? d ? a.on = !1 : a.setAttribute("on", !1) : d ? a.opacity = c : a.setAttribute("opacity", c);
                 "fill" == b && (d ? a.color = c : a.setAttribute("color", c));
                 "rx" == b && (d ? e.arcSize = c + "%" : e.setAttribute("arcsize", c + "%"))
@@ -6348,11 +6494,11 @@ AmCharts.VMLRenderer = AmCharts.Class({
         for (var c in b) b.hasOwnProperty(c) && this.setAttr(a, c, b[c])
     },
     text: function(a, b, c) {
-        var d = new AmCharts.AmDObject("text", this.D),
+        var d = new AmCharts.AmDObject("text",
+                this.D),
             e = d.node;
         e.style.whiteSpace = "pre";
-        e.innerHTML =
-            a;
+        e.innerHTML = a;
         this.D.addToContainer(e, c);
         this.attr(d, b);
         return d
@@ -6377,7 +6523,8 @@ AmCharts.VMLRenderer = AmCharts.Class({
                 l = f.width + l;
                 isNaN(l) || (d = Math.max(d, l));
                 f = f.height + m;
-                isNaN(f) || (e = Math.max(e, f))
+                isNaN(f) || (e = Math.max(e,
+                    f))
             }
             0 > g && (b += g);
             0 > h && (c += h)
@@ -6407,12 +6554,12 @@ AmCharts.VMLRenderer = AmCharts.Class({
         isNaN(b) || isNaN(c) || (d.style.left = b + "px", d.style.top = c + "px")
     },
     svgPathToVml: function(a) {
-        var b = a.split(" ");
+        var b =
+            a.split(" ");
         a = "";
         var c, d = Math.round,
             e;
-        for (e =
-            0; e < b.length; e++) {
+        for (e = 0; e < b.length; e++) {
             var f = b[e],
                 g = f.substring(0, 1),
                 f = f.substring(1),
@@ -6443,7 +6590,8 @@ AmCharts.VMLRenderer = AmCharts.Class({
     animate: function(a, b, c, d, e) {
         var f = a.node,
             g = this.chart;
-        if ("translate" == b) {
+        if ("translate" ==
+            b) {
             b = c.split(",");
             c = b[1];
             var h = f.offsetTop;
@@ -6484,7 +6632,8 @@ AmCharts.VMLRenderer = AmCharts.Class({
         return b
     },
     set: function(a) {
-        var b = new AmCharts.AmDObject("group", this.D);
+        var b = new AmCharts.AmDObject("group",
+            this.D);
         this.D.container.appendChild(b.node);
         if (a) {
             var c;
@@ -6833,42 +6982,42 @@ AmCharts.AmLegend = AmCharts.Class({
         this.set = s;
         r = r.set();
         s.push(r);
-        var v = this.entries,
-            w, t;
-        for (t = 0; t < v.length; t++) {
-            w = v[t].getBBox();
-            var u = w.width;
+        var w = this.entries,
+            v, t;
+        for (t = 0; t < w.length; t++) {
+            v = w[t].getBBox();
+            var u = v.width;
             u > p && (p = u);
-            w = w.height;
-            w > q && (q = w)
+            v = v.height;
+            v > q && (q = v)
         }
         var u = q = 0,
-            y = f,
+            x = f,
             E = 0,
             A = 0;
-        for (t = 0; t < v.length; t++) {
-            var z = v[t];
-            this.reversedOrder && (z = v[v.length - t - 1]);
-            w = z.getBBox();
-            var K;
-            this.equalWidths ? K = f + u * (p + m + this.markerLabelGap) : (K = y, y = y + w.width + f + m);
-            w.height > A && (A = w.height);
-            K + w.width > n && 0 < t && 0 !== u && (q++, u = 0, K = f, y = K + w.width + f + m, E = E + A + l, A = 0);
-            z.translate(K, E);
+        for (t = 0; t < w.length; t++) {
+            var z = w[t];
+            this.reversedOrder && (z = w[w.length - t - 1]);
+            v = z.getBBox();
+            var H;
+            this.equalWidths ? H = f + u * (p + m + this.markerLabelGap) : (H = x, x = x + v.width + f + m);
+            v.height > A && (A = v.height);
+            H + v.width > n && 0 < t && 0 !== u && (q++, u = 0, H = f, x = H + v.width + f + m, E = E + A + l, A = 0);
+            z.translate(H, E);
             u++;
             !isNaN(k) && u >= k &&
                 (u = 0, q++, E = E + A + l, A = 0);
             r.push(z)
         }
-        w = r.getBBox();
-        k = w.height + 2 * l - 1;
-        "left" == a || "right" == a ? (h = w.width + 2 * f, g.style.width = h + b + c + "px") : h = h - b - c - 1;
+        v = r.getBBox();
+        k = v.height + 2 * l - 1;
+        "left" == a || "right" == a ? (h = v.width + 2 * f, g.style.width = h + b + c + "px") : h = h - b - c - 1;
         c = AmCharts.polygon(this.container, [0, h, h, 0], [0, 0, k, k], this.backgroundColor, this.backgroundAlpha, 1, this.borderColor, this.borderAlpha);
         s.push(c);
         s.translate(b, d);
         c.toBack();
         b = f;
-        if ("top" == a || "bottom" == a || "absolute" == a || "outside" == a) "center" == this.align ? b = f + (h - w.width) / 2 : "right" == this.align && (b = f + h - w.width);
+        if ("top" == a || "bottom" == a || "absolute" == a || "outside" == a) "center" == this.align ? b = f + (h - v.width) / 2 : "right" == this.align && (b = f + h - v.width);
         r.translate(b, l + 1);
         this.titleHeight > k && (k = this.titleHeight);
         a = k + d + e + 1;
@@ -6931,58 +7080,61 @@ AmCharts.AmLegend = AmCharts.Class({
     },
     addListeners: function(a, b) {
         var c = this;
-        a && a.mouseover(function() {
-            c.rollOverMarker(b)
-        }).mouseout(function() {
-            c.rollOutMarker(b)
-        }).click(function() {
-            c.clickMarker(b)
+        a && a.mouseover(function(a) {
+            c.rollOverMarker(b, a)
+        }).mouseout(function(a) {
+            c.rollOutMarker(b, a)
+        }).click(function(a) {
+            c.clickMarker(b, a)
         })
     },
-    rollOverMarker: function(a) {
-        this.switchable && this.dispatch("rollOverMarker", a);
+    rollOverMarker: function(a, b) {
+        this.switchable && this.dispatch("rollOverMarker", a, b);
         this.dispatch("rollOverItem",
-            a)
+            a, b)
     },
-    rollOutMarker: function(a) {
-        this.switchable && this.dispatch("rollOutMarker", a);
-        this.dispatch("rollOutItem", a)
+    rollOutMarker: function(a, b) {
+        this.switchable && this.dispatch("rollOutMarker", a, b);
+        this.dispatch("rollOutItem", a, b)
     },
-    clickMarker: function(a) {
-        this.switchable && (!0 === a.hidden ? this.dispatch("showItem", a) : this.dispatch("hideItem", a));
-        this.dispatch("clickMarker", a)
+    clickMarker: function(a, b) {
+        this.switchable && (!0 === a.hidden ? this.dispatch("showItem", a, b) : this.dispatch("hideItem", a, b));
+        this.dispatch("clickMarker", a, b)
     },
-    rollOverLabel: function(a) {
+    rollOverLabel: function(a, b) {
         a.hidden || (this.textClickEnabled && a.legendLabel && a.legendLabel.attr({
             fill: this.rollOverColor
-        }), this.dispatch("rollOverItem", a))
+        }), this.dispatch("rollOverItem", a, b))
     },
-    rollOutLabel: function(a) {
+    rollOutLabel: function(a, b) {
         if (!a.hidden) {
             if (this.textClickEnabled && a.legendLabel) {
-                var b = this.color;
-                void 0 !== this.selectedColor && a.showBalloon && (b = this.selectedColor);
-                this.useMarkerColorForLabels && (b = a.lineColor, void 0 === b && (b = a.color));
+                var c =
+                    this.color;
+                void 0 !== this.selectedColor && a.showBalloon && (c = this.selectedColor);
+                this.useMarkerColorForLabels && (c = a.lineColor, void 0 === c && (c = a.color));
                 a.legendLabel.attr({
-                    fill: b
+                    fill: c
                 })
             }
-            this.dispatch("rollOutItem", a)
+            this.dispatch("rollOutItem", a, b)
         }
     },
-    clickLabel: function(a) {
-        this.textClickEnabled ? a.hidden || this.dispatch("clickLabel", a) : this.switchable && (!0 === a.hidden ? this.dispatch("showItem", a) : this.dispatch("hideItem", a))
+    clickLabel: function(a, b) {
+        this.textClickEnabled ? a.hidden || this.dispatch("clickLabel", a, b) : this.switchable && (!0 === a.hidden ? this.dispatch("showItem", a, b) : this.dispatch("hideItem", a, b))
     },
-    dispatch: function(a, b) {
+    dispatch: function(a, b, c) {
         this.fire(a, {
             type: a,
             dataItem: b,
             target: this,
+            event: c,
             chart: this.chart
         })
     },
     createValue: function(a) {
-        var b = this,
+        var b =
+            this,
             c = b.fontSize;
         if (!1 !== a.visibleInLegend) {
             var d = b.maxLabelWidth;
@@ -6997,9 +7149,9 @@ AmCharts.AmLegend = AmCharts.Class({
                     d = d + b.lx + b.markerLabelGap + b.valueWidth,
                     h = "end";
                 "left" == b.valueAlign && (d -= b.valueWidth, h = "start");
-                f = AmCharts.text(b.container, g, f, b.chart.fontFamily, c, h);
-                f.translate(d,
-                    b.ly);
+                f = AmCharts.text(b.container, g, f, b.chart.fontFamily,
+                    c, h);
+                f.translate(d, b.ly);
                 b.entries[b.index].push(f);
                 e += b.valueWidth + 2 * b.markerLabelGap;
                 f.dItem = a;
@@ -7015,12 +7167,12 @@ AmCharts.AmLegend = AmCharts.Class({
             });
             c.dItem = a;
             b.entries[b.index - 1].push(c);
-            c.mouseover(function() {
-                b.rollOverLabel(a)
-            }).mouseout(function() {
-                b.rollOutLabel(a)
-            }).click(function() {
-                b.clickLabel(a)
+            c.mouseover(function(c) {
+                b.rollOverLabel(a, c)
+            }).mouseout(function(c) {
+                b.rollOutLabel(a, c)
+            }).click(function(c) {
+                b.clickLabel(a, c)
             })
         }
     },
@@ -7299,65 +7451,66 @@ AmCharts.stringToDate = function(a, b) {
                 g || "L" == g) e || (l += 12);
             c[h] = l
         }
-    return new Date(c.year, c.month, c.date, c.hours, c.minutes, c.seconds, c.milliseconds)
+    AmCharts.useUTC ? (d = new Date, d.setUTCFullYear(c.year, c.month, c.date), d.setUTCHours(c.hours, c.minutes, c.seconds, c.milliseconds)) : d = new Date(c.year, c.month, c.date, c.hours, c.minutes, c.seconds, c.milliseconds);
+    return d
 };
 AmCharts.getFromDateString = function(a, b, c) {
     if (void 0 !== b) return c = c.indexOf(a), b = b.substr(c, a.length), "0" == b.charAt(0) && (b = b.substr(1, b.length - 1)), b = Number(b), isNaN(b) && (b = 0), -1 != a.indexOf("M") && b--, b
 };
-AmCharts.formatDate = function(a, b) {
-    var c, d, e, f, g, h, k, l, m = AmCharts.getWeekNumber(a);
-    AmCharts.useUTC ? (c = a.getUTCFullYear(), d = a.getUTCMonth(), e = a.getUTCDate(), f = a.getUTCDay(), g = a.getUTCHours(), h = a.getUTCMinutes(), k = a.getUTCSeconds(), l = a.getUTCMilliseconds()) : (c = a.getFullYear(), d = a.getMonth(), e = a.getDate(), f = a.getDay(), g = a.getHours(), h = a.getMinutes(), k = a.getSeconds(), l = a.getMilliseconds());
-    var n = String(c).substr(2, 2),
-        p = d + 1;
-    9 > d && (p = "0" + p);
-    var q = "0" + f;
+AmCharts.formatDate = function(a, b, c) {
+    c || (c = AmCharts);
+    var d, e, f, g, h, k, l, m = AmCharts.getWeekNumber(a);
+    AmCharts.useUTC ? (d = a.getUTCFullYear(), e = a.getUTCMonth(), f = a.getUTCDate(), g = a.getUTCDay(), h = a.getUTCHours(), k = a.getUTCMinutes(), l = a.getUTCSeconds(), a = a.getUTCMilliseconds()) : (d = a.getFullYear(), e = a.getMonth(), f = a.getDate(), g = a.getDay(), h = a.getHours(), k = a.getMinutes(), l = a.getSeconds(), a = a.getMilliseconds());
+    var n = String(d).substr(2, 2),
+        p = e + 1;
+    9 > e && (p = "0" + p);
+    var q = "0" + g;
     b = b.replace(/W/g, m);
-    m = g;
+    m = h;
     24 == m && (m = 0);
     var r = m;
-    10 > r && (r =
-        "0" + r);
+    10 > r && (r = "0" + r);
     b = b.replace(/JJ/g, r);
     b = b.replace(/J/g, m);
-    r = g;
-    0 === r && (r = 24, -1 != b.indexOf("H") && e--);
-    m = e;
-    10 > e && (m = "0" + e);
+    r = h;
+    0 === r && (r = 24, -1 != b.indexOf("H") && f--);
+    m = f;
+    10 > f && (m = "0" + f);
     var s = r;
     10 > s && (s = "0" + s);
     b = b.replace(/HH/g, s);
     b = b.replace(/H/g, r);
-    r = g;
+    r = h;
     11 < r && (r -= 12);
     s = r;
     10 > s && (s = "0" + s);
     b = b.replace(/KK/g, s);
     b = b.replace(/K/g, r);
-    r = g;
+    r = h;
     0 === r && (r = 12);
     12 < r && (r -= 12);
     s = r;
     10 > s && (s = "0" + s);
     b = b.replace(/LL/g, s);
     b = b.replace(/L/g, r);
-    r = h;
+    r = k;
     10 > r && (r = "0" + r);
     b = b.replace(/NN/g, r);
-    b = b.replace(/N/g, h);
-    h = k;
-    10 > h && (h = "0" + h);
-    b = b.replace(/SS/g, h);
-    b = b.replace(/S/g, k);
+    b = b.replace(/N/g, k);
     k = l;
+    10 > k && (k = "0" + k);
+    b = b.replace(/SS/g, k);
+    b = b.replace(/S/g, l);
+    l = a;
+    10 > l && (l = "00" +
+        l);
+    100 > l && (l = "0" + l);
+    k = a;
     10 > k && (k = "00" + k);
-    100 > k && (k = "0" +
-        k);
-    h = l;
-    10 > h && (h = "00" + h);
-    b = b.replace(/QQQ/g, k);
-    b = b.replace(/QQ/g, h);
-    b = b.replace(/Q/g, l);
-    b = 12 > g ? b.replace(/A/g, "am") : b.replace(/A/g, "pm");
+    b = b.replace(/QQQ/g, l);
+    b = b.replace(/QQ/g, k);
+    b = b.replace(/Q/g, a);
+    b = 12 > h ? b.replace(/A/g, "am") : b.replace(/A/g, "pm");
     b = b.replace(/YYYY/g, "@IIII@");
     b = b.replace(/YY/g, "@II@");
     b = b.replace(/MMMM/g, "@XXXX@");
@@ -7370,19 +7523,19 @@ AmCharts.formatDate = function(a, b) {
     b = b.replace(/EEE/g, "@PPP@");
     b = b.replace(/EE/g, "@PP@");
     b = b.replace(/E/g, "@P@");
-    b = b.replace(/@IIII@/g, c);
-    b = b.replace(/@II@/g,
-        n);
-    b = b.replace(/@XXXX@/g, AmCharts.monthNames[d]);
-    b = b.replace(/@XXX@/g, AmCharts.shortMonthNames[d]);
+    b = b.replace(/@IIII@/g, d);
+    b =
+        b.replace(/@II@/g, n);
+    b = b.replace(/@XXXX@/g, c.monthNames[e]);
+    b = b.replace(/@XXX@/g, c.shortMonthNames[e]);
     b = b.replace(/@XX@/g, p);
-    b = b.replace(/@X@/g, d + 1);
+    b = b.replace(/@X@/g, e + 1);
     b = b.replace(/@RR@/g, m);
-    b = b.replace(/@R@/g, e);
-    b = b.replace(/@PPPP@/g, AmCharts.dayNames[f]);
-    b = b.replace(/@PPP@/g, AmCharts.shortDayNames[f]);
+    b = b.replace(/@R@/g, f);
+    b = b.replace(/@PPPP@/g, c.dayNames[g]);
+    b = b.replace(/@PPP@/g, c.shortDayNames[g]);
     b = b.replace(/@PP@/g, q);
-    return b = b.replace(/@P@/g, f)
+    return b = b.replace(/@P@/g, g)
 };
 AmCharts.changeDate = function(a, b, c, d, e) {
     var f = -1;
