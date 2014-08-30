@@ -181,7 +181,7 @@ chart: true
     "dataProvider": [
     //get the post list
     {% assign post_list = site.posts %}
-    {% assign last_time = post_list | first %}
+    {% assign last_time = post_list | last %}
     {% assign last_time = last_time.date %}
     {% assign count = 1 %}
     {% for post in post_list reversed %}{% if post.date == last_time %}{% assign count = count | plus: 1 %}{% else %}
