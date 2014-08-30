@@ -162,8 +162,6 @@ chart: true
     //get the post list
     {% assign post_list = site.posts %}
     {% assign last_time = post_list | first %}
-    {%post_list | first%}
-    {%post_list | first%}
     {% assign last_time = last_time.date %}
     {% assign count = 0 %}
     {% for post in post_list %}
