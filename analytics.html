@@ -121,68 +121,68 @@ chart: true
     }
   );
 
-  var chart = AmCharts.makeChart("date", {
-    "type": "serial",
-    "theme": "none",
-     "pathToImages": "http://www.amcharts.com/lib/3/images/",
-    "valueAxes": [{
-        "logarithmic": true,
-        "dashLength": 1,
-        "guides": [{
-            "dashLength": 6,
-            "inside": true,
-            "label": "average",
-            "lineAlpha": 1,
-            "value": 90.4
-        }],
-        "position": "left"
-    }],
-    "graphs": [{
-        "bullet": "round",
-        "id": "g1",
-        "bulletBorderAlpha": 1,
-        "bulletColor": "#FFFFFF",
-        "bulletSize": 7,
-        "lineThickness": 2,
-        "title": "Price",
-        "type": "smoothedLine",
-        "useLineColorForBulletBorder": true,
-        "valueField": "count"
-    }],
-    "chartScrollbar": {},
-    "chartCursor": {
-        "cursorPosition": "mouse"
-    },
-    "dataDateFormat": "YYYY-MM-DD",
-    "categoryField": "date",
-    "categoryAxis": {
-        "parseDates": true
-    },
-    "dataProvider": [
-    //get the post list
-    {% assign post_list = site.posts %}
-    // get the current time 
-    {% assign last_time = post_list.first[0].date %}
-    // count set 0
-    {% assign count = 0 %}
-    //loop to calc the num of the same date
-    {% for post in post_list %}
-      // if the post has the same date as the former
-      {% if post.date == last_time %}
-        {% increment count %}
-      // the post is older than the former
-      {% else %}
-        {
-          "date": "{{ last_time }}",
-          "count": "{{ count }}"
-        }
-        //reset
-        {% assign last_time = post.date %}
-        {% assign count = 0 %}
-      {% endif %}
-    {% endfor %}
-    {% assign last_time = nil %}
-    {% assign count = nil %}
-    ]
-});
+//   var chart = AmCharts.makeChart("date", {
+//     "type": "serial",
+//     "theme": "none",
+//      "pathToImages": "http://www.amcharts.com/lib/3/images/",
+//     "valueAxes": [{
+//         "logarithmic": true,
+//         "dashLength": 1,
+//         "guides": [{
+//             "dashLength": 6,
+//             "inside": true,
+//             "label": "average",
+//             "lineAlpha": 1,
+//             "value": 90.4
+//         }],
+//         "position": "left"
+//     }],
+//     "graphs": [{
+//         "bullet": "round",
+//         "id": "g1",
+//         "bulletBorderAlpha": 1,
+//         "bulletColor": "#FFFFFF",
+//         "bulletSize": 7,
+//         "lineThickness": 2,
+//         "title": "Price",
+//         "type": "smoothedLine",
+//         "useLineColorForBulletBorder": true,
+//         "valueField": "count"
+//     }],
+//     "chartScrollbar": {},
+//     "chartCursor": {
+//         "cursorPosition": "mouse"
+//     },
+//     "dataDateFormat": "YYYY-MM-DD",
+//     "categoryField": "date",
+//     "categoryAxis": {
+//         "parseDates": true
+//     },
+//     "dataProvider": [
+//     //get the post list
+//     {% assign post_list = site.posts %}
+//     // get the current time 
+//     {% assign last_time = post_list.first[0].date %}
+//     // count set 0
+//     {% assign count = 0 %}
+//     //loop to calc the num of the same date
+//     {% for post in post_list %}
+//       // if the post has the same date as the former
+//       {% if post.date == last_time %}
+//         {% increment count %}
+//       // the post is older than the former
+//       {% else %}
+//         {
+//           "date": "{{ last_time }}",
+//           "count": "{{ count }}"
+//         }
+//         //reset
+//         {% assign last_time = post.date %}
+//         {% assign count = 0 %}
+//       {% endif %}
+//     {% endfor %}
+//     {% assign last_time = nil %}
+//     {% assign count = nil %}
+//     ]
+// });
 </script>
