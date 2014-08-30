@@ -41,7 +41,7 @@ links:
     url: /
     external: false
     icon: home
-  - title: 全部文章
+  - title: 脱水区
     url: /featured
   - title: 分类
     url: /categories

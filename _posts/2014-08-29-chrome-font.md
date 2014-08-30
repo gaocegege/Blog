@@ -10,7 +10,7 @@ imagefeature:
 mathjax: 
 chart: 
 comments: true
-featured: true
+featured: false
 ---
 
 本子是15寸的1080p的屏幕，导致chrome F12的工具里字特别小，于是找了找修改大小的方法。

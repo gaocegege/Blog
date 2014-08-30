@@ -10,7 +10,7 @@ imagefeature:
 mathjax: 
 chart: 
 comments: true
-featured: true
+featured: false
 ---
 
 这是博客的第一篇文章吧，真是艰难啊~好不容易配好了所有的东西，也算功德圆满了。
