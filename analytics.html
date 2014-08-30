@@ -161,27 +161,25 @@ chart: true
     "dataProvider": [
     //get the post list
     {% assign post_list = site.posts %}
-    // get the current time 
     {% assign last_time = post_list | first %}
     {% assign last_time = last_time.date %}
-    // count set 0
     {% assign count = 0 %}
-    //loop to calc the num of the same date
     {% for post in post_list %}
-      // if the post has the same date as the former
       {% if post.date == last_time %}
         {% assign count = count | plus: 1 %}
-      // the post is older than the former
       {% else %}
         {
           "date": "{{ last_time | date: "%Y-%M-%d" }}",
           "count": "{{ count }}"
         }
-        //reset
         {% assign last_time = post.date %}
         {% assign count = 0 %}
       {% endif %}
     {% endfor %}
+    {
+      "date": "{{ last_time | date: "%Y-%M-%d" }}",
+      "count": "{{ count }}"
+    }
     {% assign last_time = nil %}
     {% assign count = nil %}
     ]
