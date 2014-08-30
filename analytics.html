@@ -162,7 +162,8 @@ chart: true
     //get the post list
     {% assign post_list = site.posts %}
     // get the current time 
-    {% assign last_time = post_list.first[0].date %}
+    {% assign last_time = post_list.first | first %}
+    {% assign last_time = last_time.date %}
     // count set 0
     {% assign count = 0 %}
     //loop to calc the num of the same date
@@ -173,7 +174,7 @@ chart: true
       // the post is older than the former
       {% else %}
         {
-          "date": "{{ last_time }}",
+          "date": "{{ last_time | date_to_xmlschema }}",
           "count": "{{ count }}"
         }
         //reset
