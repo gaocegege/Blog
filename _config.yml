@@ -55,7 +55,7 @@ links:
   - title: 统计
     url: /analytics
   - title: RSS
-    url: /feed
+    url: /rss.xml
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    Asia/Dili
