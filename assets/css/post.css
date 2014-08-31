@@ -112,7 +112,7 @@ html, body, .summer-post-container, .summer-post-header {
     color: black;
 }
 .post-template .summer-post-title a:hover {
-    color: #9137E4;
+    color: #012363;
 }
 .post-template .summer-post-title h1 {
     color: black;
@@ -237,7 +237,7 @@ html, body, .summer-post-container, .summer-post-header {
 
 /*code color*/
 .post-template .summer-post-content > div:not(.summer-post-title) a, .post-template .summer-post-content > div:not(.summer-post-title) code {
-    color: #9137E4;
+    color: #012363;
 }
 .post-template .summer-post-content > div:not(.summer-post-title) ul, .post-template .summer-post-content > div:not(.summer-post-title) ol {
     padding-left: 1.25rem;
@@ -374,12 +374,12 @@ html, body, .summer-post-container, .summer-post-header {
     padding-top: 3.75rem;
     padding-bottom: 3.75rem;
     border-top: 0.0625rem solid #f2f2f2;
-    color: #9137E4;
+    color: #012363;
 }
 .summer-post-share a {
     display: inline-block;
     margin: 0 0.9375rem;
-    color: #9137E4;
+    color: #012363;
 }
 @media only screen and (min-width: 40.063em) {
     .summer-post-share {
@@ -436,7 +436,7 @@ html, body, .summer-post-container, .summer-post-header {
     font-size: 1.125rem;
 }
 .summer-author-info .summer-post-author > p a {
-    color: #9137E4;
+    color: #012363;
 }
 .summer-author-info .summer-post-author .summer-post-author-avatar {
     width: 12.5rem;
@@ -481,7 +481,7 @@ html, body, .summer-post-container, .summer-post-header {
     color: black;
 }
 .summer-page-title a:hover, .summer-post-title-simple a:hover {
-    color: #9137E4;
+    color: #012363;
 }
 .summer-page-title h1, .summer-post-title-simple h1 {
     color: black;
@@ -556,7 +556,7 @@ html, body, .summer-post-container, .summer-post-header {
     padding-right: 1.875rem;
 }
 .summer-page-content > div:not(.summer-page-title) a, .summer-page-content > div:not(.summer-page-title) code {
-    color: #9137E4;
+    color: #012363;
 }
 .summer-page-content > div:not(.summer-page-title) ul, .summer-page-content > div:not(.summer-page-title) ol {
     padding-left: 1.25rem;
@@ -627,15 +627,15 @@ html, body, .summer-post-container, .summer-post-header {
 /*The color of the select field*/
 
 ::selection {
-    background: #9137E4;
+    background: #012363;
     color: #fff;
 }
 ::-moz-selection {
-    background: #9137E4;
+    background: #012363;
     color: #fff;
 }
 ::-webkit-selection {
-    background: #9137E4;
+    background: #012363;
     color: #fff;
 }
 pre {
