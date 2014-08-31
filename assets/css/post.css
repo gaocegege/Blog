@@ -112,7 +112,7 @@ html, body, .summer-post-container, .summer-post-header {
     color: black;
 }
 .post-template .summer-post-title a:hover {
-    color: #e51843;
+    color: #9137E4;
 }
 .post-template .summer-post-title h1 {
     color: black;
@@ -372,12 +372,12 @@ html, body, .summer-post-container, .summer-post-header {
     padding-top: 3.75rem;
     padding-bottom: 3.75rem;
     border-top: 0.0625rem solid #f2f2f2;
-    color: #e51843;
+    color: #9137E4;
 }
 .summer-post-share a {
     display: inline-block;
     margin: 0 0.9375rem;
-    color: #e51843;
+    color: #9137E4;
 }
 @media only screen and (min-width: 40.063em) {
     .summer-post-share {
@@ -434,7 +434,7 @@ html, body, .summer-post-container, .summer-post-header {
     font-size: 1.125rem;
 }
 .summer-author-info .summer-post-author > p a {
-    color: #e51843;
+    color: #9137E4;
 }
 .summer-author-info .summer-post-author .summer-post-author-avatar {
     width: 12.5rem;
@@ -479,7 +479,7 @@ html, body, .summer-post-container, .summer-post-header {
     color: black;
 }
 .summer-page-title a:hover, .summer-post-title-simple a:hover {
-    color: #e51843;
+    color: #9137E4;
 }
 .summer-page-title h1, .summer-post-title-simple h1 {
     color: black;
@@ -554,7 +554,7 @@ html, body, .summer-post-container, .summer-post-header {
     padding-right: 1.875rem;
 }
 .summer-page-content > div:not(.summer-page-title) a, .summer-page-content > div:not(.summer-page-title) code {
-    color: #e51843;
+    color: #9137E4;
 }
 .summer-page-content > div:not(.summer-page-title) ul, .summer-page-content > div:not(.summer-page-title) ol {
     padding-left: 1.25rem;
