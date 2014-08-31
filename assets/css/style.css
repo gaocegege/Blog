@@ -30,7 +30,8 @@ footer, header, main {
     z-index: 1
 }
 .summer-disqus, .summer-share-icons, main {
-    background: #9137E4
+    /*Background of the main body*/
+    background: #fff
 }
 .animated-post {
     background: 0 0
@@ -83,7 +84,7 @@ footer, header, main {
     padding: .3125rem
 }
 .summer-blog-menu ul li a {
-    color: #9137E4;
+    color: #fff;
     display: block;
     width: 100%;
     height: 100%;
@@ -93,7 +94,7 @@ footer, header, main {
     padding-right: 1.25rem
 }
 .summer-blog-menu ul li.summer-mobile-close-btn a {
-    color: #9137E4
+    color: #fff
 }
 .summer-blog-menu ul.opened {
     -webkit-transform: translate3d(0, 0, 0);
@@ -144,7 +145,7 @@ footer, header, main {
     }
 }
 .summer-site-head .summer-site-head-menu {
-    background: #9137E4
+    background: #fff
 }
 .summer-site-head .summer-site-head-menu .summer-blog-logo {
     display: inline-block;
@@ -190,7 +191,7 @@ footer, header, main {
 .summer-site-head .summer-site-head-content h1, .summer-site-head .summer-site-head-content h2 {
     margin: 0;
     padding: 0;
-    color: #9137E4;
+    color: #fff;
     text-transform: uppercase
 }
 .summer-site-head .summer-site-head-content h1 {
@@ -358,7 +359,7 @@ footer, header, main {
     margin-right: auto;
     margin-top: 1.5625rem;
     font-size: .8125rem;
-    color: #9137E4;
+    color: #fff;
     background-color: #000;
     font-weight: 600;
     padding: .625rem 2.5rem;
@@ -420,7 +421,7 @@ nav.pagination .older-posts .fa {
     padding: 0
 }
 .summer-site-footer .copyright {
-    color: #9137E4;
+    color: #fff;
     float: none;
     text-align: center;
     font-size: .8125rem;
@@ -428,7 +429,7 @@ nav.pagination .older-posts .fa {
     padding-bottom: 1.25rem
 }
 .summer-site-footer .copyright a {
-    color: #9137E4
+    color: #fff
 }
 .summer-site-footer .social-icons {
     text-align: center;
@@ -635,7 +636,7 @@ figcaption {
     color: #000
 }
 .highlight .gr {
-    color: #9137E4;
+    color: #fff;
     background-color: red
 }
 .highlight .gh {
@@ -887,7 +888,7 @@ figcaption {
     color: #ccc
 }
 .mfp-preloader a:hover {
-    color: #9137E4
+    color: #fff
 }
 .mfp-s-error .mfp-content, .mfp-s-ready .mfp-preloader {
     display: none
@@ -921,7 +922,7 @@ button::-moz-focus-inner {
     opacity: .65;
     filter: alpha(opacity=65);
     padding: 0 0 18px 10px;
-    color: #9137E4;
+    color: #fff;
     font-style: normal;
     font-size: 28px;
     font-family: Arial, Baskerville, monospace
@@ -937,7 +938,7 @@ button::-moz-focus-inner {
     color: #333
 }
 .mfp-iframe-holder .mfp-close, .mfp-image-holder .mfp-close {
-    color: #9137E4;
+    color: #fff;
     right: -6px;
     text-align: right;
     padding-right: 6px;
@@ -995,7 +996,7 @@ button::-moz-focus-inner {
     left: 0
 }
 .mfp-arrow-left .mfp-a, .mfp-arrow-left:after {
-    border-right: 17px solid #9137E4;
+    border-right: 17px solid #fff;
     margin-left: 31px
 }
 .mfp-arrow-left .mfp-b, .mfp-arrow-left:before {
@@ -1006,7 +1007,7 @@ button::-moz-focus-inner {
     right: 0
 }
 .mfp-arrow-right .mfp-a, .mfp-arrow-right:after {
-    border-left: 17px solid #9137E4;
+    border-left: 17px solid #fff;
     margin-left: 39px
 }
 .mfp-arrow-right .mfp-b, .mfp-arrow-right:before {
