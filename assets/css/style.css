@@ -134,7 +134,7 @@ footer, header, main {
         padding: 0
     }
     .summer-blog-menu ul li a {
-        color: #000;
+        color: #fff;
         display: inline-block;
         border-bottom: .1875rem solid transparent;
         width: auto;
@@ -145,7 +145,7 @@ footer, header, main {
     }
 }
 .summer-site-head .summer-site-head-menu {
-    background: #fff
+    background-color: black;
 }
 .summer-site-head .summer-site-head-menu .summer-blog-logo {
     display: inline-block;
