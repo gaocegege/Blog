@@ -12,11 +12,11 @@ layout: none
   {% assign site_url = site.url %}
 {% endif %}
 <channel>
-<title type="text">{{ site.title }}</title>
+<title>{{ site.title }}</title>
 <discription>个人博客</discription>
 <!-- <generator uri="https://github.com/mojombo/jekyll">Jekyll</generator> -->
 <!-- <link rel="self" type="application/atom+xml" href="{{ site_url }}/feed.xml" /> -->
-<link type="text/html" href="{{ site_url }}/" />
+<link>{{ site_url }}</link>
 <pubDate>{{ site.time | date_to_xmlschema }}</pubDate>
 <!-- <id>{{ site_url }}/</id>
 <author>
@@ -27,10 +27,10 @@ layout: none
 {% for post in site.posts limit:20 %}
 
 <item>
-  <title type="html"><![CDATA[{{ post.title | cdata_escape }}]]></title>
-  <link type="text/html" href="{% if post.link %}{{ post.link }}{% else %}{{ site_url }}{{ post.url }}{% endif %}"/>
-  <id>{{ site_url }}{{ post.id }}</id>
-  {% if post.modified %}<published>{{ post.date | date_to_xmlschema }}</published>
+  <title><![CDATA[{{ post.title | cdata_escape }}]]></title>
+  <link>{% if post.link %}{{ post.link }}{% else %}{{ site_url }}{{ post.url }}{% endif %}</link>
+  <!-- <id>{{ site_url }}{{ post.id }}</id> -->
+  <!-- {% if post.modified %}<published>{{ post.date | date_to_xmlschema }}</published> -->
   <pubDate>{{ post.modified }}T00:00:00-00:00</pubDate>
   {% else %}<pubDate>{{ post.date | date_to_xmlschema }}</pubDate>
   <!-- <updated>{{ post.date | date_to_xmlschema }}</updated> -->{% endif %}
@@ -39,8 +39,8 @@ layout: none
     <uri>{{ site_url }}</uri>
     <email>{{ site.owner.email }}</email>
   </author> -->
-  {% for tag in post.tags %}<category scheme="{{ site_url }}/tags/#{{ tag | uri_escape }}" term="{{ tag }}" />{% endfor %}
-  <discription type="html">
+  {% for tag in post.tags %}<category>{{ site_url }}/tags/#{{ tag | uri_escape }}</category>{% endfor %}
+  <discription>
   {% if add_protocol %}
     {{ post.content | xml_escape | replace: site.url, site_url }}
   {% else %}
