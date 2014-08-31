@@ -8,7 +8,7 @@ chart: true
 ---
 
 <figure>
-	<img src="{{ site.url }}/images/about.jpg" alt="about">
+	<img src="{{ site.url }}/images/about.jpg" alt="about" height="200" width="400">
 	<figcaption>SJTU and Me</figcaption>
 </figure>
 
