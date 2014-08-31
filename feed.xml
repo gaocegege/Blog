@@ -1,6 +1,8 @@
 ---
 layout: none
 ---
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
 {% assign add_protocol = false %}
 {% assign protocol = site.url | split: '/' | first %}
 {% if site.url != '' and protocol != 'http:' and protocol != 'https:' %}
@@ -9,8 +11,6 @@ layout: none
 {% else %}
   {% assign site_url = site.url %}
 {% endif %}
-<?xml version="1.0" encoding="utf-8" ?>
-<rss version="2.0">
 <channel>
 <title type="text">{{ site.title }}</title>
 <discription>个人博客</discription>
