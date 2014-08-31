@@ -641,7 +641,8 @@ pre {
     margin-bottom: 1.5625rem;
 }
 code {
-    font-size: 1.25rem;
+    font-size: 85%;
+    background-color: rgba(0,0,0,0.04);
     line-height: 1.2;
 }
 iframe {
