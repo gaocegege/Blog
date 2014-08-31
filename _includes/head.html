@@ -29,6 +29,12 @@
 <link href="{{ site.url }}/feed.xml" type="application/atom+xml" rel="alternate" title="{{ site.title }} Feed">
 {% if site.owner.google_plus %}<link rel="author" href="{{ site.owner.google_plus }}?rel=author">{% endif %}
 
+<!-- highlight the code-->
+{% if site.highlight %}
+<link rel="stylesheet" href="{{ site.url }}/assets/js/vendor/highlight/styles/default.css">
+<script src="{{ site.url }}/assets/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>{% endif %}
+
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
 <meta name="MobileOptimized" content="320">
