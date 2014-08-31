@@ -638,6 +638,7 @@ html, body, .summer-post-container, .summer-post-header {
 }
 pre {
     word-wrap: break-word;
+    background-color: #f7f7f7;
     margin-bottom: 1.5625rem;
 }
 code {
