@@ -234,6 +234,8 @@ html, body, .summer-post-container, .summer-post-header {
         margin: -10% auto 0;
     }
 }
+
+/*code color*/
 .post-template .summer-post-content > div:not(.summer-post-title) a, .post-template .summer-post-content > div:not(.summer-post-title) code {
     color: #9137E4;
 }
@@ -642,6 +644,7 @@ pre {
     margin-bottom: 1.5625rem;
 }
 pre code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     display: inline;
     max-width: initial;
     padding: 0;
@@ -653,6 +656,7 @@ pre code {
     border: 0;
 }
 code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 85%;
     background-color: rgba(0, 0, 0, 0.04);
     line-height: 1.2;
