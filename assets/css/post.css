@@ -235,7 +235,7 @@ html, body, .summer-post-container, .summer-post-header {
     }
 }
 .post-template .summer-post-content > div:not(.summer-post-title) a, .post-template .summer-post-content > div:not(.summer-post-title) code {
-    color: #8B1A1A;
+    color: #9137E4;
 }
 .post-template .summer-post-content > div:not(.summer-post-title) ul, .post-template .summer-post-content > div:not(.summer-post-title) ol {
     padding-left: 1.25rem;
