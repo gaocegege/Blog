@@ -43,7 +43,7 @@ chart: true
 {% include signoff.html %} 
         
 <div class="cf"></div>
-{% if site.disqus_shortname and page.comments == true %}
+
 <section class="summer-disqus row">
 <div class="small-12 columns">
 <h1 class="summer-comments-header">Comments</h1>
@@ -51,4 +51,3 @@ chart: true
 {% include disqus_comments.html %}
 </div>
 </section>
-{% endif %}
