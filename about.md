@@ -1,6 +1,5 @@
 ---
 layout: post
-permalink: /about/index.html
 title: 关于我
 description: 关于我
 modified: 2014-09-01
