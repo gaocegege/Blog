@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: post
 permalink: /about/index.html
 title: 关于我
 tags: [SJTU, SE]
@@ -39,16 +39,3 @@ chart: true
 博客的Theme，需要感谢Github！这么美丽的界面，是套用了[Hossain Mohd. Faysal](https://github.com/hmfaysal)大大创作的[Notepad](https://github.com/hmfaysal/Notepad)，以至于自己只是简简单单地添添画画就完成了。虽然有些地方对中文来说不太美观，但是也只是小事情，自己以后慢慢修改就好。
 
 最后，欢迎光临。
-
-{% include signoff.html %} 
-        
-<div class="cf"></div>
-{% if site.disqus_shortname and page.comments == true %}
-<section class="summer-disqus row">
-<div class="small-12 columns">
-<h1 class="summer-comments-header">Comments</h1>
-<div id="disqus_thread"></div>
-{% include disqus_comments.html %}
-</div>
-</section>
-{% endif %}
