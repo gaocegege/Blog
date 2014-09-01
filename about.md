@@ -2,9 +2,13 @@
 layout: post
 permalink: /about/index.html
 title: 关于我
+description: 关于我
+modified: 2014-09-01
 tags: [SJTU, SE]
 imagefeature: 
 chart: true
+comments: true
+featured: false
 ---
 
 <figure>
