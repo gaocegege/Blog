@@ -48,12 +48,12 @@ links:
     url: /relaxed
   - title: 分类
     url: /categories
-  - title: 标签
-    url: /tags
   - title: 关于我
     url: /about
   - title: 统计
     url: /analytics
+  - title: Link
+    url: /link
   - title: RSS
     url: /rss.xml
 
