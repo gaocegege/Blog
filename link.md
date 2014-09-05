@@ -11,8 +11,7 @@ chart: true
 
 - [龙哥盟](http://www.flygon.net/)`/*大学同学的博客，看上去是个大牛*/`
 
-
-{% include signoff.html %} 
+如有需要，请留言~
         
 <div class="cf"></div>
 
