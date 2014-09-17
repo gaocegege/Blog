@@ -9,7 +9,6 @@ chart: true
 
 0.0
 
-<p>
 <table>
 <tr>
 <th><a href='http://www.flygon.net/'>龙哥盟</a></th>
@@ -20,7 +19,6 @@ chart: true
 <td>也是大学同学的博客，引领全院Lab的男人</td>
 </tr>
 </table>
-</p>
 
 如有需要，请留言~
         
