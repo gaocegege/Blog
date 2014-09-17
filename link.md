@@ -9,7 +9,7 @@ chart: true
 
 0.0
 
-<table>
+<table align='center'>
 <tr>
 <th><a href='http://www.flygon.net/'>龙哥盟</a></th>
 <td>大学同学的博客，看起来是个大神，你觉得呢</td>
