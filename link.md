@@ -9,7 +9,18 @@ chart: true
 
 0.0
 
-- [龙哥盟](http://www.flygon.net/)　　　　`/*大学同学的博客，看上去是个大牛*/`
+<div>
+<table>
+<tr>
+<th><a href='http://www.flygon.net/'>龙哥盟</a></th>
+<td>大学同学的博客，看起来是个大神，你觉得呢</td>
+</tr>
+<tr>
+<th><a href='http://azard.me/'>Azard的博客</a></th>
+<td>也是大学同学的博客，引领全院Lab的男人</td>
+</tr>
+</table>
+</div>
 
 如有需要，请留言~
         
