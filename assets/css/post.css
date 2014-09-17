@@ -256,6 +256,16 @@ html, body, .summer-post-container, .summer-post-header {
     max-width: 56.25rem;
     font-size: 1.125rem;
 }
+/*
+code
+ */
+.post-template .summer-post-content > div:not(.summer-post-title) table {
+    margin: 0 auto 2em auto;
+    max-width: 56.25rem;
+    font-size: 1.125rem;
+}
+
+
 .post-template .summer-post-content > div:not(.summer-post-title) p:first-child {
     font-size: 1.375rem;
     font-weight: 300;
