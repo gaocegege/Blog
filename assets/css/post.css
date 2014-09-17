@@ -259,7 +259,7 @@ html, body, .summer-post-container, .summer-post-header {
 /*
 code
  */
-.post-template .summer-post-content > div:not(.summer-post-title) table {
+.post-template .summer-post-content table {
     margin: 0 auto 2em auto;
     max-width: 56.25rem;
     font-size: 1.125rem;
