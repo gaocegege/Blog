@@ -202,7 +202,8 @@ chart: true
     {% for post in post_list reversed %}{% if post.date == last_time %}{% assign count = count | plus: 1 %}{% else %}
     {
       "date": "{{ last_time | date: "%Y-%m-%d" }}",
-      "count": "{{ count }}"
+      "count": "{{ count }}",
+      "color": "#0E8ED0"
     },{% assign last_time = post.date %}{% assign count = 1 %}{% endif %}{% endfor %}
     {
       "date": "{{ last_time | date: "%Y-%m-%d" }}",
