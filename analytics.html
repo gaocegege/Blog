@@ -80,7 +80,7 @@ chart: true
       "type": "serial",
       "pathToImages": "http://cdn.amcharts.com/lib/3/images/",
       "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-      "theme": "dark",
+      "theme": "none",
       "dataProvider": [
 {% assign tags_list = site.tags %}  
   {% if tags_list.first[0] == null %}
@@ -157,7 +157,7 @@ chart: true
 // });
   var chart = AmCharts.makeChart("date", {
     "type": "serial",
-    "theme": "dark",
+    "theme": "none",
      "pathToImages": "http://www.amcharts.com/lib/3/images/",
      "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b></span>",
     // "valueAxes": [{
