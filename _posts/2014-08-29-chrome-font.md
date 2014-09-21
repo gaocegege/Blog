@@ -5,7 +5,7 @@ description: 修改chrome字体的方法
 headline: 
 modified: 2014-08-29
 category: 1080p
-tags: [1080p, chrome, chrome developer tools]
+tags: [chrome, chrome developer tools, font]
 imagefeature: 
 mathjax: 
 chart: 

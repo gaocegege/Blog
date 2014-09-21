@@ -5,7 +5,7 @@ description: 修改sublime text字体
 headline: 
 modified: 2014-08-30
 category: 1080p
-tags: [sublime text, font, 字体修改]
+tags: [sublime text, font]
 imagefeature: 
 mathjax: 
 chart: 
