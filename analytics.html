@@ -80,21 +80,23 @@ chart: true
       "type": "serial",
       "pathToImages": "http://cdn.amcharts.com/lib/3/images/",
       "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-      "theme": "light",
+      "theme": "dark",
       "dataProvider": [
 {% assign tags_list = site.tags %}  
   {% if tags_list.first[0] == null %}
     {% for tag in tags_list %} 
         {
           "category": "{{ tag | capitalize }}",
-          "number-of-posts": {{ site.tags[tag].size }}
+          "number-of-posts": {{ site.tags[tag].size }},
+          "color": "#0E8ED0"
         },
     {% endfor %}
   {% else %}
     {% for tag in tags_list %} 
         {
           "category": "{{ tag[0] | capitalize }}",
-          "number-of-posts": {{ tag[1].size }}
+          "number-of-posts": {{ tag[1].size }},
+          "color": "#0E8ED0"
         },
     {% endfor %}
   {% endif %}
@@ -155,7 +157,7 @@ chart: true
 // });
   var chart = AmCharts.makeChart("date", {
     "type": "serial",
-    "theme": "none",
+    "theme": "dark",
      "pathToImages": "http://www.amcharts.com/lib/3/images/",
      "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b></span>",
     // "valueAxes": [{
@@ -204,7 +206,8 @@ chart: true
     },{% assign last_time = post.date %}{% assign count = 1 %}{% endif %}{% endfor %}
     {
       "date": "{{ last_time | date: "%Y-%m-%d" }}",
-      "count": "{{ count }}"
+      "count": "{{ count }}",
+      "color": "#0E8ED0"
     },{% assign last_time = nil %}{% assign count = nil %}
     ]
 });
