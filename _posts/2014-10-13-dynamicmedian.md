@@ -45,15 +45,12 @@ Design a data type that supports insert in logarithmic time, find-the-median in 
 插入的时候，如果插入之前有奇数个元素，那么分情况讨论：
 
 - 如果插入的元素大于插入前的中位数，即meidanLow，就将元素插入至最小堆，然后在最小堆中取出堆顶元素，存入medianLarge。
-
 - 如果插入的元素小于插入前的中位数，即meidanLow，就将元素插入至最大堆，然后在最大堆中取出堆顶元素，将medianLow存入medianLarge，然后将取出的堆顶元素存入medianLow。
 
 而如果插入之前有偶数个元素，那么同样分情况讨论：
 
 - 如果插入的元素大于medianLarge，就将元素插入至最小堆，然后把medianLow插入至最大堆，此时medianLarge就是插入后数组的中位数。
-
 - 如果插入的元素小于medianLow，就将元素插入至最大堆，然后把medianLarge插入至最小堆，此时meidanLaw就是插入后数组的中位数。
-
 - 如果插入的元素大小在medianLow与medianLarge之间，就把medianLow与medianLarge分别插入最大堆与最小堆，此时原本需插入的元素为中位数。
 
 而且显而易见，插入的时间复杂度是`O(logN)`的。
