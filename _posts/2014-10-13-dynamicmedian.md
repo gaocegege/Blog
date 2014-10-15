@@ -3,7 +3,7 @@ layout: post
 title: "最大最小堆计算动态中位数"
 description: 堆应用
 headline: 
-modified: 2014-08-30
+modified: 2014-10-13
 category: Algorithm
 tags: [algorithm, heap]
 imagefeature: 

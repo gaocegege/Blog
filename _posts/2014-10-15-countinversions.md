@@ -3,7 +3,7 @@ layout: post
 title: "Divide and conquer计算逆序数"
 description: Devide and conquer
 headline: 
-modified: 2014-08-30
+modified: 2014-10-15
 category: Algorithm
 tags: [algorithm, Divide and conquer, cpp]
 imagefeature: 
