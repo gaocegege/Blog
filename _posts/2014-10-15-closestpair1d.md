@@ -10,7 +10,7 @@ imagefeature:
 mathjax: 
 chart: 
 comments: true
-featured: false
+featured: true
 ---
 
 算法PPT中提到的一个问题~

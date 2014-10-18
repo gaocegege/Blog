@@ -10,7 +10,7 @@ imagefeature:
 mathjax: 
 chart: 
 comments: true
-featured: false
+featured: true
 ---
 
 算法作业中的一道题目~
