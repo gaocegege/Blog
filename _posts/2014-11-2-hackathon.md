@@ -39,7 +39,7 @@ Angular是谷歌的一个前端框架，在写的时候稍微看了看，感觉�
 
 首先第一个问题，就是关于git。首先，因为gitcafe有给这个比赛赞助，所以推荐使用gitcafe，而在使用gitcafe的时候遇到了好多问题，首先就是不支持putty生成的SSH密钥。据工作人员说，他们目前只支持gitbash生成的ssh。所以后来没办法只好用github，用github也遇到了一个问题，就是SourceTree似乎不支持gitignore，明明写好了ignore文件，但是不能起作用，也不知道是写错了还是怎样，最后每次上传代码连pyc都传上去了，相当混乱。
 
-然后，遇到了Django和AngularJs冲突的问题，第一个冲突是`{{}}`的问题。Django的Template和AngularJs都用到了`{{}}`，这就有问题了，当遇到时，这些符号会被当作Django来解释，而AngularJs就被冲了。这个问题解决起来还是简单的，只需要关掉template里的Django相关功能就可以了。但是后面的问题却始终没有找到解决额方案，那就是
+然后，遇到了Django和AngularJs冲突的问题，第一个冲突是`/{/{/}/}`的问题。Django的Template和AngularJs都用到了`{{}}`，这就有问题了，当遇到时，这些符号会被当作Django来解释，而AngularJs就被冲了。这个问题解决起来还是简单的，只需要关掉template里的Django相关功能就可以了。但是后面的问题却始终没有找到解决额方案，那就是
 
 **AngularJs发送的Post请求在Django来看是空串！**
 
