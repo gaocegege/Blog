@@ -73,7 +73,7 @@
 {% include signoff.html %} 
         
         <div class="cf"></div>
-        {% if site.disqus_shortname and page.comments == true %}
+        {% if site.disqus_shortname and page.comments == true and site.comments_sys == 'dispus'%}
         <section class="summer-disqus row">
     <div class="small-12 columns">
         <h1 class="summer-comments-header">Comments</h1>
@@ -81,6 +81,8 @@
         {% include disqus_comments.html %}
     </div>
 </section>
+{% else %}
+        {% include duoshuo_comments.html %}
 {% endif %}
         <div class="cf"></div>
 
