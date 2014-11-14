@@ -69,9 +69,6 @@
         <div class="cf"></div>
 {% if site.share %}{% include share.html %}{% endif %}
         <div class="cf"></div>
-        
-{% include signoff.html %} 
-        
         <div class="cf"></div>
         {% if site.disqus_shortname and page.comments == true and site.comments_sys == 'dispus'%}
         <section class="summer-disqus row">
@@ -90,6 +87,7 @@
     </div>
 </section>
 {% endif %}
+{% include signoff.html %} 
         <div class="cf"></div>
 
     {% include footer.html %} 
