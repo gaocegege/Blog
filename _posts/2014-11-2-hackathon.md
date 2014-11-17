@@ -10,7 +10,7 @@ imagefeature:
 mathjax: 
 chart: 
 comments: true
-featured: true
+featured: false
 ---
 
 这个周末参加了交大组织的Hackathon，这是我参加过的第二次Hackathon活动，虽然没有取得什么奖品，但是学习了Django，和少部分的AngularJs，感觉还是比较值得的。
