@@ -6,7 +6,7 @@ headline:
 modified: 2014-11-17
 category: 随笔
 tags: [LeapMotion, file System]
-imagefeature: HackShanghai/us.jpg
+imagefeature: HackShanghai/4.jpg
 mathjax: 
 chart: 
 comments: true
@@ -81,4 +81,9 @@ HackShanghai是上海纽约大学举办的Hackathon活动，共有250左右的�
 <figure>
 	<img src="{{ site.url }}/images/HackShanghai/3.jpg" alt="Computer" height="500" width="500">
 	<figcaption>比赛现场</figcaption>
+</figure>
+
+<figure>
+	<img src="{{ site.url }}/images/HackShanghai/us.jpg" alt="us" height="500" width="500">
+	<figcaption>我们</figcaption>
 </figure>
