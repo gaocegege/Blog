@@ -6,7 +6,7 @@ headline:
 modified: 2014-11-17
 category: 随笔
 tags: [LeapMotion, file System]
-imagefeature: HackShanghai/4.jpg
+imagefeature: 
 mathjax: 
 chart: 
 comments: true
