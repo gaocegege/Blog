@@ -18,6 +18,10 @@ chart: true
 <th><a href='http://azard.me/'>Azard的博客</a></th>
 <td>也是大学同学的博客，引领全院Lab的男人</td>
 </tr>
+<tr>
+<th><a href="http://marsrocky.github.io/">Rocky Prime的博客</a></th>
+<td>小学同学的博客，身高1.9的男人</td>
+</tr>
 </table>
 
 如有需要，请留言~
