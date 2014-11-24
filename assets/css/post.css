@@ -443,6 +443,7 @@ code
     text-transform: uppercase;
 }
 .summer-author-info .summer-post-author > p {
+    margin: 0;
     font-size: 1.125rem;
 }
 .summer-author-info .summer-post-author > p a {
