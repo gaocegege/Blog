@@ -7,10 +7,10 @@ imagefeature:
 chart: true
 ---
 
-<figure>
+<!--<figure>
 	<img src="{{ site.url }}/images/about.jpg" alt="about" height="300" width="700">
 	<figcaption>SJTU and Me</figcaption>
-</figure>
+</figure>-->
 
 {% assign total_words = 0 %}
 {% assign total_readtime = 0 %}
@@ -32,15 +32,13 @@ chart: true
     {% endif %}
 {% endfor %}
 
-我叫高策，目前在上海交通大学读书=-=，这是我的个人博客。基本来说建立博客的目的是为了记录一下自己的学习生活，防止遗忘一些学到的姿势。至于是否贴合初衷，就不好说了=-=。
+我叫高策，目前在上海交通大学软件学院软件工程专业读书，预计2016年毕业，这里是我的[LinkedIn](https://www.linkedin.com/in/gaoocegege)，是我至今为止的简历。
 
-这里一共有<a href="{{ site.url }}">{{ site.posts | size }}篇博文</a>，你问我好不好看，我说好看，我就明确告诉你这一点=-=。其中第一篇文章是[start.sh](http://gaocegege.github.io/Blog/%E9%9A%8F%E7%AC%94/Hello-World/)，也是最满怀激动的文章，经过了各种各样的尝试，最终安定了下来，不得不说有一种成就感在里面。
+这里一共有<a href="{{ site.url }}">{{ site.posts | size }}篇博文</a>，其中第一篇文章是[start.sh](http://gaocegege.github.io/Blog/%E9%9A%8F%E7%AC%94/Hello-World/)，也是最满怀激动的文章，经过了各种各样的尝试，最终安定了下来，不得不说有一种成就感在里面。博客的Theme，需要感谢Github上[Hossain Mohd. Faysal](https://github.com/hmfaysal)创作的[Notepad](https://github.com/hmfaysal/Notepad)，使我得以摆脱设计界面的痛苦与纠结Orz。
 
-博客的Theme，需要感谢Github！这么美丽的界面，是套用了[Hossain Mohd. Faysal](https://github.com/hmfaysal)大大创作的[Notepad](https://github.com/hmfaysal/Notepad)，以至于自己只是简简单单地添添画画就完成了。虽然有些地方对中文来说不太美观，但是也只是小事情，自己以后慢慢修改就好。
+博客多是记录自己认为需要记录的事情，也并没有什么特别的想法，只希望能与阅读这段文字的你一同进步Orz
 
-最后，欢迎光临。
-
-{% include signoff.html %} 
+欢迎光临。
         
 <div class="cf"></div>
 
@@ -51,3 +49,5 @@ chart: true
 {% include duoshuo_comments.html %}
 </div>
 </section>
+
+{% include signoff.html %} 
