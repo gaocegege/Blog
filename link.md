@@ -22,9 +22,11 @@ chart: true
 <th><a href="http://marsrocky.github.io/">Rocky Prime的博客</a></th>
 <td>小学同学的博客，身高1.9的男人</td>
 </tr>
+<tr>
+<th><a href="http://hczhcz.github.io/">hcz的博客</a></th>
+<td>大学里一学弟的博客～挺萌的</td>
+</tr>
 </table>
-
-如有需要，请留言~
         
 <div class="cf"></div>
 
