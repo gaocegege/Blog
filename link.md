@@ -12,19 +12,23 @@ chart: true
 <table align='center'>
 <tr>
 <th><a href='http://www.flygon.net/'>龙哥盟</a></th>
-<td>大学同学的博客，看起来是个大神，你觉得呢</td>
+<td>大学同学，看起来是个大神，你觉得呢</td>
 </tr>
 <tr>
 <th><a href='http://azard.me/'>Azard的博客</a></th>
-<td>也是大学同学的博客，引领全院Lab的男人</td>
+<td>也是大学同学，引领全院Lab的男人</td>
 </tr>
 <tr>
 <th><a href="http://marsrocky.github.io/">Rocky Prime的博客</a></th>
-<td>小学同学的博客，身高1.9的男人</td>
+<td>小学同学，身高1.9的男人</td>
 </tr>
 <tr>
 <th><a href="http://hczhcz.github.io/">hcz的博客</a></th>
-<td>大学里一学弟的博客～挺萌的</td>
+<td>大学里一学弟～挺萌的</td>
+</tr>
+<tr>
+<th><a href="https://notebookie.github.io">Jin Jianian的博客</a></th>
+<td>一个素未谋面的学弟。。。</td>
 </tr>
 </table>
         
