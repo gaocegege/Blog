@@ -23,6 +23,10 @@ chart: true
 <td>小学同学，身高1.9的男人</td>
 </tr>
 <tr>
+<th><a href="http://s684373.github.io/">Zhou的博客</a></th>
+<td>大学同班同学，人称吹比之王</td>
+</tr>
+<tr>
 <th><a href="http://hczhcz.github.io/">hcz的博客</a></th>
 <td>大学里一学弟～挺萌的</td>
 </tr>
