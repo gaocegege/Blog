@@ -11,4 +11,4 @@ read comments
 $comments = "\"" ${comments} "\""
 echo $comments
 git commit -m $comments
-git push -u origin gh_pages
+git push
