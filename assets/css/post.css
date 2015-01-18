@@ -267,12 +267,12 @@ code
 
 
 .post-template .summer-post-content > div:not(.summer-post-title) p:first-child {
-    font-size: 1.375rem;
-    font-weight: 300;
+    /*font-size: 1.375rem;
+    font-weight: 300;*/
 }
 @media only screen and (min-width: 40.063em) {
     .post-template .summer-post-content > div:not(.summer-post-title) p:first-child {
-        font-size: 1.625rem;
+        /*font-size: 1.625rem;*/
     }
 }
 .post-template .summer-post-content > div:not(.summer-post-title) p.with-image {
