@@ -649,6 +649,12 @@ code
     color: #fff;
 }
 pre {
+    /*for 4-tab*/
+    -moz-tab-size:    4;
+    -o-tab-size:      4;
+    -webkit-tab-size: 4;
+    -ms-tab-size:     4;
+    tab-size:         4;
     word-wrap: break-word;
     background-color: #f7f7f7;
     margin-bottom: 1.5625rem;
