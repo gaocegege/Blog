@@ -503,11 +503,11 @@ code
     margin: 0 auto;
     line-height: 1.1;
     text-align: center;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 @media only screen and (min-width: 40.063em) {
     .summer-page-title h1, .summer-post-title-simple h1 {
-        font-size: 4.375rem;
+        /*font-size: 4.375rem;*/
         padding-top: 5.625rem;
         padding-bottom: 5.625rem;
     }
