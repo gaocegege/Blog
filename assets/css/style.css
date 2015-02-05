@@ -290,7 +290,7 @@ footer, header, main {
 .summer-content .summer-index-post .summer-post-header .summer-post-title {
     color: #000;
     font-weight: 700;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     text-align: center;
     font-size: 1.625rem;
     margin: 0;
