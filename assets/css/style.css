@@ -6,7 +6,7 @@
     clear: both
 }
 body {
-    font-family: "Open Sans", sans-serif;
+    /*font-family: "Open Sans", sans-serif;*/
     height: auto;
     min-height: 100%;
     line-height: 1
@@ -290,7 +290,7 @@ footer, header, main {
 .summer-content .summer-index-post .summer-post-header .summer-post-title {
     color: #000;
     font-weight: 700;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     text-align: center;
     font-size: 1.625rem;
     margin: 0;
