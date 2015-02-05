@@ -655,6 +655,7 @@ pre {
     -webkit-tab-size: 4;
     -ms-tab-size:     4;
     tab-size:         4;
+    line-height:    150%;
     word-wrap: break-word;
     background-color: #f7f7f7;
     margin-bottom: 1.5625rem;
