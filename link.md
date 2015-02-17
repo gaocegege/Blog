@@ -7,8 +7,6 @@ imagefeature:
 chart: true
 ---
 
-0.0
-
 <table align='center'>
 <tr>
 <th><a href='http://www.flygon.net/'>龙哥盟</a></th>

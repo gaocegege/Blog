@@ -265,6 +265,19 @@ code
     font-size: 1.125rem;
 }
 
+/*for href*/
+.summer-post-content a {
+    color: #000080;
+}
+
+.summer-post-content a:hover {
+    background-color: #000080;
+    color: #fff;
+}
+
+.summer-post-content table {
+    font-size: 1.875rem;
+}
 
 .post-template .summer-post-content > div:not(.summer-post-title) p:first-child {
     /*font-size: 1.375rem;
