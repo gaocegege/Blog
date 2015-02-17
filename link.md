@@ -15,7 +15,7 @@ chart: true
 <td>大学同学，看起来是个大神，你觉得呢</td>
 </tr>
 <tr>
-<th><a href='http://azard.me/'>Azard的博客</a></th>
+<th><a href='http://azard.me/blog'>Azard的博客</a></th>
 <td>也是大学同学，引领全院Lab的男人</td>
 </tr>
 <tr>
