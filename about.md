@@ -7,38 +7,11 @@ imagefeature:
 chart: true
 ---
 
-<!--<figure>
-	<img src="{{ site.url }}/images/about.jpg" alt="about" height="300" width="700">
-	<figcaption>SJTU and Me</figcaption>
-</figure>-->
+我叫高策，目前在上海交通大学软件学院软件工程专业读书，预计2016年毕业，我的简历在[http://gaocegege.com/resume/](http://gaocegege.com/resume/)，平常会比较经常的使用人人，如果你也还在用的话可以加我好友：[高策_Dante](http://www.renren.com/starvestrive)。
 
-{% assign total_words = 0 %}
-{% assign total_readtime = 0 %}
-{% assign featuredcount = 0 %}
+最先开始是在CSDN写博客，现在还能在[http://blog.csdn.net/cecesjtu](http://blog.csdn.net/cecesjtu)看到之前写的博客~但是CSDN无论是编辑器，还是呈现出来的效果，都不是很能令人满意，所以试过WordPress，试过Octopress，以及完全手写，最终还是觉得Jekyll+Git Page，不仅简单，而且零成本。
 
-{% for post in site.posts %}
-    {% assign post_words = post.content | strip_html | number_of_words %}
-    {% assign ert = post_words | divided_by:180 %}
-    {% assign ertremainder = post_words | modulo:180 %}
-        {% if ertremainder >= 90 %}
-            {% assign readtime = ert | plus:1 %}
-        {% else %}
-            {% assign readtime = ert %}
-        {% endif %}
-    {% assign total_words = total_words | plus: post_words %}
-    {% assign total_readtime = total_readtime | plus: readtime %}
-    {% if post.featured %}
-    {% assign featuredcount = featuredcount | plus: 1 %}
-    {% endif %}
-{% endfor %}
-
-我叫高策，目前在上海交通大学软件学院软件工程专业读书，预计2016年毕业，这里是我的[LinkedIn](https://www.linkedin.com/in/gaoocegege)，是我至今为止的简历。
-
-这里一共有<a href="{{ site.url }}">{{ site.posts | size }}篇博文</a>，其中第一篇文章是[start.sh](http://gaocegege.github.io/Blog/%E9%9A%8F%E7%AC%94/Hello-World/)，也是最满怀激动的文章，经过了各种各样的尝试，最终安定了下来，不得不说有一种成就感在里面。博客的Theme，需要感谢Github上[Hossain Mohd. Faysal](https://github.com/hmfaysal)创作的[Notepad](https://github.com/hmfaysal/Notepad)，使我得以摆脱设计界面的痛苦与纠结Orz。
-
-博客多是记录自己认为需要记录的事情，也并没有什么特别的想法，只希望能与阅读这段文字的你一同进步Orz
-
-欢迎光临。
+根据Github的记录来看，开始建立这个博客的时间是2014年的8月28日，正值暑假，结束了闷在学院做大作业的小学期生活，回到家里就顺理成章地用Github上的开源项目[Notepad](https://github.com/hmfaysal/Notepad)作为Theme建立了这个博客，总体而言对于此自己还是比较满意的~博客会记录一些自己认为值得记录的东西，博文内容的复用性也不一定很高，很多可能真的只是一个记录，并不是一段有价值的文字。不过不管怎么样，希望会对你有所帮助。
         
 <div class="cf"></div>
 
@@ -49,5 +22,3 @@ chart: true
 {% include duoshuo_comments.html %}
 </div>
 </section>
-
-{% include signoff.html %} 
