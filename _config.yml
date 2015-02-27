@@ -45,9 +45,9 @@ links:
     url: /
     external: false
     icon: home
-  - title: 脱水区
+  - title: 编程
     url: /featured
-  - title: 水区
+  - title: 消遣
     url: /relaxed
   - title: 分类
     url: /categories

@@ -598,7 +598,7 @@ code
     max-width: 56.25rem;
     font-size: 1.125rem;
 }
-.summer-page-content > div:not(.summer-page-title) p:first-child {
+/*.summer-page-content > div:not(.summer-page-title) p:first-child {
     font-size: 1.375rem;
     font-weight: 300;
 }
@@ -606,7 +606,7 @@ code
     .summer-page-content > div:not(.summer-page-title) p:first-child {
         font-size: 1.625rem;
     }
-}
+}*/
 .summer-page-content > div:not(.summer-page-title) p.with-image {
     text-align: center;
     padding-top: 1.125rem;
