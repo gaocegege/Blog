@@ -18,11 +18,11 @@ chart: true
 </tr>
 <tr>
 <th><a href="http://marsrocky.github.io/">Rocky Prime的博客</a></th>
-<td>小学同学，身高1.9的男人</td>
+<td>小学同学，身高1.9，实习月薪8000的男人~？</td>
 </tr>
 <tr>
 <th><a href="http://s684373.github.io/">Zhou的博客</a></th>
-<td>大学同班同学，人称吹比之王</td>
+<td>大学同班同学，挺厉害的</td>
 </tr>
 <tr>
 <th><a href="http://hczhcz.github.io/">hcz的博客</a></th>
@@ -30,7 +30,11 @@ chart: true
 </tr>
 <tr>
 <th><a href="https://notebookie.github.io">Jin Jianian的博客</a></th>
-<td>一个素未谋面的学弟。。。</td>
+<td>素未谋面的学弟。。。</td>
+</tr>
+<tr>
+<th><a href="http://mrmiywj.github.io/">mrmiywj的博客</a></th>
+<td>电院CS的学弟</td>
 </tr>
 </table>
         
