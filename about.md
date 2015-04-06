@@ -7,7 +7,7 @@ imagefeature:
 chart: true
 ---
 
-我叫高策，目前在上海交通大学软件学院软件工程专业读书，预计2016年毕业，我的简历在[http://gaocegege.com/resume/](http://gaocegege.com/resume/)，平常会比较经常的使用人人，如果你也还在用的话可以加我好友：[高策_Dante](http://www.renren.com/starvestrive)。
+我叫高策，目前在上海交通大学软件学院软件工程专业读书，预计2016年毕业，我的简历在[这里](http://gaocegege.com/resume/)，平常会比较经常的使用人人，如果你也还在用的话可以加我好友：[高策_Dante](http://www.renren.com/starvestrive)。
 
 最先开始是在CSDN写博客，现在还能在[http://blog.csdn.net/cecesjtu](http://blog.csdn.net/cecesjtu)看到之前写的博客~但是CSDN无论是编辑器，还是呈现出来的效果，都不是很能令人满意，所以试过WordPress，试过Octopress，以及完全手写，最终还是觉得Jekyll+Git Page，不仅简单，而且零成本。
 
