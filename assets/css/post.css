@@ -266,14 +266,14 @@ code
 }
 
 /*for href*/
-a { color: #000080;
+.post-template .summer-post-content a { color: #000080;
     display: inline-block;
     text-decoration: none;
     padding:2px 4px;
     border-radius:2px;
     margin-right:-2px;
 }
-a:hover {
+.post-template .summer-post-content a:hover {
   background-color:#000080;
   color:#fff;
 }
