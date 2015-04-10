@@ -266,15 +266,17 @@ code
 }
 
 /*for href*/
-.summer-post-content a {
-    color: #000080;
+a { color: #000080;
+    display: inline-block;
+    text-decoration: none;
+    padding:2px 4px;
+    border-radius:2px;
+    margin-right:-2px;
 }
-
-.summer-post-content a:hover {
-    background-color: #000080;
-    color: #fff;
+a:hover {
+  background-color:#000080;
+  color:#fff;
 }
-
 .summer-post-content table {
     font-size: 1.875rem;
 }
