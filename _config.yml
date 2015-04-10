@@ -32,7 +32,7 @@ owner:
   google_plus:    https://plus.google.com/u/0/109707369864071328013
 
 # Analytics 
-baidu_analytics:  true
+baidu_analytics:  false
 
 # Analytics and webmaster tools stuff goes here
 google_analytics:   UA-54253120-1
