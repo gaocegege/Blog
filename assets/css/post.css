@@ -254,7 +254,11 @@ html, body, .summer-post-container, .summer-post-header {
 .post-template .summer-post-content > div:not(.summer-post-title) p {
     margin: 0 auto 2em auto;
     max-width: 56.25rem;
-    font-size: 1.125rem;
+    /*font-size: 1.125rem;*/
+    /* fix */
+    font-size: 16px;
+    line-height: 1.7;
+    font-family: "arial", "heltivitar", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei";
 }
 /*
 code
