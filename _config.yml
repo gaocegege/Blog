@@ -67,7 +67,8 @@ timezone:    Asia/Dili
 future:      true
 highlighter: pygments
 markdown:    kramdown
-paginate:    10
+# 一页显示的内容数
+paginate:    20
 paginate_path: "page:num"
 
 # https://github.com/mojombo/jekyll/wiki/Permalinks
