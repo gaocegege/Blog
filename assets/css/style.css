@@ -12,7 +12,7 @@ body {
     line-height: 1
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: Montserrat, sans-serif
+    font-family: "arial", "heltivitar", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei";
 }
 .summer-parallax-background {
     position: fixed;
@@ -297,9 +297,23 @@ footer, header, main {
     padding: 0;
     line-height: 1.1
 }
-.summer-content .summer-index-post .summer-post-header .summer-post-title a {
+/*.summer-content .summer-index-post .summer-post-header .summer-post-title a {
     color: #000
+}*/
+
+/*for href*/
+.summer-content .summer-index-post .summer-post-header .summer-post-title a { color: #000080;
+    display: inline-block;
+    text-decoration: none;
+    padding:2px 4px;
+    border-radius:2px;
+    margin-right:-2px;
 }
+.summer-content .summer-index-post .summer-post-header .summer-post-title a:hover {
+  background-color:#000080;
+  color:#fff;
+}
+
 @media only screen and (min-width: 40.063em) {
     .summer-content .summer-index-post .summer-post-header .summer-post-title {
         text-align: left;
