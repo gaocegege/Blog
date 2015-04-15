@@ -303,6 +303,7 @@ footer, header, main {
 
 /*for href*/
 .summer-content .summer-index-post .summer-post-header .summer-post-title a { color: #000080;
+    color: #000;
     display: inline-block;
     text-decoration: none;
     padding:2px 4px;
