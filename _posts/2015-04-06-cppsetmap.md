@@ -4,7 +4,7 @@ title: "C++ Associative Containers"
 description: C++ STL
 headline:
 modified: 2015-04-06
-category: 
+category: cpp
 tags: [c++]
 imagefeature:
 mathjax: true
