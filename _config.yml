@@ -10,8 +10,8 @@ dropcap:          true
 # Change url to your domain. Leave localhost server or blank when working locally.
 # or use the hint from http://jekyllrb.com/docs/github-pages/ to keep this the same 
 # whether working locally or remotely. Start Jekyll with: jekyll serve --baseurl ''
-baseurl:          http://gaocegege.com
-url:              /Blog
+baseurl:          
+url:              
 
 # Owner/author information
 owner:
@@ -57,8 +57,8 @@ links:
     url: /about
   - title: 统计
     url: /analytics
-  - title: Link
-    url: /link
+  # - title: Link
+  #   url: /link
   - title: RSS
     url: /rss.xml
 
