@@ -431,10 +431,27 @@ nav.pagination .older-posts .fa {
 .summer-site-footer .copyright a {
     color: #fff
 }
+
+.summer-site-footer .flink {
+    color: #fff;
+    float: none;
+    font-size: .8125rem;
+    text-align: center;
+    padding-top: 1.75rem;
+}
+
+.summer-site-footer .flink h4 {
+    color: #fff;
+}
+
+.summer-site-footer .flink a {
+    color: #fff;
+}
+
 .summer-site-footer .social-icons {
     text-align: center;
     float: none;
-    padding-bottom: 3.75rem
+    padding-bottom: 1.25rem
 }
 .summer-site-footer .social-icons a {
     color: #000
