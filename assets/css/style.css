@@ -450,7 +450,7 @@ nav.pagination .older-posts .fa {
 .summer-site-footer .flink {
     color: #fff;
     float: none;
-    font-size: .8125rem;
+    /*font-size: .8125rem;*/
     text-align: center;
     padding-top: 1.75rem;
 }
