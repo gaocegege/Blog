@@ -56,14 +56,14 @@ featured: true
 	TestInterfaceTest();
 	  Code:
 	   0:	aload_0
-	   1:	invokespecial	#1; //Method java/lang/Object."<init>":()V
+	   1:	invokespecial	#1;
 	   4:	return
 
 	public static void main(java.lang.String[]);
 	  Code:
 	   0:	new	#2; //class TestInterfaceTest$1
 	   3:	dup
-	   4:	invokespecial	#3; //Method TestInterfaceTest$1."<init>":()V
+	   4:	invokespecial	#3;
 	   7:	astore_1
 	   8:	new	#4; //class TestInterfaceTest$2
 	   11:	dup
