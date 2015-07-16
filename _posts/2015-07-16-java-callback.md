@@ -51,47 +51,47 @@ featured: true
 在编译的时候，InterfaceTest会编译产生三个字节码文件，分别叫做InterfaceTest，InterfaceTest$1，InterfaceTest$2。用javap去看他们的编码，会发现InterfaceTest是这样的：
 
 <pre>
-Compiled from "TestInterfaceTest.java"
-class TestInterfaceTest extends java.lang.Object{
-TestInterfaceTest();
-  Code:
-   0:	aload_0
-   1:	invokespecial	#1;
-   4:	return
+	Compiled from "TestInterfaceTest.java"
+	class TestInterfaceTest extends java.lang.Object{
+	TestInterfaceTest();
+	  Code:
+	   0:	aload_0
+	   1:	invokespecial	#1;
+	   4:	return
 
-public static void main(java.lang.String[]);
-  Code:
-   0:	new	#2; //class TestInterfaceTest$1
-   3:	dup
-   4:	invokespecial	#3;
-   7:	astore_1
-   8:	new	#4; //class TestInterfaceTest$2
-   11:	dup
-   12:	invokespecial	#5; //Method TestInterfaceTest$2."<init>":()V
-   15:	astore_2
-   16:	return
+	public static void main(java.lang.String[]);
+	  Code:
+	   0:	new	#2; //class TestInterfaceTest$1
+	   3:	dup
+	   4:	invokespecial	#3;
+	   7:	astore_1
+	   8:	new	#4; //class TestInterfaceTest$2
+	   11:	dup
+	   12:	invokespecial	#5; //Method TestInterfaceTest$2."<init>":()V
+	   15:	astore_2
+	   16:	return
 
-}
-</pre>
+	}
+<\/pre>
 
 而InterfaceTest$1和Interface$2内容是基本一致的（除了类名）：
 
 <pre>
-final class TestInterfaceTest$2 extends java.lang.Object implements Index{
-TestInterfaceTest$2();
-  Code:
-   0:	aload_0
-   1:	invokespecial	#1; //Method java/lang/Object."<init>":()V
-   4:	return
+	final class TestInterfaceTest$2 extends java.lang.Object implements Index{
+	TestInterfaceTest$2();
+	  Code:
+	   0:	aload_0
+	   1:	invokespecial	#1; //Method java/lang/Object."<init>":()V
+	   4:	return
 
-public void a();
-  Code:
-   0:	getstatic	#2; //Field java/lang/System.out:Ljava/io/PrintStream;
-   3:	ldc	#3; //String end back!!!
-   5:	invokevirtual	#4; //Method java/io/PrintStream.println:(Ljava/lang/String;)V
-   8:	return
+	public void a();
+	  Code:
+	   0:	getstatic	#2; //Field java/lang/System.out:Ljava/io/PrintStream;
+	   3:	ldc	#3; //String end back!!!
+	   5:	invokevirtual	#4; //Method java/io/PrintStream.println:(Ljava/lang/String;)V
+	   8:	return
 
-}
+	}
 </pre>
 
 其实可以看出两个问题，一个是，每次接口被new构造出来的时候，都会产生一个final class，这个class会继承接口。所以在字节码层，实例化接口其实最后还是用实例化实现接口的类来实现的。这个不是运行时的行为，是在编译的时候就确定了的。另一个问题，就是在我们的例子中，两次对接口的实例化其实是一模一样的，但Java还是会产生两个final class。这说明Java没办法知道两个实例化操作中的接口实现是否是等价的，这也符合我的预期。如果Java可以从语义的角度判断等价，那就有点黑科技了。
