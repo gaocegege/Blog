@@ -50,8 +50,6 @@ featured: true
 
 在编译的时候，InterfaceTest会编译产生三个字节码文件，分别叫做InterfaceTest，InterfaceTest$1，InterfaceTest$2。用javap去看他们的编码，会发现InterfaceTest是这样的：
 
-
-	Compiled from "TestInterfaceTest.java"
 	class TestInterfaceTest extends java.lang.Object{
 	TestInterfaceTest();
 	  Code:
