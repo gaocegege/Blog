@@ -72,7 +72,7 @@ featured: true
 	   16:	return
 
 	}
-<\/pre>
+</pre\>
 
 而InterfaceTest$1和Interface$2内容是基本一致的（除了类名）：
 
