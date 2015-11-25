@@ -39,19 +39,17 @@ featured: false
 
 然后在重启后的终端里输入`csrutil status`，会看到：
 
-```
-System Integrity Protection status: enabled (Custom Configuration).
+	System Integrity Protection status: enabled (Custom Configuration).
 
-Configuration:
-	Apple Internal: disabled
-	Kext Signing: disabled
-	Filesystem Protections: disabled
-	Debugging Restrictions: disabled
-	DTrace Restrictions: disabled
-	NVRAM Protections: disabled
+	Configuration:
+		Apple Internal: disabled
+		Kext Signing: disabled
+		Filesystem Protections: disabled
+		Debugging Restrictions: disabled
+		DTrace Restrictions: disabled
+		NVRAM Protections: disabled
 
-This is an unsupported configuration, likely to break in the future and leave your machine in an unknown state.
-```
+	This is an unsupported configuration, likely to break in the future and leave your machine in an unknown state.
 
 然后proxychains就可以正常工作了，至于说的`leave your machine in an unknown state.`，只能寄希望于Time Machine了。
 
