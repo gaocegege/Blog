@@ -25,7 +25,7 @@ Hi，我是高策，2009年在洋泾中学读书，2012年来到交大念软件�
 * [Facebook-高策](https://www.facebook.com/gaocegege)
 * [LinkedIn_gaocegege](https://www.linkedin.com/in/gaocegege)
 
-[http://gaocegege.com/resume/cn/](http://gaocegege.com/resume/cn/)是我的个人简历，如果你对我感兴趣，可以联系我的邮箱gaocegege # hotmial.com(#替换为@)。
+[http://gaocegege.com/resume/cn/](http://gaocegege.com/resume/cn/)是我的个人简历，如果你对我感兴趣，可以联系我的邮箱gaocegege # hotmail.com(#替换为@)。
         
 <div class="cf"></div>
 
