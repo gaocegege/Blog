@@ -152,7 +152,9 @@ footer, header, main {
     max-height: 5rem
 }
 .summer-site-head .summer-site-head-menu .summer-blog-logo img {
-    max-height: 5rem
+    max-height: 5rem;
+    opacity: 0.8;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
 }
 .summer-site-head .summer-site-head-menu .title {
     display: inline-block;
