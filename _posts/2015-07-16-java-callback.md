@@ -120,7 +120,7 @@ Callback就是回调，举例说明这个过程，比如A调用了B的b方法，
 		public void callbackFunc();
 	}
 
-	class CallBacker() {
+	class CallBacker {
 		public void b(CallBackUnit callBackUnit) {
 			// some operations
 			callBackUnit.callbackFunc();
@@ -128,7 +128,7 @@ Callback就是回调，举例说明这个过程，比如A调用了B的b方法，
 		}
 	}
 
-	class CallBacked() {
+	class CallBacked {
 		public void a() {
 			CallBacker callBacker = new CallBacker();
 			callBacker.b(new CallBackUnit() {
@@ -137,6 +137,7 @@ Callback就是回调，举例说明这个过程，比如A调用了B的b方法，
 					System.out.println("end back!!!");
 				}
 			});
+		}
 	}
 
 当然，Java8似乎也有了匿名函数等等一些函数式的特性，有了这些实现CallBack机制就更简单了。
