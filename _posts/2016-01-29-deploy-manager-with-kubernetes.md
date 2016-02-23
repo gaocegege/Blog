@@ -5,7 +5,7 @@ description: 愿永远沉迷在代码的世界中无法自拔
 headline:
 modified: 2016-01-29
 category: Kubernetes
-tags: []
+tags: [kubernetes]
 imagefeature:
 mathjax: false
 chart:

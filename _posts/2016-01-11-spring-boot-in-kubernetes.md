@@ -4,7 +4,7 @@ title: "在Kubernetes中的Spring Boot项目部署"
 description: 容器这么火，不学学怎么行
 headline:
 modified: 2016-01-11
-category: kubernetes
+category: Kubernetes
 tags: [kubernetes, spring boot]
 imagefeature:
 mathjax: false
