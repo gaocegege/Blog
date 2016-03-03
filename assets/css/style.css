@@ -635,7 +635,7 @@ figcaption {
     -moz-border-radius: 4px;
     border-radius: 4px
 }
-.highlight .c {
+/*.highlight .c {
     color: #3F6B5B;
     font-weight: 700
 }
@@ -753,7 +753,7 @@ figcaption {
 .highlight .il {
     color: #00C226;
     text-decoration: underline
-}
+}*/
 .chart {
     max-width: 56.25rem;
     margin-right: auto;
