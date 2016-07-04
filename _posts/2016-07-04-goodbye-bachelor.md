@@ -39,8 +39,6 @@ featured: false
 	<img src="{{ site.url }}/images/goodbye/5.jpg" height="500" width="500">
 </figure>
 
-=-=写了好多，没什么逻辑，大概是因为最近有些多愁善感~？好了，最后祝大家前程似锦，四年来，谢谢大家一路的照顾和『关爱』，以前叫我测女神和高策哥哥的就不追究了，希望后会有期。
-
 <figure>
 	<img src="{{ site.url }}/images/goodbye/2.jpg" height="500" width="500">
 </figure>
@@ -60,3 +58,5 @@ featured: false
 <figure>
 	<img src="{{ site.url }}/images/goodbye/8.jpg" height="500" width="500">
 </figure>
+
+=-=写了好多，没什么逻辑，大概是因为最近有些多愁善感~？好了，最后祝大家前程似锦，四年来，谢谢大家一路的照顾和『关爱』，以前叫我测女神和高策哥哥的就不追究了，希望后会有期。
