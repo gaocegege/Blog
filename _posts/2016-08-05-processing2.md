@@ -59,7 +59,7 @@ Exception in thread "AWT-EventQueue-0" java.lang.UnsupportedClassVersionError: c
 我猜的还是很准的嘛，果然是Java版本的问题，但是为什么通过设置环境变量变更Java版本不管用呢，难道Processing自己内置了<del>三个XX</del>一个Java的运行环境，所以自己换是没用的？那是时候看看Info.plist了，其中有一个很有趣的地方。
 
 <figure>
-	<img src="{{ site.url }}/images/processing/java.png" alt="info" height="500" width="500">
+	<img src="{{ site.url }}/images/processing2/java.png" alt="info" height="500" width="500">
 	<figcaption>Info.plist</figcaption>
 </figure>
 
