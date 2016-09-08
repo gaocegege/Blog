@@ -4,8 +4,8 @@ title: "Processing 2踩坑之旅"
 description: 
 headline:
 modified: 2016-08-05
-category: 体验
-tags: [踩坑]
+category: Processing
+tags: [Processing]
 imagefeature:
 mathjax: false
 chart:
