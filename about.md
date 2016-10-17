@@ -9,7 +9,6 @@ chart: true
 
 ```
 ---
---- 
 Name: "Ce Gao"
 Github: "https://github.com/gaocegege"
 LinkedIn: "https://www.linkedin.com/in/gaocegege"
