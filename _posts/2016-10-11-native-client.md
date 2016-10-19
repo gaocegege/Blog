@@ -16,14 +16,14 @@ featured: true
 谷歌的Chrome浏览器无疑是最好用的浏览器之一，Google Native Client是Chrome浏览器的一个Feature，它的目的是解决Javascript计算能力不强的问题，解决方法是通过在浏览器中运行原生的代码的方式来做到的。
 
 <figure>
-	<img src="{{ site.url }}/images/nacl/us.jpg" alt="NaCl 解释图" height="500" width="500">
+	<img src="{{ site.url }}/images/nacl/nacl-code.png" alt="NaCl 解释图" height="500" width="500">
 	<figcaption>NaCl 解释图</figcaption>
 </figure>
 
 在传统的前端实现中，基本只有HTML, CSS和Javascript三种语言（算是语言么）的事情，但是随着需求的复杂化，有些时候要求网页应用有着更好的计算性能。
 
 <figure>
-	<img src="{{ site.url }}/images/nacl/us.jpg" alt="运行速度图" height="500" width="500">
+	<img src="{{ site.url }}/images/nacl/performance.png" alt="运行速度图" height="500" width="500">
 	<figcaption>各语言性能对比</figcaption>
 </figure>
 
