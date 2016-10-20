@@ -50,7 +50,7 @@ Hybrid Kernel!
 这大概是研究的惯用套路，一个事情有两种极端的做法，然后中和一下，就有了第三种做法，公有云，私有云，混合云也是这样的套路，呃扯远了。那Hybrid Kernel就是把一部分不常使用的内核模块，或者是原本需要的时间就很长，因此IPC的overhead看起来就不是那么夸张的功能，移出内核，而其他的就会放在内核里。
 
 <figure>
-	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/OS-structure2.svg/800px-OS-structure2.svg.png" alt="Hybrid Kernel" height="700" width="700">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/OS-structure2.svg/800px-OS-structure2.svg.png" alt="Hybrid Kernel" height="800" width="800">
 	<figcaption>Hybrid Kernel</figcaption>
 </figure>
 
