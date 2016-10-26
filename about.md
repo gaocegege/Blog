@@ -15,7 +15,7 @@ chart: true
 
 目前比较关注：
 
-* 女朋友 这真是个大项目 _(:зゝ∠)_
+* 女朋友 这真是个大项目 \_(:зゝ∠)\_
 * [Docker](https://github.com/docker/docker) 开始试着给它提 PR
 * [Kubernetes](https://github.com/kubernetes/kubernetes) 主要在看代码和使用阶段，用的也很少，因为没有用的机会
 * [Drone](https://github.com/drone/drone) 目前正在写一个基于 docker 的 CI & CD 工具，因此会参考它的实现
