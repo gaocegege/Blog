@@ -16,9 +16,9 @@ chart: true
 目前比较关注：
 
 * 女朋友 这真是个大项目 \_(:зゝ∠)\_
+* [Cyclone](https://github.com/drone/drone) 是一个打造容器工作流的云原生持续集成持续发布平台，目前在积极维护这个项目
 * [Docker](https://github.com/docker/docker) 开始试着给它提 PR
 * [Kubernetes](https://github.com/kubernetes/kubernetes) 主要在看代码和使用阶段，用的也很少，因为没有用的机会
-* [Drone](https://github.com/drone/drone) 目前正在写一个基于 docker 的 CI & CD 工具，因此会参考它的实现
 * Distributed Systems 深感知识缺乏，在看相关论文
 * Computer System 感兴趣，在看相关论文，主要是虚拟化相关
 * Linux 在学习相关操作，源码暂时不想涉及，坑太深
