@@ -15,7 +15,7 @@ featured:  false
 
 今天为东岳搭建了一个饥荒的服务器，并不是特别复杂。饥荒对于服务器的要求是：
 
-```
+```text
 Internet(Upload) = 8Kbytes/player/s
 Ram = around 65Mbytes/player
 CPU = N/A
@@ -52,7 +52,7 @@ cd /home/steam/steamapps/DST/bin/
 
 cluster.ini 文件内容很简单：
 
-```
+```text
 [network]
 cluster_name = <cluster_name>
 cluster_intention = cooperative
@@ -72,7 +72,7 @@ pause_when_empty = true
 
 cluster_token.txt 文件的内容需要用饥荒的客户端来生成，输入~打开游戏内置的 console，输入 `TheNet:GenerateClusterToken()`，不同系统会在不同位置生成一个 token：
 
-```
+```text
 Windows:
 /My Documents/Klei/DoNotStarveTogether/cluster_token.txt
 
@@ -87,7 +87,7 @@ Mac OS X:
 
 ## 运行
 
-```
+```bash
 /home/<user>/steamapps/DST/bin/dontstarve_dedicated_server_nullrenderer
 ```
 
