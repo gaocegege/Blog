@@ -50,9 +50,9 @@ Resume:
 <div class="cf"></div>
 
 <section class="summer-disqus row">
-<div class="small-12 columns">
-<h1 class="summer-comments-header">Comments</h1>
-<div id="disqus_thread"></div>
-{% include duoshuo_comments.html %}
-</div>
+    <div class="small-12 columns">
+        <h1 class="summer-comments-header">评论</h1>
+        <div id="disqus_thread"></div>
+        {% include disqus_comments.html %}
+    </div>
 </section>
