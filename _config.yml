@@ -2,7 +2,7 @@ title:            高策
 description:      Talk is ( Not!) cheap.
 logo:             logo.png
 background:       
-comments_sys:     duoshuo
+comments_sys:     disqus
 disqus_shortname: blogofcece
 share:            true
 highlight:        true
