@@ -15,15 +15,14 @@ chart: true
 
 目前比较关注：
 
-* 女朋友 这真是个大项目 \_(:зゝ∠)\_
-* [Cyclone](https://github.com/caicloud/cyclone) 一个打造容器工作流的云原生持续集成持续发布平台
+* [maintainer](https://github.com/gaocegege/maintainer) 帮助 maintainer 更好地维护项目的命令行工具
 * [treadmill](https://github.com/Morgan-Stanley/treadmill) 摩根士坦利开源的基于容器的集群管理系统
 * [Docker](https://github.com/docker/docker) I ❤ Docker.
 * [Kubernetes](https://github.com/kubernetes/kubernetes) 因为 I ❤ Docker.
-* [hyperd](https://github.com/hyperhq/hyperd) 虚拟机和容器的有爱结合
 
 曾经关注过：
 
+* [Cyclone](https://github.com/caicloud/cyclone) 一个打造容器工作流的云原生持续集成持续发布平台
 * [scrapy](https://github.com/scrapy/scrapy) 实习的时候接触的，后实现了 [scrala](https://github.com/gaocegege/scrala), [scala-renren](https://github.com/gaocegege/scala-renren) 和 [scala-github-relationship](https://github.com/gaocegege/scala-github-relationship)
 * [processing](https://github.com/processing/processing) 曾以为会是一代设计师必学语言，后来发现想多了，目前正在为其实现 [Proceesing.R](https://github.com/gaocegege/processing.r)，希望能够使用 R 语言来开发 Processing 程序，<del>感觉社区不是很友好，暂时弃坑。</del> 现在[作为一个项目](https://forum.processing.org/two/discussion/21195/gsoc-2017-r-language-mode-for-processing)申请了 Processing Foundation 的 GSoC
 * [scala](https://github.com/scala/scala) 写过 [yet-another-insane](https://github.com/gaocegege/yet-another-insane)，一个过程间Control Flow Graph生成器，瞎写的，各种问题
@@ -35,6 +34,10 @@ chart: true
 
 * [caicloud/cyclone](https://github.com/caicloud/cyclone/commits/master?author=gaocegege)
 	* 作为本科时候的毕业设计参与实现 YAML parser 以及最早的 Docker Runtime
+* [pingcap/tidb](https://github.com/pingcap/tidb/commits/master?author=gaocegege)
+	* 为了对 contributor 友好，在 travis 里引入了覆盖率测试
+	* 添加了 built-in truncate function
+	* 完善了 expression 包的注释
 * [coala/coala-vs-code](https://github.com/coala/coala-vs-code/commits/master?author=gaocegege)
 	* coala 在 Visual Studio Code 上的插件，微软的 Language Server Protocol 使得这类语言工具类的插件变得非常优雅
 * [docker/docker](https://github.com/docker/docker/commits/master?author=gaocegege)
