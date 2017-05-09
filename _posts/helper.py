@@ -14,7 +14,7 @@ def writeTemplate(objname):
 	f.write("""## License
 
 - This article is licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/).
-- Please contact me for commerical use.
+- Please contact me for commercial use.
 """)
 	print "Write Done."
 
