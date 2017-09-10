@@ -57,7 +57,7 @@ void variableEllipse(int x, int y, int px, int py) {
 }
 ```
 
-先讲效果，这段代码会根据鼠标的位置和鼠标移动的速度在画布上不停的画圆：
+先讲效果，这段代码会根据鼠标的位置和鼠标移动的速度在画布上不停的画圆。
 
 在代码中可以看到三个函数，其中 `setup` 和 `draw` 是内置函数，就像是传统编程语言中的 main 函数一样，是整个程序的入口。`setup` 会进行一些设定，比如画布的大小，以及背景颜色。而每当需要绘制新的一帧时，Processing 就会调用 `draw` 函数。因此如果 `draw` 函数每次调用结果都一样，那就是一个静态的图形，如果是不一样的，得到的就是动态的效果。`variableEllipse` 是负责绘制圆形的函数。其参数是鼠标的当前坐标和上一帧的坐标，它会根据坐标计算速度，随后去绘制圆形。如果你感兴趣的话，可以去 [Examples - Pattern](https://processing.org/examples/pattern.html) 亲自试试效果 :)
 
