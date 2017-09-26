@@ -28,7 +28,7 @@ Kubernetes 的调度的目的是把一个 pod 放在它最合适的 node 上去�
 在 Priorities 过程中，kube-scheduler 会将所有通过 Predicates 过程的 node 根据自己的标准打分，然后从中选择一个得分最高的 node，将其与 pod 绑定在一起，即在该 node 上运行此 pod。这就好比，相亲网站过滤好了潜在的相亲对象，会再帮你对他们做一个打分，然后推荐给你一个条件最好的给你。（不要问我为什么这么熟练）
 
 <figure>
-	<img src="{{ site.url }}/images/kubernetes/initial-state.png" alt="State" height="500" width="500">
+	<img src="{{ site.url }}/images/kubernetes/initial-state.png" alt="State" height="300" width="300">
 </figure>
 
 文字性的叙述过于单调，这里用图来说明这个过程。在图中一共有 16 台服务器，有着不同的配置。
