@@ -62,7 +62,12 @@ chart: true
 	* 用开源字体替换 Adobe 字体
 * [dyweb/electsys-safari](https://github.com/dyweb/electsys-safari/commits/master?author=gaocegege)
 	* 上海交通大学选课插件在 safari 上的实现
-        
+
+如果这些还不能满足你的好奇心，你可以在各种平台上围观我：
+
+* [LinkedIn://gaocegege](https://www.linkedin.com/in/gaocegege/)
+* [知乎://gaocegege](https://www.zhihu.com/people/gaocegege)
+
 <div class="cf"></div>
 
 <section class="summer-disqus row">
