@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /about/index.html
-title: 关于我
+title: 关于高策
 tags: [SJTU, SE]
 imagefeature: 
 chart: true
