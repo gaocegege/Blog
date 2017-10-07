@@ -7,30 +7,43 @@ imagefeature:
 chart: true
 ---
 
+<p align="center">
+	<a href="http://gaocegege.com/Blog"><img src="https://img.shields.io/badge/blog-30k%20visitors-ffffff.svg?style=social" alt="Blog"></a>
+	<a href="https://github.com/gaocegege/"><img src="https://img.shields.io/github/followers/gaocegege.svg?style=social&label=Follow" alt="GitHub"></a>
+	<a href="http://gaocegege.com/resume/"><img src="https://img.shields.io/badge/resume-english-blue.svg" alt="Resume"></a>
+	<a href="http://gaocegege.com/resume/cn/"><img src="https://img.shields.io/badge/%E7%AE%80%E5%8E%86-%E4%B8%AD%E6%96%87-blue.svg" alt="Resume in Chinese"></a>
+	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/univ-SJTU-020081.svg" alt="SJTU"></a>
+	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/degree-master-0100b3.svg" alt="Master"></a>
+</p>
+
+**你可以从上方的各种 badge 开始了解我，那里有我的 Blog，GitHub主页以及简历等等:)**
+
 我是一个：
 
-* 在读研究生，目前正在上海交通大学软件学院学习姿势，2019年毕业
-* Github Heavy User，可以不吃饭，不能不上同性交友网站
-* 刺客信条粉，虽然已经不怎么玩了
+* 上海交通大学软件学院在读研究生，2019年3月份毕业
+* 不算太虔诚的开源信徒，喜欢开源的理念，同样喜欢为开源做贡献
+* 不适合做研究但又有点兴趣的研究者，对资源调度比较关注，比如 Google Borg 等
+* 前辩论队辩手，时常说话带刺
+* 实至名归的瘦子，目前在努力增肥
 
 目前比较关注：
 
-* [maintainer](https://github.com/gaocegege/maintainer) 帮助 maintainer 更好地维护项目的命令行工具
-* [treadmill](https://github.com/Morgan-Stanley/treadmill) 摩根士坦利开源的基于容器的集群管理系统
-* [Docker](https://github.com/docker/docker) I ❤ Docker.
-* [Kubernetes](https://github.com/kubernetes/kubernetes) 因为 I ❤ Docker.
+* [Kubernetes](https://github.com/kubernetes/kubernetes) 与研究方向很相关，并且十分火热
+* [treadmill](https://github.com/Morgan-Stanley/treadmill) 摩根士坦利开源的基于容器的集群管理系统，与研究方向很相关
+* [Docker](https://github.com/docker/docker) 很早起就在关注了，非常贴地气的产品
 
 曾经关注过：
 
+* [Maintainer](https://github.com/gaocegege/maintainer) 自造轮子，帮助开发者更好地维护自己的 repo
 * [Cyclone](https://github.com/caicloud/cyclone) 一个打造容器工作流的云原生持续集成持续发布平台
-* [scrapy](https://github.com/scrapy/scrapy) 实习的时候接触的，后实现了 [scrala](https://github.com/gaocegege/scrala), [scala-renren](https://github.com/gaocegege/scala-renren) 和 [scala-github-relationship](https://github.com/gaocegege/scala-github-relationship)
-* [processing](https://github.com/processing/processing) 曾以为会是一代设计师必学语言，后来发现想多了，目前正在为其实现 [Proceesing.R](https://github.com/gaocegege/processing.r)，希望能够使用 R 语言来开发 Processing 程序，<del>感觉社区不是很友好，暂时弃坑。</del> 现在[作为一个项目](https://forum.processing.org/two/discussion/21195/gsoc-2017-r-language-mode-for-processing)申请了 Processing Foundation 的 GSoC
-* [scala](https://github.com/scala/scala) 写过 [yet-another-insane](https://github.com/gaocegege/yet-another-insane)，一个过程间Control Flow Graph生成器，瞎写的，各种问题
-* [spring boot](https://github.com/spring-projects/spring-boot) 阅读过少许代码，用 spring 感觉自己很臃肿，而这个还挺方便的
-* [Raspberry Pi](https://www.raspberrypi.org/) 后悔，没用
+* [Scrapy](https://github.com/scrapy/scrapy) 实习的时候接触的，后实现了 [scrala](https://github.com/gaocegege/scrala), [scala-renren](https://github.com/gaocegege/scala-renren) 和 [scala-github-relationship](https://github.com/gaocegege/scala-github-relationship)
+* [Processing](https://github.com/processing/processing) 曾以为会是一代设计师必学语言，后来发现想多了，想为其实现 [Proceesing.R](https://github.com/gaocegege/processing.r)，希望能够使用 R 语言来开发 Processing 程序，<del>感觉社区不是很友好，暂时弃坑。</del> 现在[作为一个项目](https://forum.processing.org/two/discussion/21195/gsoc-2017-r-language-mode-for-processing)申请了 Processing Foundation 的 GSoC
+* [Scala](https://github.com/scala/scala) 写过 [yet-another-insane](https://github.com/gaocegege/yet-another-insane)，一个过程间Control Flow Graph生成器，瞎写的，各种问题
+* [Spring Boot](https://github.com/spring-projects/spring-boot) 阅读过少许代码，用 spring 感觉自己很臃肿，而这个还挺方便的
+* [Raspberry Pi](https://www.raspberrypi.org/) 后悔，正常情况下应用场景还是太过于单一
 * [Leap Motion](https://www.leapmotion.com/) 很棒，但是因为穷，就卖给别人了，开发相当方便，SDK 完善
 
-曾经为开源贡献过：
+曾经为社区贡献过：
 
 * [caicloud/cyclone](https://github.com/caicloud/cyclone/commits/master?author=gaocegege)
 	* 作为本科时候的毕业设计参与实现 YAML parser 以及最早的 Docker Runtime
@@ -49,20 +62,6 @@ chart: true
 	* 用开源字体替换 Adobe 字体
 * [dyweb/electsys-safari](https://github.com/dyweb/electsys-safari/commits/master?author=gaocegege)
 	* 上海交通大学选课插件在 safari 上的实现
-
-```yml
----
-Name: "Ce Gao"
-Github: "https://github.com/gaocegege"
-LinkedIn: "https://www.linkedin.com/in/gaocegege"
-History: 
-- "2009-2012 Yangjing Senior High School in Pudong District, Shanghai, China."
-- "2012-2016 Shanghai Jiaotong University, Shanghai, China."
-- "2016-2019 Shanghai Jiaotong University, Shanghai, China."
-Resume: 
-- "http://gaocegege.com/resume/cn/"
-- "http://gaocegege.com/resume/"
-```
         
 <div class="cf"></div>
 
