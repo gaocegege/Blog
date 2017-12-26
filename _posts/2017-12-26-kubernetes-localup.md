@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Kubernetes hack/localup-cluster.sh 无法启动 DNS 的问题溯源"
+title: "Kubernetes hack/local-up-cluster.sh 无法启动 DNS 的问题溯源"
 description: 
 headline:
 modified: 2017-12-26
@@ -13,9 +13,9 @@ comments: true
 featured: true
 ---
 
-最近在关注 [google/kubeflow](https://github.com/google/kubeflow), 这是一个 run TensorFlow on Kubernetes 的项目, 所以涉及频繁地启动 Kubernetes 集群来做测试. 而因为我们对 Kubernetes 环境有要求, 必须是 1.7 版本, 所以选择了 v1.7.11 作为测试版本, 使用脚本 `hack/localup-cluster.sh` 来构建出一个临时的 Kubernetes 本地集群, 其中只有一个 node, 但是也已经够用了, 因为暂时不涉及调度相关的实现.
+最近在关注 [google/kubeflow](https://github.com/google/kubeflow), 这是一个 run TensorFlow on Kubernetes 的项目, 所以涉及频繁地启动 Kubernetes 集群来做测试. 而因为我们对 Kubernetes 环境有要求, 必须是 1.7 版本, 所以选择了 v1.7.11 作为测试版本, 使用脚本 `hack/local-up-cluster.sh` 来构建出一个临时的 Kubernetes 本地集群, 其中只有一个 node, 但是也已经够用了, 因为暂时不涉及调度相关的实现.
 
-但是在使用 `hack/localup-cluster.sh` 的时候遇到了一个小坑. Kubeflow 会为 TensorFlow 的每个 worker 和 PS 创建一个对应的 service, 所以需要用到 kube-dns 的一些功能. 但是 v1.7.11 在执行 `hack/localup-cluster.sh` 会有报错:
+但是在使用 `hack/local-up-cluster.sh` 的时候遇到了一个小坑. Kubeflow 会为 TensorFlow 的每个 worker 和 PS 创建一个对应的 service, 所以需要用到 kube-dns 的一些功能. 但是 v1.7.11 在执行 `hack/local-up-cluster.sh` 会有报错:
 
 ```
 clusterrolebinding "system:kube-dns" created
