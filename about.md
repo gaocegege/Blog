@@ -23,12 +23,9 @@ chart: true
 - 实至名归的瘦子，目前在努力增肥
 - 沉迷恋爱无法自拔的秀恩爱狂魔
 
-### 正在开的坑
-
-- 集群调度相关论文, 因为在写论文 = =
-
 ### 开过的坑
 
+- [Kubeflow](https://github.com/google/kubeflow) 比较关注其发展
 - [Kubernetes](https://github.com/kubernetes/kubernetes) 与研究方向很相关，并且十分火热
 - [Docker](https://github.com/docker/docker) 很早起就在关注了，非常贴地气的产品
 - [treadmill](https://github.com/Morgan-Stanley/treadmill) 摩根士坦利开源的基于容器的集群管理系统，与研究方向很相关
@@ -49,29 +46,31 @@ chart: true
 
 ### 开源贡献
 
-- [caicloud/cyclone](https://github.com/caicloud/cyclone/commits/master?author=gaocegege)
+- [caicloud/cyclone](https://github.com/caicloud/cyclone) Collaborator
 	- 作为本科时候的毕业设计参与实现 YAML parser 以及最早的 Docker Runtime
-- [tensorflow/k8s](https://github.com/tensorflow/k8s/commits/master?author=gaocegege)
+- [tensorflow/k8s](https://github.com/tensorflow/k8s) Collaborator
 	- 完善设计文档
 	- 实现对 grpc server 的检查
 	- 参与设计 CRD
-- [pingcap/tidb](https://github.com/pingcap/tidb/commits/master?author=gaocegege)
+- [caicloud/kubeflow-controller](https://github.com/caicloud/kubeflow-controller) Collaborator
+	- 内部工具的开源实现, 最终将被 merge 到 [tensorflow/k8s](https://github.com/tensorflow/k8s) 中
+- [weijianwen/SJTUThesis](https://github.com/sjtug/SJTUThesis) Collaborator
+	- 为学士论文模板添加英文大摘要
+	- 用开源字体替换 Adobe 字体
+- [dyweb/electsys-safari](https://github.com/dyweb/electsys-safari/commits/master?author=gaocegege) Collaborator
+	- 上海交通大学选课插件在 safari 上的实现
+- [pingcap/tidb](https://github.com/pingcap/tidb/commits/master?author=gaocegege) Contributor
 	- 为了对 contributor 友好，在 travis 里引入了覆盖率测试
 	- 添加了 built-in truncate function
 	- 完善了 expression 包的注释
-- [coala/coala-vs-code](https://github.com/coala/coala-vs-code/commits/master?author=gaocegege)
+- [coala/coala-vs-code](https://github.com/coala/coala-vs-code/commits/master?author=gaocegege) Collaborator
 	- coala 在 Visual Studio Code 上的插件，微软的 Language Server Protocol 使得这类语言工具类的插件变得非常优雅
-- [docker/docker](https://github.com/docker/docker/commits/master?author=gaocegege)
+- [docker/docker](https://github.com/docker/docker/commits/master?author=gaocegege) Contributor
 	- 添加了一个 subcommand 参数 `docker service ps -q`
-- [opencontainers/runc](https://github.com/opencontainers/runc/commits/master?author=gaocegege)
+- [opencontainers/runc](https://github.com/opencontainers/runc/commits/master?author=gaocegege) Contributor
 	- 为了 Fix [docker/docker#27484](https://github.com/docker/docker/issues/27484) 对上游进行的修改，不过后来被证明是错误的= =
-- [alibaba/pouch](https://github.com/alibaba/pouch/commits?author=gaocegege)
+- [alibaba/pouch](https://github.com/alibaba/pouch/commits?author=gaocegege) Contributor
 	- 为其 CI 更新 go 版本, 移除对环境路径的 hack
-- [weijianwen/SJTUThesis](https://github.com/weijianwen/SJTUThesis/commits/master?author=gaocegege)
-	- 为学士论文模板添加英文大摘要
-	- 用开源字体替换 Adobe 字体
-- [dyweb/electsys-safari](https://github.com/dyweb/electsys-safari/commits/master?author=gaocegege)
-	- 上海交通大学选课插件在 safari 上的实现
 
 如果这些还不能满足你的好奇心，你可以在各种平台上围观我：
 
