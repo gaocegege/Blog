@@ -19,13 +19,13 @@ chart: true
 **你可以从上方的各种 badge 开始了解我，那里有我的 Blog，GitHub主页以及简历等等:)**
 
 - 上海交通大学软件学院在读研究生，2019年3月份毕业
-- 根正苗红的魔法高校毕业的魔法师 (上海交通大学获得第二专业法学士学位)
+- 根正苗红的魔法高校毕业的魔法师 (获得上海交通大学法学士学位)
 - 实至名归的瘦子，目前在努力增肥
 - 沉迷恋爱无法自拔的秀恩爱狂魔
 
 ### 开过的坑
 
-- [Kubeflow](https://github.com/google/kubeflow) 比较关注其发展
+- [Kubeflow](https://github.com/google/kubeflow) 谷歌开源的一个 ML on Kubernetes 项目
 - [Kubernetes](https://github.com/kubernetes/kubernetes) 与研究方向很相关，并且十分火热
 - [Docker](https://github.com/docker/docker) 很早起就在关注了，非常贴地气的产品
 - [treadmill](https://github.com/Morgan-Stanley/treadmill) 摩根士坦利开源的基于容器的集群管理系统，与研究方向很相关
@@ -48,10 +48,9 @@ chart: true
 
 - [caicloud/cyclone](https://github.com/caicloud/cyclone) Collaborator
 	- 作为本科时候的毕业设计参与实现 YAML parser 以及最早的 Docker Runtime
-- [tensorflow/k8s](https://github.com/tensorflow/k8s) Collaborator
-	- 完善设计文档
-	- 实现对 grpc server 的检查
-	- 参与设计 CRD
+- [google/kubeflow](https://github.com/google/kubeflow) Collaborator
+	- 维护 [tensorflow/k8s](https://github.com/tensorflow/k8s)
+	- 实现 controller 的重构
 - [caicloud/kubeflow-controller](https://github.com/caicloud/kubeflow-controller) Collaborator
 	- 内部工具的开源实现, 最终将被 merge 到 [tensorflow/k8s](https://github.com/tensorflow/k8s) 中
 - [weijianwen/SJTUThesis](https://github.com/sjtug/SJTUThesis) Collaborator
