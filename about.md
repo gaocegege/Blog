@@ -176,7 +176,7 @@ chart: true
 
 - 上海交通大学选课插件在 safari 上的实现。
 
-### 业余开源贡献
+## 业余开源贡献
 
 - [weijianwen/SJTUThesis](https://github.com/sjtug/SJTUThesis) Collaborator
 	- 为学士论文模板添加英文大摘要
