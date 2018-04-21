@@ -29,13 +29,13 @@ chart: true
 
 **Google Summer of Code 2018** 2018.03 - 至今
 
-[coala.io](https://coala.io/) | 导师
+[coala.io](https://coala.io/) \| 导师
 
 - 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次担任导师，将指导一位学生参与 [coala Language Server](https://github.com/coala/coala-vs-code) 的实现。
 
 **才云科技** 2017.12 - 至今
 
-机器学习平台组 | 合作研究
+机器学习平台组 \| 合作研究
 
 - [Kubeflow](https://github.com/kubeflow/kubeflow) 由谷歌在 2017 年开源，旨在基于 Kubernetes 支持机器学习工作负载。
 - 我主要维护社区中的 TensorFlow 分布式训练支持项目 [kubeflow/tf-operator](https://github.com/kubeflow/tf-operator) 和超参数以及模型搜索平台项目 [kubeflow/katib](https://github.com/kubeflow/katib)。
@@ -46,13 +46,13 @@ chart: true
 
 **Google Code-In 2017** 2017.12 - 2018.02
 
-[coala.io](https://coala.io/) | 导师
+[coala.io](https://coala.io/) \| 导师
 
 - 由谷歌组织的，鼓励在校的高中生参与开源社区的活动。在此活动中作为导师，指导了全球各地的高中生参与 coala 社区。
 
 **Google Summer of Code 2017** 2017.05 - 2017.09
 
-[The Processing Foundation](https://processingfoundation.org/) | 参与学生
+[The Processing Foundation](https://processingfoundation.org/) \| 参与学生
 
 - 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次 GSoC 共有 20651 名学生注册，最终 1318 人入选，接受率 **6%**。
 - 在活动期间，我实现了 [Processing.R](https://github.com/processing-r/Processing.R)，为 Processing 实现了 R 语言的支持，并且发布到了 Processing IDE 中。项目获得 90 stars，成为本次编程之夏 star 最多的项目之一。
@@ -74,13 +74,13 @@ chart: true
 
 **上海触宝信息技术有限公司** 2015.09 - 2015.09
 
-大数据组 | 数据工程师（实习）
+大数据组 \| 数据工程师（实习）
 
 - 随着业务发展，内部爬虫要进行分布式的部署与管理。我在实习期间主要负责移植爬虫代码到新的平台，优化重写部分过期的爬虫。
 
 **蚂蚁金服（杭州）网络技术有限公司** 2015.07 - 2015.09
 
-国际事业部 | Java 研发工程师（实习）
+国际事业部 \| Java 研发工程师（实习）
 
 - 支付宝开展[海外直购业务](https://cshall.alipay.com/lab/help_detail.htm?help_id=451454)，用户在国外电商网站上使用支付宝下单，由支付宝负责运送至国内并进行配送。我在实习期间基于内部 [Sofa 框架](https://github.com/alipay/sofa-boot)实现了商品包裹通关的相应逻辑，以及为运维提供后台管理支持。
 
