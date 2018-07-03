@@ -27,11 +27,11 @@ chart: true
 
 ## 职业经历
 
-**Google Summer of Code 2018** \| 2018.03 - 至今 \| [coala.io](https://coala.io/) \| 导师
+**Google Summer of Code 2018** \| 2018.03 – 至今 \| [coala.io](https://coala.io/) \| 导师
 
 - 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次担任导师，将指导一位学生参与 [coala Language Server](https://github.com/coala/coala-vs-code) 的实现。
 
-**才云科技** \| 2017.12 - 至今 \| 机器学习平台组 \| 合作研究
+**才云科技** \| 2017.12 – 至今 \| 机器学习平台组 \| 合作研究
 
 - [Kubeflow](https://github.com/kubeflow/kubeflow) 由谷歌在 2017 年开源，旨在基于 Kubernetes 支持机器学习工作负载。
 - 我主要维护社区中的 TensorFlow 分布式训练支持项目 [kubeflow/tf-operator](https://github.com/kubeflow/tf-operator) 和超参数以及模型搜索平台项目 [kubeflow/katib](https://github.com/kubeflow/katib)。
@@ -40,39 +40,39 @@ chart: true
 	- 基于项目完成了两篇介绍性的文章 [Kubeflow 安利：在 Kubernetes 上进行机器学习](http://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/kubeflow) 和 [Katib: Kubernetes native 的超参数训练系统](http://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/katib)，浏览量过 5000（不计算知乎，微信等其他渠道阅读）。
 - 研究机器学习负载在 Kubernetes 上的调度优化。
 
-**Google Code-In 2017** \| 2017.12 - 2018.02 \| [coala.io](https://coala.io/) \| 导师
+**Google Code-In 2017** \| 2017.12 – 2018.02 \| [coala.io](https://coala.io/) \| 导师
 
 - 由谷歌组织的，鼓励在校的高中生参与开源社区的活动。在此活动中作为导师，指导了全球各地的高中生参与 coala 社区。
 
-**Google Summer of Code 2017** \| 2017.05 - 2017.09 \| [The Processing Foundation](https://processingfoundation.org/) \| 参与学生
+**Google Summer of Code 2017** \| 2017.05 – 2017.09 \| [The Processing Foundation](https://processingfoundation.org/) \| 参与学生
 
 - 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次 GSoC 共有 20651 名学生注册，最终 1318 人入选，接受率 **6%**。
 - 在活动期间，我实现了 [Processing.R](https://github.com/processing-r/Processing.R)，为 Processing 实现了 R 语言的支持，并且发布到了 Processing IDE 中。项目获得 90 stars，成为本次编程之夏 star 最多的项目之一。
 - 在[第十届中国R会议（上海） 暨华东地区数据科学会议](http://china-r.org/sh2017/index.html)上针对这一实现发表了主题演讲 [Processing.R: 使用 R 语言实现新媒体艺术作品](http://slides.com/gaocegege/processing-r/)。
 - 参与创建 [GSoC 中国社区](https://github.com/gsoc-cn/gsoc-cn)，发布 [Google Summer of Code 学生申请指南](http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/apply-gsoc)，在知乎上获得 150 赞，博客访问逾 5000。
 
-**Morgan Stanley** \| 2017.02 - 2017.08 \| 项目实习生
+**Morgan Stanley** \| 2017.02 – 2017.08 \| 项目实习生
 
 - 摩根开源的集群管理系统 [treadmill](https://github.com/Morgan-Stanley/treadmill) 在调度上的支持相对较简单。我基于 Kubernetes 的调度模型，在 treadmill 上实现了一个预研原型：[ Morgan-Stanley/treadmill#72](https://github.com/Morgan-Stanley/treadmill/pull/72)。调度延迟在 100 节点规模下与原本的调度器相比下降 12%，但大大增强了其可配置性。
 
-**才云科技** \| 2015.12 - 2017.02 \| 项目合作
+**才云科技** \| 2015.12 – 2017.02 \| 项目合作
 
 - 基于 Docker 实现了持续集成与持续部署系统 [cyclone](https://github.com/caicloud/cyclone)，主要负责 YAML 配置解析，Docker 运行时的集成等
 - 在 GitHub 上获得 530 stars。
 
-**上海触宝信息技术有限公司** \| 2015.09 - 2015.09 \| 大数据组 \| 数据工程师（实习）
+**上海触宝信息技术有限公司** \| 2015.09 – 2015.09 \| 大数据组 \| 数据工程师（实习）
 
 - 随着业务发展，内部爬虫要进行分布式的部署与管理。我在实习期间主要负责移植爬虫代码到新的平台，优化重写部分过期的爬虫。
 
-**蚂蚁金服（杭州）网络技术有限公司** \| 2015.07 - 2015.09 \| 国际事业部 \| Java 研发工程师（实习）
+**蚂蚁金服（杭州）网络技术有限公司** \| 2015.07 – 2015.09 \| 国际事业部 \| Java 研发工程师（实习）
 
 - 支付宝开展[海外直购业务](https://cshall.alipay.com/lab/help_detail.htm?help_id=451454)，用户在国外电商网站上使用支付宝下单，由支付宝负责运送至国内并进行配送。我在实习期间基于内部 [Sofa 框架](https://github.com/alipay/sofa-boot)实现了商品包裹通关的相应逻辑，以及为运维提供后台管理支持。
 
 ## 教育经历
 
-- **上海交通大学** \| 软件学院 \| 2016.09 - 2019.03 (预计) \| 研究生 \| 软件工程
-- **上海交通大学**  \| 软件学院 & 凯原法学院 \| 2012.09 - 2016.06 \| 软件工程（辅修法学）
-- **上海纽约大学附属洋泾中学** \| 2009.09 - 2012.06
+- **上海交通大学** \| 软件学院 \| 2016.09 – 2019.03 (预计) \| 研究生 \| 软件工程
+- **上海交通大学** \| 软件学院 & 凯原法学院 \| 2012.09 – 2016.06 \| 软件工程（辅修法学）
+- **上海纽约大学附属洋泾中学** \| 2009.09 – 2012.06
 
 ## 所获奖项
 
