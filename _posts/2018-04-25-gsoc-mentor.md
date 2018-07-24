@@ -10,7 +10,7 @@ imagefeature:
 mathjax: false
 chart:
 comments: true
-featured: true
+featured: false
 ---
 
 这篇文章的受众是想更加深入了解 Google Summer of Code 这一活动，或者有志于担任某一开源社区 mentor 的同学。由于有些背景知识没有介绍，因此配合 [Google Summer of Code 学生申请指南](https://zhuanlan.zhihu.com/p/27823910)阅读更佳。
