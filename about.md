@@ -27,10 +27,6 @@ chart: true
 
 ## 职业经历
 
-**Google Summer of Code 2018** \| 2018.03 – 至今 \| [coala.io](https://coala.io/) \| 导师
-
-- 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次担任导师，将指导一位学生参与 [coala Language Server](https://github.com/coala/coala-vs-code) 的实现。
-
 **才云科技** \| 2017.12 – 至今 \| 机器学习平台组 \| 合作研究
 
 - [Kubeflow](https://github.com/kubeflow/kubeflow) 由谷歌在 2017 年开源，旨在基于 Kubernetes 支持机器学习工作负载。
@@ -39,6 +35,10 @@ chart: true
 	- [kubeflow/katib#23](https://github.com/kubeflow/katib/pull/23) 使用 multi-stage building，将 katib 组件的镜像 size 降低了 98%；同时引入 vendor，构建速度提高了 80%。
 	- 基于项目完成了两篇介绍性的文章 [Kubeflow 安利：在 Kubernetes 上进行机器学习](http://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/kubeflow) 和 [Katib: Kubernetes native 的超参数训练系统](http://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/katib)，浏览量过 5000（不计算知乎，微信等其他渠道阅读）。
 - 研究机器学习负载在 Kubernetes 上的调度优化。
+
+**Google Summer of Code 2018** \| 2018.03 – 2018.08 \| [coala.io](https://coala.io/) \| 导师
+
+- 由谷歌组织的，赞助在校大学生兼职为开源项目贡献代码的暑期活动。本次担任导师，指导一位学生参与 [coala Language Server](https://github.com/coala/coala-vs-code) 的实现。
 
 **Google Code-In 2017** \| 2017.12 – 2018.02 \| [coala.io](https://coala.io/) \| 导师
 
@@ -73,6 +73,15 @@ chart: true
 - **上海交通大学** \| 软件学院 \| 2016.09 – 2019.03 (预计) \| 研究生 \| 软件工程
 - **上海交通大学** \| 软件学院 & 凯原法学院 \| 2012.09 – 2016.06 \| 软件工程（辅修法学）
 - **上海纽约大学附属洋泾中学** \| 2009.09 – 2012.06
+
+## 发表论文
+
+- **Ce Gao**, R. R., and Cai, H. Gai: A centralized tree-based scheduler for
+machine learning workload in large shared clusters. In International
+Conference on Algorithms and Architectures for Parallel Processing (2018), Springer.
+- Xinyuan Huang, Amit Saha, D. D., and **Ce Gao**. Kubebench: A
+benchmarking platform for ml workloads. In International Conference
+on Artificial Intelligence for Industries (2018), IEEE.
 
 ## 所获奖项
 
