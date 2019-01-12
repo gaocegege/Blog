@@ -22,8 +22,6 @@ chart: true
 - [GitHub://gaocegege](https://github.com/gaocegege/)
 - [LinkedIn://gaocegege](https://www.linkedin.com/in/gaocegege/)
 - [知乎://gaocegege](https://www.zhihu.com/people/gaocegege)
-- [英文 Resume](http://gaocegege.com/resume/)
-- [中文 Resume](http://gaocegege.com/resume/cn/)
 
 ## 职业经历
 
@@ -82,6 +80,13 @@ Conference on Algorithms and Architectures for Parallel Processing (2018), Sprin
 - Xinyuan Huang, Amit Saha, D. D., and **Ce Gao**. Kubebench: A
 benchmarking platform for ml workloads. In International Conference
 on Artificial Intelligence for Industries (2018), IEEE.
+
+## 演讲经历
+
+- [**GAI: A Centralized Tree-Based Scheduler for Machine Learning Workload in Large Shared Clusters**](https://docs.google.com/presentation/d/15fPljYu8a8J2X3MPOZIkccgyh6i0kyQGqdnQMyIh-5I/edit?usp=sharing)，ICA3PP'18，中国广州，2018 年 11 月
+- [**对 Kubeflow 上的机器学习工作负载做基准测试**](sched.co/FvLV)，KubeCon China 2018，中国上海，2018 年 11 月
+- [**Kubeflow: Run ML workloads on Kubernetes**](https://docs.google.com/presentation/d/1ED24TCnlBVzyJz0aCEAtXQQh0_W1RKSeapP3QZ0fTKA/edit?usp=sharing)，统计之都 2018 年 Meetup，中国上海，2018 年 7 月
+- [**Processing.R: 使用 R 语言实现新媒体艺术作品**](http://slides.com/gaocegege/processing-r)，第十届中国 R 语言会议，中国上海，2017 年 11 月
 
 ## 所获奖项
 
