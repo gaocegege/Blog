@@ -1,2 +1,3 @@
 # Personal Blog
-The Blog is established in the githu.io, and use [Notepad](https://github.com/hmfaysal/Notepad) as the jekyll theme
+
+The Blog is established in the github.io, and use [Notepad-China](https://github.com/gaocegege/Notepad-China) as the jekyll theme
