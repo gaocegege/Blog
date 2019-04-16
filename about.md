@@ -25,7 +25,11 @@ chart: true
 
 ## 职业经历
 
-**才云科技** \| 2017.12 – 至今 \| 机器学习平台组 \| 合作研究
+**才云科技** \| 2019.04 – 至今 \| 机器学习平台组 \| 软件工程师
+
+- 实现模型服务功能
+
+**才云科技** \| 2017.12 – 2019.03 \| 机器学习平台组 \| 合作研究
 
 - [Kubeflow](https://github.com/kubeflow/kubeflow) 由谷歌在 2017 年开源，旨在基于 Kubernetes 支持机器学习工作负载。
 - 我主要维护社区中的 TensorFlow 分布式训练支持项目 [kubeflow/tf-operator](https://github.com/kubeflow/tf-operator) 和超参数以及模型搜索平台项目 [kubeflow/katib](https://github.com/kubeflow/katib)。
