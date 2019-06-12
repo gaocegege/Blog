@@ -15,7 +15,7 @@ featured: true
 
 Kubernetes 现在已经成为了容器集群管理，乃至云计算的事实标准。相比于它曾经的竞争对手如 Mesos，Docker Swarm 等，其最大的优势在于扩展性。其扩展性的一个重要的体现，就是 [Custom Resource][1] 这一特性。Kubernetes 本身有很多资源类型，被我们熟知的有 Pod，Job，Deployment 等等。而通过 [Custom Resource][1]，用户可以定义自己的资源，并实现对应的 Operator（控制器）来处理对资源的请求。用户实现的 Operator 通过与 Kubernetes 的 API server 交互，来实现自身的业务逻辑。
 
-在没有 [kubebuilder][] 之前，为了实现一个 Operator，用户需要完全实现从 Kubernetes Client 的创建开始，到监听 Kubernetes API Server 的请求，再到请求的队列化，以及后面的业务逻辑一整套的逻辑。在整个过程中，有一些逻辑是所有的 Operator 在实现的时候都需要的。因此 [kubebuilder][] 将其进行了封装和抽象成了公共的库（[controller-runtime][]）和公共的工具（[controller-tools](https://github.com/kubernetes-sigs/controller-tools)）。随后在开发 Operator 的时候，只需要通过 [kubebuilder][] 生成一些 Scaffolding（脚手架）代码，就可以依据脚手架代码专心于业务逻辑的开发即可。用户不再需要关心 Kubernetes API Server 发来的请求是怎样进入请求队列，然后被依次执行的，只需要关心要如何处理当前的请求即可。其他的事情会由 Scaffolding 代码中用到的 [controller-runtime][] 等库来帮助开发者处理。因此对于用户而言，其只需要关注生成的 Scaffolding 代码中需要用户修改的部分即可。
+在没有 [kubebuilder][] 之前，为了实现一个 Operator，用户需要完全实现从 Kubernetes Client 的创建开始，到监听 Kubernetes API Server 的请求，再到请求的队列化，以及后面的业务逻辑一整套的逻辑。在整个过程中，有一些逻辑是所有的 Operator 在实现的时候都需要的。因此 [kubebuilder][] 将其进行了封装和抽象成了公共的库（[controller-runtime][]）和公共的工具（[controller-tools](https://github.com/kubernetes-sigs/controller-tools)）。随后在开发 Operator 的时候，只需要通过 [kubebuilder][] 生成一些 Scaffolding（脚手架）代码，用户不再需要关心 Kubernetes API Server 发来的请求是怎样进入请求队列，然后被依次执行的，只需要关心要如何处理当前的请求即可。其他的事情会由 Scaffolding 代码中用到的 [controller-runtime][] 等库来帮助开发者处理。
 
 因此接下来，本文主要介绍利用 [kubebuilder v1 scaffolding](https://github.com/kubernetes-sigs/kubebuilder/tree/master/pkg/scaffold/v1) 简化 Operator 开发的过程。目前 [kubebuilder][] 社区已经推出了正在开发中的[第二版实现](https://github.com/kubernetes-sigs/kubebuilder/blob/master/designs/simplified-scaffolding.md)，这一实现将在后续文章进行介绍。
 
@@ -249,7 +249,9 @@ func (r *ReconcileFrigate) Reconcile(request reconcile.Request) (reconcile.Resul
 
 ## Under the Hood
 
-看完了使用上的过程，接下来我们来看看，[kubebuilder][] 生成的代码到底是怎么去运行的。首先先看 cmd 中的代码：
+看完了使用上的过程，接下来我们来看看，[kubebuilder][] 生成的代码到底是怎么去运行的。这一部分主要涉及 [controller-runtime][] 中的实现，因此需要有一定的 Kubernetes 基础会比较好理解。
+
+首先来看看 cmd 中的代码：
 
 ```go
 // Create a new Cmd to provide shared dependencies and start components
@@ -290,11 +292,13 @@ if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
 }
 ```
 
-之前说到 [kubebuilder][] 是开发 Operator 的框架，其实并不十分准确。准确来说，[kubebuilder][] 是开发 Controller Manager 的框架，Controller Manager 会管理一个或者多个 Operator。因此 cmd 中的代码也主要是围绕 Controller Managter 展开的。`manager.New` 首先创建了一个 Manager 实例，在这一实例中有 client，cache 等之后需要的对象。
+之前说到 [kubebuilder][] 是开发 Operator 的框架，其实并不十分准确。准确来说，[kubebuilder][] 是开发 Controller Manager 的框架，Controller Manager 会管理一个或者多个 Operator。因此 cmd 中的代码也主要是围绕 Controller Manager 展开的。`manager.New` 首先创建了一个 Manager 实例，在这一实例中有 client，cache 等之后需要的对象。
 
-`apis.AddToScheme` 将 CRD 的结构与 Kubernetes GroupVersionKinds 的映射添加到 Manager 的 Scheme 中。
+`apis.AddToScheme` 将 CRD 的结构与 Kubernetes GroupVersionKinds 的映射添加到 Manager 的 Scheme 中。这一步是为了能够让 Manager 知道 CRD 的存在。
 
-接下来，就是通过 `controller.AddToManager` 创建出定义的 Operator，并且添加到 Manager 中。这也就是前文提到的 `add` 函数做的事情。利用 `controller.New` 创建出 Operator，然后 Watch 对应的资源，最后返回。下面是 `controller.New` 的实现：
+接下来，就是通过 `controller.AddToManager` 创建出定义的 Operator，并且添加到 Manager 中。`webhook.AddToManager` 会创建对应的 Webhook，主要是做数据校验，与默认值的赋值等操作，这里就不多介绍了，因为与 Controller 主要的逻辑无关。最后的 `mgr.Start` 会真正运行 Manager。
+
+`controller.AddToManager` 中会用 `controller.New` 创建出 Operator，然后 Watch 对应的资源，最后返回。下面是 `controller.New` 的实现：
 
 ```go
 // New returns a new Controller registered with the Manager.  The Manager will ensure that shared Caches have
