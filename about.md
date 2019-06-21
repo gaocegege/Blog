@@ -87,6 +87,7 @@ on Artificial Intelligence for Industries (2018), IEEE.
 
 ## 演讲经历
 
+- [**ciao: Jupyter Kernel for Kubeflow**](https://docs.google.com/presentation/d/1abDkQlYEn2EmPs_4UOmlWxBTZFn4aKlN0CCmiDiaLPc/edit?usp=sharing)，[Kubernetes & Kubeflow Meetup](https://study.163.com/course/courseMain.htm?courseId=1209336810)，中国上海，2019 年 6 月
 - [**GAI: A Centralized Tree-Based Scheduler for Machine Learning Workload in Large Shared Clusters**](https://docs.google.com/presentation/d/15fPljYu8a8J2X3MPOZIkccgyh6i0kyQGqdnQMyIh-5I/edit?usp=sharing)，ICA3PP'18，中国广州，2018 年 11 月
 - [**对 Kubeflow 上的机器学习工作负载做基准测试**](sched.co/FvLV)，KubeCon China 2018，中国上海，2018 年 11 月
 - [**Kubeflow: Run ML workloads on Kubernetes**](https://docs.google.com/presentation/d/1ED24TCnlBVzyJz0aCEAtXQQh0_W1RKSeapP3QZ0fTKA/edit?usp=sharing)，统计之都 2018 年 Meetup，中国上海，2018 年 7 月
