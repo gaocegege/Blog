@@ -55,8 +55,10 @@ links:
     url: /categories
   - title: 关于我
     url: /about
-  - title: 统计
+  - title: 博客数据统计
     url: /analytics
+  - title: 开源项目
+    url: /opensource
   # - title: Link
   #   url: /link
   - title: RSS
