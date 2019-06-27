@@ -28,7 +28,7 @@ KubeCon China 2019 有很多干货满满的分享，这里针对其中的一些�
 这一 Talk 是由 SAP Principal Engineer Dominik Tornow，以及 Google 开源策略项目经理 Andrew Chen 贡献的。他们主要介绍了 KNative Serving 的功能和部分实现。KNative 是由谷歌开源的，支持在 Kubernetes 上运行 Serverless 工作负载的系统。而 KNative Serving 是其中用来支持部署和服务 Serverless 应用的组件。它是构建在 Istio 之上的，但是对 Istio 提供的功能进行了更高层次的抽象。这一 Talk 最大的特色是 Slides 制作精良，加入了很多动画方便听众理解。但在网站上提供只能提供 PDF，所以有些遗憾。不过两位讲师也将出席由才云科技举办的 [CKA 上海站培训](https://www.huodongxing.com/event/5494884686811)，进行时长约 1 个小时的分享。到时也许能够有机会再次领略两位讲师深入浅出的讲解。
 
 <figure>
-	<img src="{{ site.url }}/images/kubecon/knative.png" height="500" width="500">
+	<img src="{{ site.url }}/images/kubecon/knative.png" height="500" width="700">
 </figure>
 
 ### [Kubernetes 集群的大规模分布式深度学习 - Yuan Tang，蚂蚁金服；Yong Tang，MobileIron](https://kccncosschn19chi.sched.com/event/Nrcc/kubernetes-zhong-shi-zha-mao-yuan-tangdaelskuang-yan-shu-daehyong-tangdaelsmobileiron?iframe=no&w=100%&sidebar=yes&bg=no)
@@ -42,7 +42,7 @@ KubeCon China 2019 有很多干货满满的分享，这里针对其中的一些�
 这一分享主要介绍了阿里容器云服务下的开源项目 [gpushare-scheduler-extender](https://github.com/AliyunContainerService/gpushare-scheduler-extender) 的需求和实现。两位讲者也是 Kubeflow 社区中 CLI 项目的维护者。
 
 <figure>
-	<img src="{{ site.url }}/images/kubecon/gpu.png" height="500" width="500">
+	<img src="{{ site.url }}/images/kubecon/gpu.png" height="500" width="700">
 </figure>
 
 GPU 在推理服务中的共享越来越成为一个工业界关注的焦点。目前在 Kubernetes 上的 GPU 共享有不同的解决方案，阿里云服务开源的这一实现借助了诸多 Kubernetes 提供的扩展机制，如 CRD，Device Plugin，Scheduler Extender 和 kubectl 插件等，无侵入地实现了 GPU 显存共享的特性。除此之外，才云科技也有一个类似的[闭源实现](https://caicloud.io/blog/5cd8e472275dbb002b9cd5b6)，也可供参考。
