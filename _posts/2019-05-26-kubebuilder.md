@@ -4,8 +4,8 @@ title: "利用 kubebuilder 优化 Kubernetes Operator 开发体验"
 description: 
 headline:
 modified: 2019-05-27
-category: 
-tags: []
+category: Kubernetes
+tags: [Kubernetes]
 imagefeature:
 mathjax: false
 chart:

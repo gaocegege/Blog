@@ -4,8 +4,8 @@ title: "Kubernetes Operator 测试面面观"
 description: 
 headline:
 modified: 2019-06-31
-category: 
-tags: []
+category: Kubernetes
+tags: [Kubernetes]
 imagefeature:
 mathjax: false
 chart:

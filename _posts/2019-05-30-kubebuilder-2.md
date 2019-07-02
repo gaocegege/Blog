@@ -4,8 +4,8 @@ title: "Kubebuilder 新版本 Scaffolding 之我见"
 description: 
 headline:
 modified: 2019-05-29
-category: 
-tags: []
+category: Kubernetes
+tags: [Kubernetes]
 imagefeature:
 mathjax: false
 chart:
