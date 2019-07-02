@@ -3,7 +3,7 @@ layout: post
 title: "Kubernetes Operator 测试面面观"
 description: 
 headline:
-modified: 2019-06-31
+modified: 2019-06-30
 category: Kubernetes
 tags: [Kubernetes]
 imagefeature:
