@@ -22,6 +22,8 @@ chart: true
 
 希望博客的文章能对你有所帮助。
 
+我们团队目前正在招聘中。如果你对构建基于 Kubernetes 的 Cloud Native 的机器学习平台系统感兴趣，可以了解下我司才云科技的产品 [Clever](https://caicloud.io/products/clever)。我们很早以来就一直在做这一方面的工作，目前我司在机器学习平台开源项目 Kubeflow 上贡献位列全球前三。如果各位读者对我司的工作职位感兴趣，欢迎投递简历到 gaoce#caicloud.io（#换成@）。
+
 <div class="cf"></div>
 
 <section class="summer-disqus row">
