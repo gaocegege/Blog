@@ -20,6 +20,7 @@ chart: true
 	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/degree-master-0100b3.svg" alt="Master"></a>
 </p>
 
+希望博客的文章能对你有所帮助。
 
 <div class="cf"></div>
 
