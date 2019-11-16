@@ -63,7 +63,39 @@ wechat:
       minusAccount: Income:Earnings
 ```
 
+这份配置中，我们定义了很多规则。首先是收款方中带有“米线”的，同时付款方式为中国银行的记录。在生成时把匹配到的记录的支出账户指定为 Assets:BOC，而收入账户指定为 Expenses:Food。意为用 BOC 支付了一次食物消费。第二个规则也类似，它识别出所有类型为收入的记录，并且把他们的支出账户指定为 Income:Earnings，收入账户指定为 Assets:Wechat。所有收入类型的记录，都增加微信钱包的余额，同时减少 Income:Earnings。
 
+除此之外，配置中还定义了默认的收入与支出账户。在这个例子中，默认的支出账户是 Liabilities:CreditCard:Test 而默认的收入账户是 Expenses:Test。
+
+最后，运行命令 `double-entry-generator translate --config <config.yaml> <wechat.csv>`，一个 beancount 文件就会被生成：
+
+```
+option "title" "测试账单"
+option "operating_currency" "CNY"
+
+1970-01-01 open Assets:BOC
+1970-01-01 open Expenses:Food
+1970-01-01 open Income:Earnings
+1970-01-01 open Assets:Wechat
+1970-01-01 open Expenses:Test
+1970-01-01 open Liabilities:CreditCard:Test
+
+2019-09-26 * "特朗普过桥米线" "总共消费:28.16"
+	Expenses:Food 28.16 CNY
+	Assets:BOC -28.16 CNY
+
+2019-09-24 * "同性好友" "/"
+	Assets:Wechat 0.35 CNY
+	Income:Earnings -0.35 CNY
+```
+
+最后可以利用 fava 等工具进行可视化。
+
+[double-entry-generator][] 为了实现对多种账单格式和多种复式记账语言的支持，引入了一个中间表示（A.K.A IR）。说是 IR，但其实现在还是非常简陋和粗糙，不过作用还是非常明显的。来自多种不同提供方的账单，会先被转换为中间表示，再由不同的编译器后端将其编译（严格意义上来说，应该是解释）为不同的记账语言的具体实现（如 beancount 等）。
+
+因此如果想扩展支持新的账单格式，如中国银行信用卡账单等，可以新增 provider（账单提供方的抽象）的实现，而不需要修改其他部分的逻辑。如果想扩展支持新的记账语言，可以新增 compiler 的实现，同样不需要修改其他逻辑。
+
+所以，这次造轮子告诉我们，果然，计算机领域的任何问题，都可以通过新加一层抽象来解决（
 
 ## License
 
