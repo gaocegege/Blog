@@ -174,6 +174,7 @@ spec:
 ## 参考文献
 
 - [morsmachine.dk: go-scheduler](http://morsmachine.dk/go-scheduler)
+- [Understanding resource limits in kubernetes: cpu time](https://medium.com/@betz.mark/understanding-resource-limits-in-kubernetes-cpu-time-9eff74d3161b)
 
 ## License
 
