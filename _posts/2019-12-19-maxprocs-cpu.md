@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Golang MAXPROCS 与容器的相处之道"
-description: 
+title: "GOMAXPROCS 与容器的相处之道"
+description: GOMAXPROCS 在 Kubernetes 和 Docker 中的表现和原理分析
 headline:
 modified: 2019-12-19
 category: 
-tags: []
+tags: ["kubernetes", "GOMAXPROCS"]
 imagefeature:
 mathjax: false
 chart:
