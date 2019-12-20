@@ -86,11 +86,9 @@ func getproccount() int32 {
 
 上述代码，就是 go-scheduler 确定 P 数量的逻辑。在 Linux 上，它会利用系统调用 [sched_getaffinity](https://linux.die.net/man/2/sched_getaffinity) 来获得系统的 CPU 核数。在了解了 Golang 的行为之后，接下来我们可以在 Kubernetes 和 Docker 上，通过实验来观察一下它的表现和影响，再分析一下原因。
 
-## 在 Kubernetes 上的表现
+## 测试环境
 
-### 测试环境
-
-#### CPU
+### CPU
 
 由于实验是利用 XPS-13 笔记本进行的，所以 CPU 只有四核，其具体的配置如下：
 
@@ -122,7 +120,7 @@ NUMA node0 CPU(s):   0-3
 Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
 ```
 
-#### 测试代码
+### 测试代码
 
 Runtime 提供了两个函数可以获得 `GOMAXPROCS` 的值，分别是 `runtime.NumCPU` 和 `runtime.GOMAXPROCS`。因此，在实验中可以利用这两个函数来查看未经过修改的 `GOMAXPROCS`：
 
@@ -141,7 +139,9 @@ func main() {
 
 为了实验的方便，首先已经将其构建成了 Docker 镜像 `gaocegege/get-maxprocs:v1.0.0`。
 
-### 实验结果
+## 实验结果
+
+### Kubernetes
 
 首先，利用 Kubernetes Job，先运行一个没有任何 CPU 限制的任务：
 
@@ -170,6 +170,67 @@ spec:
 |     100m 	|  2000m 	|      4 	|          4 	|
 
 根据结果可以看到，Kubernetes 在 CPU 上的限制并不能影响 `GOMAXPROCS`。
+
+### Docker
+
+|         Arguments 	| NumCPU 	| GOMAXPROCS 	|
+|------------------:	|-------:	|-----------:	|
+|          --cpus=1 	|      4 	|          4 	|
+|          --cpus=2 	|      4 	|          4 	|
+| --cpu-shares=1024 	|      4 	|          4 	|
+|   --cpuset-cpus 0 	|      1 	|          1 	|
+| --cpuset-cpus 0,1 	|      2 	|          2 	|
+
+### 性能测试
+
+Native
+
+BenchmarkFindPrimes     	     100	 200299357 ns/op
+BenchmarkFindPrimes-2   	     100	 134764203 ns/op
+BenchmarkFindPrimes-4   	     100	 123839508 ns/op
+
+Docker --cpuset-cpus 0,1,2,3
+
+BenchmarkFindPrimes     	     100	 291045571 ns/op
+BenchmarkFindPrimes-2   	     100	 162660043 ns/op
+BenchmarkFindPrimes-4   	     100	 116440975 ns/op
+
+Docker --cpus 1
+
+BenchmarkFindPrimes     	      50	 311859202 ns/op
+BenchmarkFindPrimes-2   	      30	 320848055 ns/op
+BenchmarkFindPrimes-4   	      20	 495146155 ns/op
+
+Docker --cpus 2
+
+BenchmarkFindPrimes     	     100	 302142657 ns/op
+BenchmarkFindPrimes-2   	     100	 179710583 ns/op
+BenchmarkFindPrimes-4   	      50	 191927677 ns/op
+
+Docker --cpus 4
+
+BenchmarkFindPrimes     	     100	 272941539 ns/op
+BenchmarkFindPrimes-2   	      50	 169193642 ns/op
+BenchmarkFindPrimes-4   	     100	 134240066 ns/op
+
+Kubernetes CPU 1
+
+BenchmarkFindPrimes     	      30	 243531284 ns/op
+BenchmarkFindPrimes-2   	      30	 277222119 ns/op
+BenchmarkFindPrimes-4   	      20	 424990842 ns/op
+
+Kubernetes CPU 2
+
+BenchmarkFindPrimes     	     100	 260469040 ns/op
+BenchmarkFindPrimes-2   	     100	 154109943 ns/op
+BenchmarkFindPrimes-4   	     100	 192049788 ns/op
+
+Kubernetes CPU 4
+
+BenchmarkFindPrimes     	     100	 248648065 ns/op
+BenchmarkFindPrimes-2   	     100	 154673642 ns/op
+BenchmarkFindPrimes-4   	     100	 125453452 ns/op
+
 
 ## 参考文献
 
