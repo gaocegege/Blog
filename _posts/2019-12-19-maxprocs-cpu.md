@@ -183,54 +183,20 @@ spec:
 
 ### 性能测试
 
-Native
+既然不少隔离 CPU 的方式无法限制 Go 运行时对 CPU 数量的判定，那这一问题是否会影响运行的性能，是一个值得分析的问题。利用了上游社区提供的 CPU bound 的 Benchmark [concprime](https://github.com/embano1/gotutorials/tree/master/concprime)，对不同的限制手段和 GOMAXPROCS 取值进行了详细的性能测试，得到了如下结果。
 
-BenchmarkFindPrimes     	     100	 200299357 ns/op
-BenchmarkFindPrimes-2   	     100	 134764203 ns/op
-BenchmarkFindPrimes-4   	     100	 123839508 ns/op
+<figure>
+	<img src="{{ site.url }}/images/maxprocs/gomaxprocs.png" height="300" width="300">
+    <figcaption>测试结果</figcaption>
+</figure>
 
-Docker --cpuset-cpus 0,1,2,3
+## 结果分析
 
-BenchmarkFindPrimes     	     100	 291045571 ns/op
-BenchmarkFindPrimes-2   	     100	 162660043 ns/op
-BenchmarkFindPrimes-4   	     100	 116440975 ns/op
+Kubernetes 与 `docker --cpus` 一样，都是利用 [CFS Bandwith Control](https://www.kernel.org/doc/Documentation/scheduler/sched-bwc.txt) 来对 CPU 进行资源使用的限制的。以使用 Docker 运行时的 Kubernetes 为例，当用户利用 `.spec.containers[].resources.limit.cpu` 来限制 CPU 的 hard limit 时，其背后的行为是向 Docker 容器中加入了 `HostConfig.CpuPeriod` 和 `HostConfig.CpuQuota`。最后两个 `cpu,cpuacct`cgroup 下的值 `cpu.cfs_period_us` 和 `cpu.cfs_quota_us` 被修改。
 
-Docker --cpus 1
+[CFS Bandwith Control](https://www.kernel.org/doc/Documentation/scheduler/sched-bwc.txt) 原本是为了解决 CPU Share 不能做 hard limit 的问题的，但它同样造成了新的问题，系统调用 `sched_getaffinity` 并不感知它对进程的限制。这也使得运行在 Kubernetes 中的 Go 程序的运行时始终会认为自己可以使用宿主机上的所有 CPU，进而创建了相同数量的 P。而当其 `GOMAXPROCS` 被手动地设置为限制后的值后，其在 CPU 密集的任务上的表现得到了很大程度的提高。
 
-BenchmarkFindPrimes     	      50	 311859202 ns/op
-BenchmarkFindPrimes-2   	      30	 320848055 ns/op
-BenchmarkFindPrimes-4   	      20	 495146155 ns/op
-
-Docker --cpus 2
-
-BenchmarkFindPrimes     	     100	 302142657 ns/op
-BenchmarkFindPrimes-2   	     100	 179710583 ns/op
-BenchmarkFindPrimes-4   	      50	 191927677 ns/op
-
-Docker --cpus 4
-
-BenchmarkFindPrimes     	     100	 272941539 ns/op
-BenchmarkFindPrimes-2   	      50	 169193642 ns/op
-BenchmarkFindPrimes-4   	     100	 134240066 ns/op
-
-Kubernetes CPU 1
-
-BenchmarkFindPrimes     	      30	 243531284 ns/op
-BenchmarkFindPrimes-2   	      30	 277222119 ns/op
-BenchmarkFindPrimes-4   	      20	 424990842 ns/op
-
-Kubernetes CPU 2
-
-BenchmarkFindPrimes     	     100	 260469040 ns/op
-BenchmarkFindPrimes-2   	     100	 154109943 ns/op
-BenchmarkFindPrimes-4   	     100	 192049788 ns/op
-
-Kubernetes CPU 4
-
-BenchmarkFindPrimes     	     100	 248648065 ns/op
-BenchmarkFindPrimes-2   	     100	 154673642 ns/op
-BenchmarkFindPrimes-4   	     100	 125453452 ns/op
-
+目前 Golang 上游并无好的方式来规避这一问题，而 Uber 提出了一种 Workaround [uber-go/automaxprocs](https://github.com/uber-go/automaxprocs)。利用这一个包，可以在运行时根据 cgroup 或者 runtime 来修改 GOMAXPROCS，来选择一个合适的取值，值得一试。
 
 ## 参考文献
 
