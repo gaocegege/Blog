@@ -785,6 +785,13 @@ code
     max-width: 56.25rem;
     font-size: 1.125rem;
 }
+
+.summer-page-content > div:not(.summer-post-title) table {
+    margin: 0 auto 2em auto;
+    max-width: 56.25rem;
+    font-size: 1.125rem;
+}
+
 /*.summer-page-content > div:not(.summer-page-title) p:first-child {
     font-size: 1.375rem;
     font-weight: 300;
