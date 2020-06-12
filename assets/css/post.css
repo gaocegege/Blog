@@ -786,7 +786,7 @@ code
     font-size: 1.125rem;
 }
 
-.summer-page-content > div:not(.summer-post-title) table {
+.summer-page-content > div:not(.summer-page-title) table {
     margin: 0 auto 2em auto;
     max-width: 56.25rem;
     font-size: 1.125rem;
