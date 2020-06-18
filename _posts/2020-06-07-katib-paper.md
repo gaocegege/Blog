@@ -61,9 +61,37 @@ Katib 的系统工作流程如下图所示。首先用户会创建 Experiment，
     <figcaption>系统流程</figcaption>
 </figure>
 
+对于用户而言，只需要创建好 Experiment 即可，之后的流程都是由 Katib 自动化地完成。
+
 ## 竞品特性比较
 
+在文章中，我们对比了 katib 与其他 state-of-art 系统的特性，具体如下所示。
 
+<figure>
+	<img src="{{ site.url }}/images/katib-paper/features.png" height="500" width="500">
+    <figcaption>特性对比</figcaption>
+</figure>
+
+在开源协议方面，除了 Google Vizier 之外，其他的系统都以不同的协议开源。在支持的语言方面，大部分的系统都只提供了 Python SDK。而 Katib 作为云原生的自动机器学习系统，在设计上做到了语言无关，能够支持各种语言。在云原生方面，Katib 的功能以 Kubernetes CRD 的方式对外提供，能够与 Kubernetes 的生态非常好地融合。而其他大部分系统都只是能够运行在 Kubernetes 之上，或者不支持。
+
+在多租户方面，Katib 可以利用 Kubernetes 的 Namespace 和 ResourceQuota 等功能进行简单的租户隔离。同时 Katib 可以控制每个任务的并发程度，每个训练任务的资源限制。而其他大多数系统则不支持这一能力。
+
+在自动扩缩容能力上，Katib 可以配合 Kubernetes Cluster-Autoscaler，自动地在资源不足时扩展集群。同时得益于 Kubeflow 社区的其他项目，Katib 可以在单次搜索任务中运行分布式的训练。
+
+在扩展性方面，Katib 对用户代码几乎没有侵入性，只需要用户将超参数对外以命令行参数的方式暴露出来，即可进行搜索。
+
+在容错方面，Katib 支持定义 Error budgets，允许用户配置搜索任务的最大训练失败次数，保证搜索任务不会因为偶然的训练失败就是停止训练。除此之外，Katib 支持对训练的容错。
+
+Katib 也是与 NNI 一样，支持模型结构搜索的系统。另外 Katib 也可以与 Kubernetes 社区中的 Volcano，Kube-Batch 等调度器项目配合使用，对分布式的训练任务进行 Gang Scheduling。
+
+## 实验验证
+
+针对 Katib 的一些特性，我们进行了实验验证。
+
+<figure>
+	<img src="{{ site.url }}/images/katib-paper/multi.png" height="500" width="500">
+    <figcaption>多租户</figcaption>
+</figure>
 
 ## License
 
