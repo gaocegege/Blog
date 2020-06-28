@@ -20,9 +20,20 @@ chart: true
 	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/degree-master-0100b3.svg" alt="Master"></a>
 </p>
 
-希望博客的文章能对你有所帮助。
+出生于山东滨州，于上海求学十数载，毕业于上海交通大学软件学院。毕业后加入[才云科技](https://caicloud.io)工作至今，主要关注在 ML Infra 和云原生领域。
 
-我们团队目前正在招聘中。如果你对构建基于 Kubernetes 的 Cloud Native 的机器学习平台系统感兴趣，可以了解下我司才云科技的产品 [Clever](https://caicloud.io/products/clever)。我们很早以来就一直在做这一方面的工作，目前我司在机器学习平台开源项目 Kubeflow 上贡献位列全球前三。如果各位读者对[我司的工作职位](https://www.lagou.com/gongsi/j85122.html)感兴趣，欢迎投递简历到 gaoce#caicloud.io（#换成@）。
+曾经是[上海交通大学东岳网络工作室](https://github.com/dyweb/)，[SJTUG](https://github.com/sjtug/) 成员，年轻时喜欢辩论，为了打好辩论修读了法律第二专业。虽然辩论水平不足一提，但因此认识了爱人（是的，已婚）。
+
+希望博客的文章能对你有所帮助。如果你想和我聊聊，可以在如下平台上找到我:
+
+- <a href="https://www.zhihu.com/people/gaocegege"><img src="https://img.shields.io/badge/%E7%9F%A5%E4%B9%8E-gaocegege-blueviolet.svg?style=social" alt="Zhihu"></a>
+- <a href="https://www.linkedin.com/in/gaocegege/"><img src="https://img.shields.io/badge/LinkedIn-gaocegege-blueviolet.svg?style=social" alt="LinkedIn"></a>
+- <a href="https://twitter.com/gaocegege"><img src="https://img.shields.io/twitter/follow/gaocegege.svg?style=social" alt="Twitter"></a>
+
+<figure>
+	<img src="{{ site.url }}/images/aboutme/wechat.jpg" height="200" width="200">
+    <figcaption>微信</figcaption>
+</figure>
 
 <div class="cf"></div>
 
