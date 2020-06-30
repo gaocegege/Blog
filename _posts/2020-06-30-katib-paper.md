@@ -3,7 +3,7 @@ layout: post
 title: "云原生的自动机器学习系统 Katib 论文解读"
 description: 
 headline:
-modified: 2020-06-07
+modified: 2020-06-30
 category: kubernetes
 tags: []
 imagefeature: /katib-paper/cover.png
@@ -91,6 +91,24 @@ Katib 也是与 NNI 一样，支持模型结构搜索的系统。另外 Katib �
 <figure>
 	<img src="{{ site.url }}/images/katib-paper/multi.png" height="500" width="500">
     <figcaption>多租户</figcaption>
+</figure>
+
+首先是多租户能力。在这一实验中，我们一共将系统划分为两个租户，分别是 user1 和 user2。对于 user1，我们创建了一个搜索次数为 12 的搜索任务，并且将其并行搜索数设置为 8。而对于 user2，我们创建了一个搜索次数为 12，但并行搜索数为 2 的搜索任务。
+
+在训练中我们可以看到，所有的任务都严格遵守我们定义的规范，user1 会创建 8 个并行的搜索任务，并且在运行结束后创建新的搜索任务。在任意一个时刻，都只有小于等于 8 个任务在运行。而 user2 也与之类似。在任意时刻，至多只有两个任务在执行。
+
+接下来，我们针对 Katib 的自动扩缩容集群能力进行验证。当集群资源不够时，我们可以通过 Cluster Autoscaler，对集群进行扩缩容。下图就是实验结果。我们一共运行了 250 次搜索任务，其中每个搜索任务占用 2 核 CPU。起初集群上没有任何节点，随着任务的创建，对 CPU 资源的需求随之增加。我们通过扩容集群来支持自训练业务运行。而在训练末期，资源不再被使用，我们通过自动地缩容集群起到节约资源的作用。
+
+<figure>
+	<img src="{{ site.url }}/images/katib-paper/autoscale.png" height="500" width="500">
+    <figcaption>集群自动扩缩容</figcaption>
+</figure>
+
+人工智能自训练技术不仅支持扩缩容，同样支持容错。在容错试验中，我们通过利用 Chaos Mesh 为 Katib，Optuna 和 NNI 注入错误。其中主要包括训练失败和训练任务被杀死两种错误。我们发现，在相似的框架的表现中，Katib 是表现最好的。
+
+<figure>
+	<img src="{{ site.url }}/images/katib-paper/ft.png" height="800" width="800">
+    <figcaption>容错</figcaption>
 </figure>
 
 ## License
