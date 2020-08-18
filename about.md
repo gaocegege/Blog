@@ -20,7 +20,7 @@ chart: true
 	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/degree-master-0100b3.svg" alt="Master"></a>
 </p>
 
-出生于山东滨州，于上海求学十数载，毕业于上海交通大学软件学院。毕业后加入[才云科技](https://caicloud.io)工作至今，主要关注在 ML Infra 和云原生领域。
+出生于山东滨州，于上海求学十数载，毕业于上海交通大学软件学院。毕业后加入[才云科技](https://caicloud.io)（目前被字节跳动收购）工作至今，主要关注在 ML Infra 和云原生领域。
 
 曾经是[上海交通大学东岳网络工作室](https://github.com/dyweb/)，[SJTUG](https://github.com/sjtug/) 成员，年轻时喜欢辩论，为了打好辩论修读了法律第二专业。虽然辩论水平不足一提，但因此认识了爱人（是的，已婚）。
 
