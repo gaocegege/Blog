@@ -30,7 +30,7 @@ featured: true
 Horovod 是一款基于 AllReduce 的分布式训练框架。凭借其对 TensorFlow、PyTorch 等主流深度学习框架的支持，以及通信优化等特点，Horovod 被广泛应用于数据并行的训练中。在 Horovod 中，训练进程是平等的参与者，每个进程既负责梯度的分发，也负责具体的梯度计算。如下图所示，三个 Worker 中的梯度被均衡地划分为三份，通过 4 次通信，能够完成集群梯度的计算和同步。
 
 <figure>
-	<img src="{{ site.url }}/images/elastic-training/allreduce.png" height="300" width="300">
+	<img src="{{ site.url }}/images/elastic-training/allreduce.png" height="500" width="500">
     <figcaption>AllReduce</figcaption>
 </figure>
 
@@ -59,7 +59,7 @@ Horovod 是目前在数据并行的分布式训练中应用最多的训练框架
 Uber 开源的 Horovod 框架作为数据并行模式下广泛使用的训练框架，在 2020 年夏天也开始着手解决弹性训练这个需求。最终 Elastic Horovod 在 Horovod v0.20.0 版本发布中面世。
 
 <figure>
-	<img src="{{ site.url }}/images/elastic-training/horovod.png" height="300" width="300">
+	<img src="{{ site.url }}/images/elastic-training/horovod.png" height="500" width="500">
     <figcaption>Horovod Elastic</figcaption>
 </figure>
 
@@ -81,7 +81,7 @@ Uber 开源的 Horovod 框架作为数据并行模式下广泛使用的训练框
 在 Elastic 功能推出之前，Kubeflow 社区的 MPI-Operator 是将 Horovod 部署并运行在 Kubernetes 集群上的主流方案。MPI-Operator 虽然经历 v1alpha1、v1alpha2 和 v1 三个版本，但大体上的思想一致。其主要过程包括：
 
 <figure>
-	<img src="{{ site.url }}/images/elastic-training/mpioperator.png" height="300" width="300">
+	<img src="{{ site.url }}/images/elastic-training/mpioperator.png" height="500" width="500">
     <figcaption>mpi-operator</figcaption>
 </figure>
 
