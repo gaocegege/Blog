@@ -4,7 +4,7 @@ title: "OCI Artifacts，面向未来的 Artifacts 分发服务"
 description: 
 headline:
 modified: 2020-05-13
-category: 
+category: kubernetes
 tags: []
 imagefeature:
 mathjax: false
