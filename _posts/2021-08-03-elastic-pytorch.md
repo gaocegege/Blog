@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "PyTorch 弹性分布式训练的设计与实现"
+title: "云原生的弹性 AI 训练系列之二：PyTorch 弹性分布式训练的设计与实现"
 description: 
 headline:
 modified: 2021-08-03
-category: 
+category: kubernetes
 tags: []
 imagefeature:
 mathjax: false
@@ -279,7 +279,35 @@ class EtcdRendezvousHandler(RendezvousHandler):
         return self._pcontext.pids()
 ```
 
+### c10d 新的设计
 
+前文介绍了基于 etcd 的 `rendezvous` 实现，它可以保证多个实例之间对于参与训练的节点共识的强一致，但是这也为 PyTorch 运行训练任务引入了额外的依赖。因此 PyTorch 也提供了一个内置的实现 c10d。相比于基于 etcd 的实现，c10d 基于 TCP 来进行同步。
+
+```python
+def create_backend(params: RendezvousParameters) -> Tuple[C10dRendezvousBackend, Store]:
+    ...
+    if store_type == "file":
+        store = _create_file_store(params)
+    elif store_type == "tcp":
+        store = _create_tcp_store(params)
+    ...
+
+    backend = C10dRendezvousBackend(store, params.run_id)
+
+def _create_tcp_store(params: RendezvousParameters) -> TCPStore:
+    host, port = parse_rendezvous_endpoint(params.endpoint, default_port=29400)
+    ...
+    for is_server in [is_host, False]:
+        ...
+        store = TCPStore(
+            host, port, is_master=is_server, timeout=timedelta(seconds=read_timeout)
+        )
+        ...
+        break
+    return store
+```
+
+c10d 是一个 client-server 的架构，其中的一个 agent 上会运行 c10d 的 TCPServer，它监听给定的端口，提供了 `compareAndSet`、`add` 等原语。它也可以被理解为一个简化的，提供 KV 接口的内存数据库，类似于 Redis。有关 `rendezvous` 的同步，都是由各个 agent 通过一个中心化的 agent 上的 c10d TCPServer 完成的。可以预见这样的实现在可用性上相比于 etcd 是有一定差距的，但是胜在易用性。用户如果使用 c10d，那么不再需要运维一个 etcd 集群。
 
 ## PyTorch Elastic on Kubernetes
 
@@ -329,7 +357,7 @@ spec:
 
 ## PyTorch Elastic 与 Horovod Elastic
 
-TODO
+目前，两者的设计从原理上来说并无二致。相比于 Horovod Elastic，PyTorch Elastic 提供了更灵活的扩展性，它提供了 `agent`、`rendezvous` 等接口，用户可以根据需要进行扩展。但是从另外一个角度讲，Horovod 的易用性做的更好。PyTorch 并没有提供保存状态的内置支持，为了能够在 worker 进程失败，重建训练任务的时候，需要用户自己实现保存会加载 checkpoint 的逻辑；而 Horovod 则提供了内置的实现。
 
 ## License
 
