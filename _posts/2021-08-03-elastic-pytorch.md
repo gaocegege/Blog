@@ -13,7 +13,9 @@ comments: true
 featured: true
 ---
 
-机器学习工作负载与传统的工作负载相比，一个比较显著的特点是对 GPU 的需求旺盛。在之前的文章中介绍过，目前 GPU 的显存已经不足以跟上模型参数规模的发展。随着 Transformer 等新的模型结构的出现，这一问题越来越显著。算法工程师们训练模型所需要的资源越来越多，分布式训练也随之成为了工业界进行模型训练的标准方式。弹性训练能够在训练过程中动态地调整参与训练的实例数量，极大程度提高集群资源的利用率。在 PyTorch 最新发布的 1.9.0 版本中，其原本分布式训练的方式 `torch.distributed.launch` [即将被废弃](https://github.com/pytorch/pytorch/issues/60754)，转而推荐用户使用弹性的分布式训练接口 `torch.distributed.run`。借此机会，我们对这一新特性进行简单地介绍，并且与 Horovod Elastic 进行简单地对比和分析。
+机器学习工作负载与传统的工作负载相比，一个比较显著的特点是对 GPU 的需求旺盛。在之前的文章中介绍过，目前 GPU 的显存已经不足以跟上模型参数规模的发展。随着 Transformer 等新的模型结构的出现，这一问题越来越显著。算法工程师们训练模型所需要的资源越来越多，分布式训练也随之成为了工业界进行模型训练的标准方式。
+
+弹性训练能够在训练过程中动态地调整参与训练的实例数量，极大程度提高集群资源的利用率。同时，配合云上的竞价实例等资源类型，能够以更低的成本进行模型调优，进一步降本增效。在 PyTorch 最新发布的 1.9.0 版本中，其原本分布式训练的方式 `torch.distributed.launch` [即将被废弃](https://github.com/pytorch/pytorch/issues/60754)，转而推荐用户使用弹性的分布式训练接口 `torch.distributed.run`。借此机会，我们对这一新特性进行简单地介绍，并且与 Horovod Elastic 进行简单地对比和分析。最后总结一下使用弹性训练时，需要注意的问题。
 
 ## PyTorch 1.9.0 之前的设计
 
@@ -353,11 +355,38 @@ spec:
                   nvidia.com/gpu: 1
 ```
 
-由于在最开始，基于 `c10d` 的 `rendezvous` 还没有被支持，所以 CRD 中需要定义 rdzvEndpoint，指向一个已经部署好的 etcd 集群。同时，用户需要指定 `minReplicas` 和 `maxReplicas`。其他就与 Kubeflow PyTorchJob 并无二致。
+由于在最开始，基于 `c10d` 的 `rendezvous` 还没有被支持，所以 CRD 中需要定义 rdzvEndpoint，指向一个已经部署好的 etcd 集群。同时，用户需要指定 `minReplicas` 和 `maxReplicas`。其他就与 Kubeflow PyTorchJob 并无二致。
+
+在运行时，
+
+// TODO: 日志
 
 ## PyTorch Elastic 与 Horovod Elastic
 
 目前，两者的设计从原理上来说并无二致。相比于 Horovod Elastic，PyTorch Elastic 提供了更灵活的扩展性，它提供了 `agent`、`rendezvous` 等接口，用户可以根据需要进行扩展。但是从另外一个角度讲，Horovod 的易用性做的更好。PyTorch 并没有提供保存状态的内置支持，为了能够在 worker 进程失败，重建训练任务的时候，需要用户自己实现保存会加载 checkpoint 的逻辑；而 Horovod 则提供了内置的实现。
+
+Horovod 和 PyTorch 在同步机制上也具有比较大的差异。Horovod Elastic 需要用户提供一个脚本 `discovery_hosts.sh`，帮助其在运行时获得正在参与训练的节点。
+
+```bash
+$ horovodrun -np 8 --host-discovery-script discover_hosts.sh python train.py
+...
+$ ./discover_hosts.sh
+host-1:29500
+host-2:29500
+host-3:29500
+```
+
+这相当于将节点发现的逻辑交给用户来实现。反观 PyTorch，它利用 etcd、自身实现的 c10d 等组件解决节点间的相互发现问题，显得更为精巧。
+
+## 总结
+
+最后，我们总结一下目前实现弹性训练需要注意的问题。首先，也是最重要的，弹性训练需要一种机制来解决节点/训练进程间相互发现的问题。训练过程中节点会动态地加入或者退出，如何让其他的节点感知到这一变化，是这一机制主要面对的问题。目前的设计中，Horovod 将这一问题交给用户来解决，Horovod 定期执行用户定义的逻辑来发现目前的节点。PyTorch 通过第三方的分布式一致性中间件 etcd 等来实现高可用的节点发现。除此之外，也有一些探索性的工作，利用[基于 Gossip 的协议](https://ieeexplore.ieee.org/document/1028914)来进行同步，在兼顾高可用的同时也没有引入过多的组件。
+
+其次，要实现弹性训练还需要捕获训练失效。Horovod 和 PyTorch 都通过一个后台进程（Horovod 中是 Driver，PyTorch 中是每个节点的 Local Elastic Agent）来实现这一逻辑。当进程 crash，或在梯度通信中遇到问题时，后台进程会捕获到失效并且重新进行节点发现，然后重启训练。
+
+最后，训练时的数据切分的逻辑和学习率/ batch size 的设置也要对应进行修改。由于参与训练的进程会动态的增减，因此可能需要根据新的训练进程的规模来重新设置学习率和数据分配的逻辑，避免影响模型收敛。
+
+在本文中，我们
 
 ## License
 
