@@ -357,10 +357,6 @@ spec:
 
 由于在最开始，基于 `c10d` 的 `rendezvous` 还没有被支持，所以 CRD 中需要定义 rdzvEndpoint，指向一个已经部署好的 etcd 集群。同时，用户需要指定 `minReplicas` 和 `maxReplicas`。其他就与 Kubeflow PyTorchJob 并无二致。
 
-在运行时，
-
-// TODO: 日志
-
 ## PyTorch Elastic 与 Horovod Elastic
 
 目前，两者的设计从原理上来说并无二致。相比于 Horovod Elastic，PyTorch Elastic 提供了更灵活的扩展性，它提供了 `agent`、`rendezvous` 等接口，用户可以根据需要进行扩展。但是从另外一个角度讲，Horovod 的易用性做的更好。PyTorch 并没有提供保存状态的内置支持，为了能够在 worker 进程失败，重建训练任务的时候，需要用户自己实现保存会加载 checkpoint 的逻辑；而 Horovod 则提供了内置的实现。
@@ -386,7 +382,7 @@ host-3:29500
 
 最后，训练时的数据切分的逻辑和学习率/ batch size 的设置也要对应进行修改。由于参与训练的进程会动态的增减，因此可能需要根据新的训练进程的规模来重新设置学习率和数据分配的逻辑，避免影响模型收敛。
 
-在本文中，我们
+在本文中，我们首先介绍了 PyTorch 1.9.0 版本中弹性训练的设计与实现。然后分析总结了实现弹性训练的方式和不同框架之间的设计差异。从我们的角度来看，弹性训练能够很好地贴合云原生的趋势，以极致的弹性来降低成本提高资源利用率，是未来的趋势。因此目前我们也在积极参与 TensorFlow、PyTorch 和 Kubeflow 等社区的弹性训练的社区贡献工作，后续会发布更多的相关文章，感谢关注。
 
 ## License
 
