@@ -13,6 +13,8 @@ comments: true
 featured: true
 ---
 
+> Jupyter Notebooks 在 Kubernetes 上部署往往需要绑定一张 GPU，而大多数时候 GPU 并没有被使用，因此利用率低下。为了解决这一问题，我们开源了 [elastic-jupyter-operator](https://github.com/tkestack/elastic-jupyter-operator/)，将占用 GPU 的 Kernel 组件单独部署，在长期空闲的情况下自动回收，释放占用的 GPU。这篇文章主要介绍了这一开源项目的使用方式以及工作原理。
+
 Jupyter Notebooks 是目前应用最为广泛的交互式开发环境，它很好地满足了数据科学、深度学习模型构建等场景的代码开发需求。不过另一方面，Jupyter Notebooks 在方便了算法工程师和数据科学家们日常开发工作的同时，也对基础架构提出了更多的挑战。
 
 <figure>
@@ -106,10 +108,6 @@ jupyternotebook-elastic-787d94bb4b-xdwnc      1/1     Running   0          3h10m
 
 除此之外，由于 Notebook 和 Kernel 解耦的设计，使得用户可以方便地修改 Kernel 的镜像与资源配额、向已经在运行的 Notebook 中添加新的 Kernel 等。
 
-从算法工程师的角度来说，elastic-jupyter-operator 支持自定义的 Kernel，可以自行选择在 Kernel 的容器镜像中安装 Python 包或者系统依赖，不需要担心与团队内部的 Notebook 统一镜像的版本一致性问题，提高研发效率。
-
-而从运维与资源管理的角度来说，elastic-jupyter-operator 遵循了云原生的设计理念，以 5 个 CRD 的方式对外提供服务，对于已经落地 Kuerbenetes 的团队来说具有较低的运维成本。
-
 ## 设计与实现
 
 在介绍完使用方式后，我们简单介绍其设计与实现。
@@ -118,6 +116,18 @@ jupyternotebook-elastic-787d94bb4b-xdwnc      1/1     Running   0          3h10m
 	<img src="{{ site.url }}/images/elastic-jupyter/uml.png" height="500" width="500">
     <figcaption>时序图</figcaption>
 </figure>
+
+当用户在浏览器中选择执行代码时，首先请求会发送给在 Kubernetes 上运行的 Notebook Server。由于目前集群上没有正在运行的 Kernel，代码执行任务无法分配下去，所以 Notebook Server 会向 Gateway 发送一个创建 Kernel 的请求。Gateway 负责管理远端的 Kernel 的生命周期，它会在 Kubernetes 集群中创建对应的 JupyterKernel CR。随后会与集群中已经创建好的 Kernel 通过 ZeroMQ 进行交互，然后将代码执行的请求发送给 Kernel 进行执行，随后将结果发送给 Notebook Server 再将其返回给前端进行渲染和展示。
+
+而 Gateway 会根据在 JupyterGateway CR 中定义的有关资源回收的参数，定时检查目前管理的 Kernel 中有没有满足要求，需要被回收的实例。当 Kernel 空闲时间达到了定义的阈值时，Gateway 会删除对应的 JupyterKernel CR，将其回收，释放 GPU。
+
+## 总结
+
+目前深度学习在开发与落地生产的过程中仍然存在着诸多的挑战。elastic-jupyter-operator 瞄准了在开发过程中的 GPU 利用率与开发效率的问题，提出了一种可行的方案，将占用 GPU 的 Kernel 组件单独部署，在长期空闲的情况下自动回收，释放占用的 GPU，通过这样的方式提高资源的利用率的同时，也给予了算法工程师用户更多的灵活度。
+
+从算法工程师的角度来说，elastic-jupyter-operator 支持自定义的 Kernel，可以自行选择在 Kernel 的容器镜像中安装 Python 包或者系统依赖，不需要担心与团队内部的 Notebook 统一镜像的版本一致性问题，提高研发效率。
+
+而从运维与资源管理的角度来说，elastic-jupyter-operator 遵循了云原生的设计理念，以 5 个 CRD 的方式对外提供服务，对于已经落地 Kuerbenetes 的团队来说具有较低的运维成本。
 
 ## License
 
