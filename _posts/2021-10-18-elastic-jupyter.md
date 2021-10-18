@@ -3,7 +3,7 @@ layout: post
 title: "云原生的弹性 AI 训练系列之三：借助弹性伸缩的 Jupyter Notebook，大幅提高 GPU 利用率"
 description: 
 headline:
-modified: 2021-09-22
+modified: 2021-10-18
 category: kubernetes
 tags: []
 imagefeature:
