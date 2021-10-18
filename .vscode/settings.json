@@ -15,5 +15,23 @@
         "titleBar.inactiveBackground": "#f10d5d99",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#f10d5d"
+    "peacock.color": "#f10d5d",
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/_posts/2021-09-22-elastic-jupyter.md"
+            ],
+            "config": {
+                "audience": "general",
+                "dialect": "american",
+                "domain": "general",
+                "emotions": [
+                    "neutral"
+                ],
+                "goals": [
+                    "describe"
+                ]
+            }
+        }
+    ]
 }
