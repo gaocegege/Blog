@@ -119,7 +119,7 @@ jupyternotebook-elastic-787d94bb4b-xdwnc      1/1     Running   0          3h10m
 
 当用户在浏览器中选择执行代码时，首先请求会发送给在 Kubernetes 上运行的 Notebook Server。由于目前集群上没有正在运行的 Kernel，代码执行任务无法分配下去，所以 Notebook Server 会向 Gateway 发送一个创建 Kernel 的请求。Gateway 负责管理远端的 Kernel 的生命周期，它会在 Kubernetes 集群中创建对应的 JupyterKernel CR。随后会与集群中已经创建好的 Kernel 通过 ZeroMQ 进行交互，然后将代码执行的请求发送给 Kernel 进行执行，随后将结果发送给 Notebook Server 再将其返回给前端进行渲染和展示。
 
-而 Gateway 会根据在 JupyterGateway CR 中定义的有关资源回收的参数，定时检查目前管理的 Kernel 中有没有满足要求，需要被回收的实例。当 Kernel 空闲时间达到了定义的阈值时，Gateway 会删除对应的 JupyterKernel CR，将其回收，释放 GPU。
+而 Gateway 会根据在 JupyterGateway CR 中定义的有关资源回收的参数，定时检查目前管理的 Kernel 中有没有满足要求，需要被回收的实例。当 Kernel 空闲时间达到了定义的阈值时，Gateway 会删除对应的 JupyterKernel CR，将其回收，释放 GPU。
 
 ## 总结
 
