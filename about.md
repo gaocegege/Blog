@@ -34,6 +34,6 @@ chart: true
     <div class="small-12 columns">
         <h1 class="summer-comments-header">评论</h1>
         <div id="disqus_thread"></div>
-        {% include disqus_comments.html %}
+        {% include giscus_comments.html %}
     </div>
 </section>
