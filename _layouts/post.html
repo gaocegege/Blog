@@ -78,6 +78,20 @@
         {% include disqus_comments.html %}
     </div>
 </section>
+{% elsif page.comments == true and site.comments_sys == 'giscus' %}
+<script src="https://giscus.app/client.js"
+        data-repo="gaocegege/blog-comments"
+        data-repo-id="R_kgDOGms1JQ"
+        data-category="General"
+        data-category-id="DIC_kwDOGms1Jc4CAfIx"
+        data-mapping="title"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
 {% else %}
         <section class="summer-disqus row">
     <div class="small-12 columns">

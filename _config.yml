@@ -2,7 +2,7 @@ title:            高策
 description:      江湖小虾米
 logo:             gaocegege.jpg
 background:
-comments_sys:     disqus
+comments_sys:     giscus
 disqus_shortname: blogofcece
 share:            true
 highlight:        true
