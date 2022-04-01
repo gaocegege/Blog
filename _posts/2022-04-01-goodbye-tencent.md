@@ -35,7 +35,7 @@ featured: true
 </figure>
 
 <figure>
-	<img src="{{ site.url }}/images/tencent/1.png" height="500" width="500">
+	<img src="{{ site.url }}/images/tencent/2.png" height="500" width="500">
     <figcaption>Docker 是否能解决问题</figcaption>
 </figure>
 
