@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "千方百计讨好你 - 论开源项目的开发流程"
+title: "千方百计讨好开发者 - 论开源项目的开发流程"
 description: 
 headline:
 modified: 2022-06-27
