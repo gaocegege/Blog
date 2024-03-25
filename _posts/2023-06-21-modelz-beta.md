@@ -4,8 +4,8 @@ title: "Serverless 推理服务 ModelZ 进入 Beta 公测！"
 description: 
 headline:
 modified: 2023-06-21
-category: 
-tags: []
+category: genai
+tags: [genai]
 imagefeature:
 mathjax: false
 chart:
