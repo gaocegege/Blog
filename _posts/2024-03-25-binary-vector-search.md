@@ -13,6 +13,8 @@ comments: true
 featured: true
 ---
 
+> Original post: [My binary vector search is better than your FP32 vectors](https://blog.pgvecto.rs/my-binary-vector-search-is-better-than-your-fp32-vectors)
+
 在向量搜索领域出现了一项有趣的发展：二进制向量搜索。这种方法通过显著减少内存消耗，取得了30倍的减少。然而，关于它对准确性的影响引发了争议。然而通过实验我们发现，使用二进制向量搜索和特定的优化技术，可以保持与原始向量相似的准确性。为了阐明这个问题，我们展示了一系列实验来演示这种方法的效果和影响。
 
 ## 二进制向量搜索
