@@ -4,8 +4,8 @@ title: "20倍速度提升：Rust 实现的 Postgres 向量相似度插件"
 description: 
 headline:
 modified: 2023-08-09
-category: 
-tags: []
+category: genai
+tags: [genai]
 imagefeature:
 mathjax: false
 chart:
