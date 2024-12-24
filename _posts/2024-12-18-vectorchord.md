@@ -13,6 +13,10 @@ comments: true
 featured: true
 ---
 
+2024.12.24: 本文部分评论可见 [Hacker News](https://news.ycombinator.com/item?id=42324059)
+
+> Original post: [VectorChord: Store 400k Vectors for $1 in PostgreSQL](https://blog.pgvecto.rs/vectorchord-store-400k-vectors-for-1-in-postgresql)
+
 我们很高兴地宣布推出适用于 PostgreSQL 的新向量搜索扩展，它提供了一种非常经济高效的方法来管理大型向量。使用 [VectorChord](https://github.com/tensorchord/VectorChord)，您可以对 top 10 查询的 1 亿个 768 维向量实现 131 的 QPS 和 0.95 的精度。此设置每月仅需 250 美元，并且可以托管在一台机器上。
 
 这意味着只需 1 美元即可存储 400k 个向量，从而大幅节省成本：与 Pinecone（存储优化实例）相比，向量数量多 6 倍，与 pgvector/pgvecto.rs 相比，价格相同，向量数量多 26 倍。
