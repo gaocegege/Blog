@@ -159,12 +159,6 @@ X-Request-Id: Root=1-64019a9a-2a1c8df34f329c2167b71ce2
 
 kvcache 使得对话场景下的 LLM 推理服务不再是无状态的。针对这一问题，目前有两种思路。首先是 kvcache 的 live migration。目前我看到的工作有 [LMCache](https://github.com/LMCache/LMCache)，它支持把 kvcache 通过 redis 等方式进行共享。类比传统的应用相当于分布式 session（会话）管理。用户相关的 kvcache 在多个实例间共享，这样就不需要复杂的负载均衡策略。
 
-
-
-## 与其他实现方式的比较
-
-除此以外 [KNative](https://knative.dev/docs/) 和 [KServe](https://github.com/kserve/kserve) 也经常被用于这一场景。
-
 感谢 Yuandong Xie, Junyu Chen, Jingjing Zhou, Keming Yang 和 Zilong Cui 对本文的贡献。
 
 ## License
