@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>KUBERNETES HACK/LOCAL-UP-CLUSTER.SH 无法启动 DNS 的问题溯源 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Kubernetes hack/local-up-cluster.sh 无法启动 DNS 的问题溯源">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes hack/local-up-cluster.sh 无法启动 DNS 的问题溯源">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/kubernetes-hack/local-up-cluster.sh-%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8-dns-%E7%9A%84%E9%97%AE%E9%A2%98%E6%BA%AF%E6%BA%90/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Kubernetes hack/local-up-cluster.sh 无法启动 DNS 的问题溯源</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近在关注 <a href="https://github.com/google/kubeflow">google/kubeflow</a>, 这是一个 run TensorFlow on Kubernetes 的项目, 所以涉及频繁地启动 Kubernetes 集群来做测试. 而因为我们对 Kubernetes 环境有要求, 必须是 1.7 版本, 所以选择了 v1.7.11 作为测试版本, 使用脚本 <code>hack/local-up-cluster.sh</code> 来构建出一个临时的 Kubernetes 本地集群, 其中只有一个 node, 但是也已经够用了, 因为暂时不涉及调度相关的实现.</p>
+<p>但是在使用 <code>hack/local-up-cluster.sh</code> 的时候遇到了一个小坑. Kubeflow 会为 TensorFlow 的每个 worker 和 PS 创建一个对应的 service, 所以需要用到 kube-dns 的一些功能. 但是 v1.7.11 在执行 <code>hack/local-up-cluster.sh</code> 会有报错:</p>
+<pre tabindex="0"><code>clusterrolebinding &#34;system:kube-dns&#34; created
+serviceaccount &#34;kube-dns&#34; created
+configmap &#34;kube-dns&#34; created
+error: unable to recognize &#34;kubedns-deployment.yaml&#34;: no matches for extensions/, Kind=Deployment
+service &#34;kube-dns&#34; created
+Kube-dns deployment and service successfully deployed.
+</code></pre><p>这个问题会导致不能根据 service 的 name 解析到对应的 IP, 因此在 Kubeflow 中的表现就是 worker-0 会一直在等 PS 的 response. 这个问题在社区中也有反馈: <a href="https://github.com/kubernetes/kubernetes/issues/47739">kubernetes/kubernetes#47739</a>, 以及有了对应的修复: <a href="https://github.com/kubernetes/kubernetes/pull/49072">kubernetes/kubernetes#49072</a>.</p>
+<p>但是按照上述 PR 中进行修改还是不够的, 还是会遇到新的问题:</p>
+<pre tabindex="0"><code>Waiting for apiserver to come up
+!!! [0720 11:47:43] Timed out waiting for apiserver:  to answer at https://127.0.0.1:6443/healthz; tried 20 waiting 1 between each
+check apiserver logs: /tmp/kube-apiserver.log
+</code></pre><p>这个问题在 PR 中也有回复: <a href="https://github.com/kubernetes/kubernetes/pull/49072#issuecomment-316798981">#issuecomment-316798981</a>, 简单来说就是要把 <code>ENABLE_RBAC</code> 打开, 这样就可以成功地在本地跑一个 Kubernetes 集群并且有可用的 kube-dns 支持了.</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

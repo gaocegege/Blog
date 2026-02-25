@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>KUBEFLOW 安利：在 KUBERNETES 上进行机器学习 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="机器学习">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Kubeflow 安利：在 Kubernetes 上进行机器学习">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubeflow 安利：在 Kubernetes 上进行机器学习">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/kubeflow-%E5%AE%89%E5%88%A9%E5%9C%A8-kubernetes-%E4%B8%8A%E8%BF%9B%E8%A1%8C%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Kubeflow 安利：在 Kubernetes 上进行机器学习</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>这篇文章主要介绍了 <a href="https://github.com/kubeflow/kubeflow">Kubeflow</a> 的使用，以及未来的计划，面向人群为对在 Kubernetes 上运行机器学习负载感兴趣的同学。</p>
+<h2 id="问题背景">问题背景</h2>
+<p>Kubernetes 本来是一个用来管理无状态应用的容器平台，但是在近两年，有越来越多的公司用它来运行各种各样的工作负载，尤其是机器学习<del>炼丹</del>。各种 AI 公司或者互联网公司的 AI 部门都会尝试在 Kubernetes 上运行 TensorFlow，Caffe，MXNet 等等分布式学习的任务，这为 Kubernetes 带来了新的挑战。</p>
+<p>首先，分布式的机器学习任务一般会涉及参数服务器（以下称为 PS）和工作节点（以下成为 worker）两种不同的工作类型。而且不同领域的学习任务对 PS 和 worker 有不同的需求，这体现在 Kubernetes 中就是配置难的问题。以 TensorFlow 为例，<a href="https://www.tensorflow.org/deploy/distributed">TensorFlow 的分布式学习任务</a>通常会启动多个 PS 和多个 worker，而且在 TensorFlow 提供的最佳实践中，每个 worker 和 PS 要求传入不同的命令行参数。举例说明：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># On ps0.example.com:</span>
+</span></span><span class="line"><span class="cl">$ python trainer.py <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --ps_hosts<span class="o">=</span>ps0.example.com:2222,ps1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --worker_hosts<span class="o">=</span>worker0.example.com:2222,worker1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --job_name<span class="o">=</span>ps --task_index<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># On ps1.example.com:</span>
+</span></span><span class="line"><span class="cl">$ python trainer.py <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --ps_hosts<span class="o">=</span>ps0.example.com:2222,ps1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --worker_hosts<span class="o">=</span>worker0.example.com:2222,worker1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --job_name<span class="o">=</span>ps --task_index<span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># On worker0.example.com:</span>
+</span></span><span class="line"><span class="cl">$ python trainer.py <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --ps_hosts<span class="o">=</span>ps0.example.com:2222,ps1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --worker_hosts<span class="o">=</span>worker0.example.com:2222,worker1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --job_name<span class="o">=</span>worker --task_index<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># On worker1.example.com:</span>
+</span></span><span class="line"><span class="cl">$ python trainer.py <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --ps_hosts<span class="o">=</span>ps0.example.com:2222,ps1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --worker_hosts<span class="o">=</span>worker0.example.com:2222,worker1.example.com:2222 <span class="se">\
+</span></span></span><span class="line"><span class="cl">     --job_name<span class="o">=</span>worker --task_index<span class="o">=</span><span class="m">1</span>
+</span></span></code></pre></div><p>其中需要的参数有四个，一个是所有的 PS 的网络地址（主机名-端口），以及所有的 worker 的网络地址。另外是 job 的类型，分为 PS 与 worker 两种。最后是任务的 index，从 0 开始递增。因此在此例中，用户需要写至少四个 pod 的配置文件，以及四个 service 的配置文件，使得 PS 跟 worker 可以互相访问，况且这只是一个机器学习任务。如果大规模地在 Kubernetes 上运行 TensorFlow 分布式任务，可以预见繁杂的配置将成为机器学习工程师们新的负担。</p>
+<p>其次，Kubernetes 默认的调度器对于机器学习任务的调度并不友好。如果说之前的问题只是在应用与部署阶段比较麻烦，那调度引发的资源利用率低，或者机器学习任务效率下降的问题，就格外值得关注。机器学习任务对于计算和网络的要求相对较高，一般而言所有的 worker 都会使用 GPU 进行训练，而且为了能够得到一个较好的网络支持，尽可能地同一个机器学习任务的 PS 和 worker 放在同一台机器或者网络较好的相邻机器上会降低训练所需的时间。</p>
+<h2 id="hello-kubeflow">Hello, Kubeflow</h2>
+<p>针对这些问题，<a href="https://github.com/kubeflow/kubeflow">Kubeflow</a> 项目应运而生，它以 TensorFlow 作为第一个支持的框架，在 Kubernetes 上定义了一个新的资源类型：TFJob，即 TensorFlow Job 的缩写。通过这样一个资源类型，使用 TensorFlow 进行机器学习训练的工程师们不再需要编写繁杂的配置，只需要按照他们对业务的理解，确定 PS 与 worker 的个数以及数据与日志的输入输出，就可以进行一次训练任务。在本节中，我们将从零开始搭建一个 Kubernetes 集群，并且将 Kubeflow 运行在其上，最后利用其进行一次完整的学习任务运行。</p>
+<p>首先，我们需要有一个正在运行的 Kubernetes 集群，而且集群的版本要大于等于 1.8。在这一步里，个人推荐以下两种方式创建一个单节点的本地 Kubernetes 集群：</p>
+<ul>
+<li><a href="https://github.com/kubernetes/kubernetes/blob/master/hack/local-up-cluster.sh">使用 Kubernetes 里的 local-up-cluster.sh 脚本</a></li>
+<li><a href="https://github.com/kubernetes/minikube">使用 minikube 项目</a></li>
+</ul>
+<p>其中前者会在本地创建一个 native 的 Kubernetes 集群，而后者则会在本地的虚拟机里创建出 Kubernetes 集群。因为本文侧重点不在此，因此整个过程不再赘述。</p>
+<p>如果你已经成功地创建了一个 Kubernetes 集群，那么接下来就是在这一集群上创建 Kubeflow 所有的组件，这一步需要用到 <a href="https://github.com/ksonnet/ksonnet">ksonnet</a>，一个简化应用在 Kubernetes 上的分发与部署的命令行工具，它会帮助你创建 Kubeflow 所需组件。在安装了 <a href="https://github.com/ksonnet/ksonnet">ksonnet</a> 后，接下来就是一片坦途了，只需要运行下面的命令，就可以完成 Kubeflow 的部署。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Initialize a ksonnet APP</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_NAME</span><span class="o">=</span>my-kubeflow
+</span></span><span class="line"><span class="cl">ks init <span class="si">${</span><span class="nv">APP_NAME</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="si">${</span><span class="nv">APP_NAME</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Install Kubeflow components</span>
+</span></span><span class="line"><span class="cl">ks registry add kubeflow github.com/kubeflow/kubeflow/tree/master/kubeflow
+</span></span><span class="line"><span class="cl">ks pkg install kubeflow/core
+</span></span><span class="line"><span class="cl">ks pkg install kubeflow/tf-serving
+</span></span><span class="line"><span class="cl">ks pkg install kubeflow/tf-job
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Deploy Kubeflow</span>
+</span></span><span class="line"><span class="cl"><span class="nv">NAMESPACE</span><span class="o">=</span>default
+</span></span><span class="line"><span class="cl">kubectl create namespace <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">ks generate core kubeflow-core --name<span class="o">=</span>kubeflow-core --namespace<span class="o">=</span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">ks apply default -c kubeflow-core
+</span></span></code></pre></div><p>Kubeflow 的部署会附带一个 JupyterHub 但笔者并不知道如何使用它，因此下面的操作是用 Docker 打包训练数据和代码，用 kubectl 在 Kubernetes 上启动一次训练任务的。</p>
+<p>示例代码可见 <a href="https://github.com/tensorflow/k8s/blob/master/examples/tf_sample/tf_sample/tf_smoke.py">tf_smoke.py</a>，与正常的训练代码类似，只不过 clusterspec 的传递方式是遵循了 <a href="https://cloud.google.com/ml-engine/docs/trainer-considerations#use_tf_config">Cloud ML</a> 的 TF_CONFIG 的方式。Kubeflow 已经根据这一训练文件打好了一个 Docker 镜像：<code>gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff</code>，在这里直接使用就好：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl create -f https://raw.githubusercontent.com/tensorflow/k8s/master/examples/tf_job.yaml
+</span></span></code></pre></div><h2 id="kubeflow-实现介绍">Kubeflow 实现介绍</h2>
+<p>本部分主要涉及对 Kubeflow 内部实现的介绍和未来可能的开发计划，如果不感兴趣可以就此打住 :)</p>
+<h3 id="对分布式训练任务的支持">对分布式训练任务的支持</h3>
+<p>为了解决配置困难的问题，Kubeflow 以 TensorFlow 作为第一个支持的框架，为其实现了一个在 Kubernetes 上的 <a href="https://coreos.com/operators/">operator</a>：<a href="https:github.com/tensorflow/k8s">tensorflow/k8s</a>。由于在 Kubernetes 上内置的资源类型，如 deployment，replicaset，或者是 pod 等，都很难能够简练而清晰地描述一个分布式机器学习的任务，因此我们利用 Kubernetes 的 <a href="https://kubernetes.io/docs/concepts/api-extension/custom-resources/">Custom Resource Definition</a> 特性，定义了一个新的资源类型：TFJob，即 TensorFlow Job 的缩写。一个 TFJob 配置示例如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;kubeflow.org/v1alpha1&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;TFJob&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;example-job&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">replicaSpecs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tfReplicaType</span><span class="p">:</span><span class="w"> </span><span class="l">MASTER</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tensorflow</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OnFailure</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tfReplicaType</span><span class="p">:</span><span class="w"> </span><span class="l">WORKER</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tensorflow</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OnFailure</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tfReplicaType</span><span class="p">:</span><span class="w"> </span><span class="l">PS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">tensorflow</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">OnFailure</span><span class="w">
+</span></span></span></code></pre></div><p>其中每个字段就不多介绍了，这里主要是说一下实现。任何一个 PS 或者 worker，都由两个资源组成，分别是 job 和 service。其中 job 负责创建出 PS 或者 worker 的 pod，而 service 负责将其暴露出来。这里社区目前也在重新考虑选型，目前希望可以直接创建 pod 而非 job，而用 headless service 替代 service，因为 PS worker 不需要暴露给除了该分布式学习任务外的其他服务。</p>
+<p>TFJob operator 的实现早期是从 <a href="https://github.com/coreos/etcd-operator/">etcd-operator</a> 复制来的，因此整体的架构在最初是完全仿照其改写而成。在最初的实现中，当有一个 TFJob 被创建时，在 operator 内都会有一个新的 goroutine，以轮询的方式获取 TFJob 的状态，然后基于此状态做出相应的操作，相当于是在 operator 内部维护了一个状态机。这样的方式会有一些缺点：</p>
+<ul>
+<li>这样的架构使得 operator 是有状态的，使得状态很难横向扩展</li>
+<li>维护基于 Phase 的状态机是 Kubernetes 社区不推崇的一种方式</li>
+</ul>
+<p>基于这些问题，operator 的架构正在往事件驱动重构，这部分工作由 <a href="https://github.com/caicloud">@caicloud</a> 在推进。重构之后，operator 会在 Kubernetes 的一些资源上注册 informer 的事件回调，比较现在的状态与理想状态的不同而采取相应的操作。比如当有一个新的 TFJob 被创建时，理想状态是所有对应的 PS， worker 都被创建好，而当下的状态则是没有任何 pod 和 service 被创建，此时 operator 会创建出对应的 PS，worker 的 pod 和 service，以达到理想状态，这也是 Kubernetes 社区对于 operator/controller 的最佳实践。</p>
+<h3 id="对分布式学习任务效率的关注">对分布式学习任务效率的关注</h3>
+<p>目前社区还停留在如何对 AI 工程师更友好，更好地维护上面提到的 operator 这一步，在效率方面考虑地较少。目前有利用 <a href="https://github.com/kubernetes-incubator/kube-arbitrator">kube-arbitrator</a> 来进行 gang scheduling 的探索，目前还没有尝试过因此不好评价。但是整体来说 Kubeflow 的性能提高还有很大的空间。</p>
+<p>因为机器学习任务根据模型的不同，其输入数据的规模，特征，模型的大小等等都有很大不同。比如 CV 领域与推荐领域的学习模型就有完全不同的特点，因此 TensorFlow 的分布式模型提供了极强的灵活性。而对于 Kubernetes 而言，如何能够在保持灵活性的基础上，同时也保证任务在较高的性能下运行，同时集群的利用率也相对较高，是一个值得研究的问题。</p>
+<h3 id="对其他机器学习框架的支持">对其他机器学习框架的支持</h3>
+<p>目前 Kubeflow 主要关注 TensorFlow，而其他机器学习框架的支持将于之后展开，目前有一些第三方实现的 operator，比如 <a href="https://github.com/deepinsight/mxnet-operator">MXNet operator</a>，但是质量难以保证。</p>
+<h3 id="开发情况与未来展望">开发情况与未来展望</h3>
+<p>目前 Kubeflow 有来自 Google，Caicloud，RedHat 等公司的积极参与，短期的目标有这么几个：</p>
+<ul>
+<li>operator 方面
+<ul>
+<li>使用 pod 替换 job <a href="https://github.com/tensorflow/k8s/issues/325">tensorflow/k8s#325</a></li>
+<li>使用 headless service 替换 service <a href="https://github.com/tensorflow/k8s/issues/40">tensorflow/k8s#40</a></li>
+<li>由 etcd operator 主动轮询的方式改为事件驱动 <a href="https://github.com/tensorflow/k8s/issues/314">tensorflow/k8s#314</a></li>
+<li>分离对 TensorBoard 的支持 <a href="https://github.com/tensorflow/k8s/issues/347">tensorflow/k8s#347</a></li>
+<li>支持细粒度的任务状态 <a href="https://github.com/tensorflow/k8s/issues/333">tensorflow/k8s#333</a></li>
+</ul>
+</li>
+<li>模型服务方面
+<ul>
+<li>GPU 支持 <a href="https://github.com/kubeflow/kubeflow/issues/64">kubeflow/kubeflow#64</a></li>
+<li>监控支持 <a href="https://github.com/kubeflow/kubeflow/issues/64">kubeflow/kubeflow#64</a></li>
+<li>多框架支持下的统一 API 支持 <a href="https://github.com/kubeflow/kubeflow/issues/102">kubeflow/kubeflow#102</a></li>
+</ul>
+</li>
+<li>UI 方面
+<ul>
+<li>为各个部件支持统一的 UI <a href="https://github.com/kubeflow/kubeflow/issues/199">kubeflow/kubeflow#199</a></li>
+</ul>
+</li>
+</ul>
+<p>目前 Kubeflow 在 GitHub 上有 2400 多个 star，有 40 个左右的贡献者。其长期的目标是成为 CNCF 的一个项目，目前实现仍存在很多问题，窃以为也并不是 production ready 的状态，但它仍然值得一试。</p>
+<h2 id="关于作者">关于作者</h2>
+<p><a href="https://github.com/gaocegege">@gaocegege</a>，上海交通大学软件学院研究生在读，<a href="https://github.com/kubeflow/kubeflow">Kubeflow</a> Member，寻找 2018 暑期实习。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

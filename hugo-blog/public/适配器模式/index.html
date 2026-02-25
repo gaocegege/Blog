@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>适配器模式 | 高策</title>
+<meta name="description" content="设计模式">
+<meta name="keywords" content="design pattern">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="适配器模式">
+<meta name="twitter:description" content="设计模式">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="适配器模式">
+<meta property="og:description" content="设计模式">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>适配器模式</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>适配器模式，是一个提高接口复用的模式，他的作用是，把一个原本存在的接口包装成另一番摸样，使得原本因为接口问题不能使用的类可以使用了。在我看来是开闭原则的一种体现吧。</p>
+<p>适配器有两种，一种是类适配器，一种是对象适配器。类适配器，就是利用类的继承，去实现适配的作用。对象适配器，是利用组合，就是在适配器类中有被适配的类的实例，通过这个实例来实现适配的作用。这个看看UML图就可以比较详细地了解了。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/design-pattern/adapter.jpg" alt="适配器模式" height="500" width="500">
+	<figcaption>适配器模式</figcaption>
+</figure>
+<p>两者的差别就是一个是通过继承，一个是通过组合，利用实例的方式去进行。本身对于两个方法的应用场景，是比较疑惑的。对象适配器的好处，似乎是在于可以使得一个适配器能够适配很多的待适配类。因为Java是不允许多重继承的，因此要是想通过一个适配器来适配多于一个的待适配类的时候，使用对象适配器似乎是更加合适的选择。不过对象适配器因为是使用一个对象，所以当适配器类被多次实例化，那他们引用的对象是同一个还是不同的对象之类的，会产生一些细节问题。所以对象适配器在实现起来会比较复杂一点。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

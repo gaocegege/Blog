@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Compiler on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/compiler/</link>
+    <description>Recent content in Compiler on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sun, 07 Dec 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/compiler/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>递归下降与LL(1)</title>
+      <link>https://gaocegege.com/Blog/%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E4%B8%8Ell1/</link>
+      <pubDate>Sun, 07 Dec 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E4%B8%8Ell1/</guid>
+      <description>&lt;p&gt;编译原理第二次答辩的时候，出了一点点问题。答辩时天神说递归下降是可以hold住所有语法的，不需要保证语法是没有左递归的。到现在一直还是不是很理解，于是就看了看课本。PS: 课本为龙书～&lt;/p&gt;&#xA;&lt;h2 id=&#34;关于大作业&#34;&gt;关于大作业&lt;/h2&gt;&#xA;&lt;p&gt;大作业是跟&lt;a href=&#34;https://github.com/hczhcz&#34;&gt;橙汁大腿(大腿无误)&lt;/a&gt;以及&lt;a href=&#34;https://github.com/qikangqi&#34;&gt;QKQ&lt;/a&gt;一起在写。&lt;s&gt;其实说是三个人一起写，多是橙汁写，我们看着&lt;code&gt;_(:з」∠)_&lt;/code&gt;&lt;/s&gt;&lt;/p&gt;&#xA;&lt;p&gt;项目开源在Github上-&amp;gt;&lt;a href=&#34;https://github.com/gaocegege/CompilerLab&#34;&gt;https://github.com/gaocegege/CompilerLab&lt;/a&gt;，定位是一个LL语法的编译器前端生成器。据橙汁说，我们的大作业是用递归下降的方法来做的，嗯。&lt;/p&gt;&#xA;&lt;h1 id=&#34;递归下降语法分析&#34;&gt;递归下降语法分析&lt;/h1&gt;&#xA;&lt;p&gt;关于这个，书上的定义是这样的：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;一个递归下降语法分析程序由一组过程组成，&lt;strong&gt;每个非终结符号对应一个过程&lt;/strong&gt;，程序的执行从开始符号对应的过程开始，如果这个过程的过程体扫描了整个输入串，它就停止并宣布语法分析成功。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;下面是一个在自顶向下的语法分析器中一个非终结符号对应的典型过程：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;void A(){&#xA;&#x9;chooses a predict A-&amp;gt;X1 X2 X3 ... Xk;&#xA;&#x9;for (int i = 1; i &amp;lt;= k; i++){&#xA;&#x9;&#x9;if (Xi is non-terminal)&#xA;&#x9;&#x9;&#x9;Xi();&#xA;&#x9;&#x9;else if (Xi == the input char a)&#xA;&#x9;&#x9;&#x9;input the next char to a&#xA;&#x9;&#x9;else&#xA;&#x9;&#x9;&#x9;err();&#xA;&#x9;}&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这种根据非终结符号决定应用哪个产生式的方法，就是通过上面这种方式来实现，不过会多回溯的过程。&lt;/p&gt;&#xA;&lt;p&gt;那我们最大的问题在于递归下降的算法能不能hold住左递归的语法。书上有这样一种说法：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;一个左递归的文法会使得它的语法分析起进入一个无限循环。即使带回溯的语法分析器也是如此。也就是说，当我们试图展开一个非终结符号A的时候，我们可能会没有读入任何输入符号就再次试图展开A。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;举个例子来看看吧～&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;A -&amp;gt; Aa | b&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这样一个简单的语法，看上去是可以用递归下降来做的，但是其实是不可以的。因为在读入第一个字符b的时候，是不能确定要调用哪个产生式的。我试着写了下，可能代码的样子是这样的：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;void A(string &amp;amp;str, int &amp;amp;ptr)&#xA;{&#xA;&#x9;if (str[ptr] == &#39;b&#39;)&#xA;&#x9;{&#xA;&#x9;&#x9;ptr++;&#xA;&#x9;&#x9;if (ptr == str.size())&#xA;&#x9;&#x9;&#x9;cout &amp;lt;&amp;lt; &amp;quot;successs!\n&amp;quot;;&#xA;&#x9;&#x9;else&#xA;&#x9;&#x9;{&#xA;&#x9;&#x9;&#x9;ptr--;&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;&#x9;&#xA;&#x9;A(str, ptr);&#xA;&#x9;if (str[ptr] == &#39;a&#39;)&#xA;&#x9;&#x9;ptr++;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;代码看上去是有一个死循环的，所以跑的时候会爆Segmentation fault。死循环的原因就是A的一个产生式的第一个符号就是它自己，所以程序就在判断A-&amp;gt;b的产生式失败后，执行A-&amp;gt;Aa产生式然后不停递归，就死循环了。感觉这种一个非终结符号对应一个过程的方法是没办法处理左递归的。不知道天神所说的可以处理是用另外的方法还是怎么样。。。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Javacc 6.0 无法使用的谜之Bug</title>
+      <link>https://gaocegege.com/Blog/javacc-6.0-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E8%B0%9C%E4%B9%8Bbug/</link>
+      <pubDate>Mon, 20 Oct 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/javacc-6.0-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E8%B0%9C%E4%B9%8Bbug/</guid>
+      <description>&lt;p&gt;配置编译原理大作业的环境遭遇谜之Bug~&lt;/p&gt;&#xA;&lt;h1 id=&#34;问题描述&#34;&gt;问题描述&lt;/h1&gt;&#xA;&lt;p&gt;在使用JavaCC时，始终提示&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;&lt;strong&gt;&amp;lsquo;javacc&amp;rsquo; is not recognized as an internal or external command, operable program or batch file&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;我也是醉啦~明明环境变量已经按照文档里说的配置好了，但是还是找不到JavaCC。&lt;/p&gt;&#xA;&lt;h1 id=&#34;问题解决&#34;&gt;问题解决&lt;/h1&gt;&#xA;&lt;p&gt;参考&lt;a href=&#34;http://stackoverflow.com/questions/18674474/setting-javacc-to-work-with-command-prompt&#34;&gt;StackOverflow&lt;/a&gt;，似乎是因为他们在6.0的版本里没有启动脚本，只有一个jar包，可以下载5.0版本然后把所有的脚本都复制到bin文件夹下，就可以启动啦~&lt;/p&gt;&#xA;&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;&#xA;&lt;p&gt;这锅是Javacc的~&lt;/p&gt;&#xA;&lt;p&gt;PS: 为什么我都百度不到解决方案啊！最后只能依靠科学上网解决问题。&lt;strong&gt;谷歌大法好~&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

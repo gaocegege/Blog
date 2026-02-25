@@ -1,0 +1,55 @@
+{{ define "bodyClass" }}home-template{{ end }}
+{{ define "main" }}
+<header class="summer-site-head">
+    <div class="summer-site-head-menu">
+        <a class="summer-blog-logo" href="{{ "/" | relURL }}">
+            <img src="{{ "/images/" | relURL }}{{ .Site.Params.logo }}" alt="Blog Logo" />
+        </a>
+        {{ partial "menu.html" (dict "page" .) }}
+        <div class="clearfix"></div>
+    </div>
+    <div class="summer-site-head-content with-bg-cover">
+        <h1 class="summer-blog-title">
+            <span class="summer-site-head-title-bg">
+                消遣
+            </span>
+        </h1>
+        <h2 class="summer-blog-description">随笔与生活</h2>
+    </div>
+</header>
+
+<main class="summer-content" role="main">
+    {{ $relaxed := where (where .Site.RegularPages "Type" "posts") ".Params.featured" "ne" true }}
+    {{ range $relaxed }}
+    <article class="summer-index-post post row">
+        <div class="small-12 medium-3 large-2 columns datetime">
+            <span class="summer-post-meta">
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                    <span class="day">
+                        {{ .Date.Format "02" }}
+                    </span>
+                    <span class="month-year">
+                        {{ .Date.Format "January 2006" }}
+                    </span>
+                </time>
+            </span>
+        </div>
+        <div class="small-12 medium-9 large-10 columns">
+            <header class="summer-post-header">
+                <h3 class="summer-post-title">
+                    <a href="{{ .RelPermalink }}">
+                        {{ .Title }}
+                    </a>
+                </h3>
+            </header>
+            <div class="summer-index-post-tags">
+                {{ range .Params.categories }}
+                <a href="{{ "/categories/" | relURL }}#{{ . | urlize }}" title="Other posts from the {{ . | humanize }} category">{{ . | humanize }}</a>
+                {{ end }}
+            </div>
+        </div>
+    </article>
+    {{ end }}
+</main>
+{{ partial "footer.html" . }}
+{{ end }}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MCM on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/mcm/</link>
+    <description>Recent content in MCM on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 24 Jan 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/mcm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>交通流学习记录</title>
+      <link>https://gaocegege.com/Blog/%E4%BA%A4%E9%80%9A%E6%B5%81%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Sat, 24 Jan 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E4%BA%A4%E9%80%9A%E6%B5%81%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;h1 id=&#34;nash模型&#34;&gt;Nash模型&lt;/h1&gt;&#xA;&lt;p&gt;Nash是一个一维的元胞自动机，是建立在初等元胞自动机的第184号转换函数上的一个模型。他适用于单车道的交通流，之所以只适用于单车道，因为他的元胞只有一维，不能涉及超车等等。&lt;/p&gt;&#xA;&lt;h2 id=&#34;学前知识&#34;&gt;学前知识&lt;/h2&gt;&#xA;&lt;h3 id=&#34;元胞自动机&#34;&gt;元胞自动机&lt;/h3&gt;&#xA;&lt;p&gt;元胞自动机是什么，在&lt;a href=&#34;http://gaocegege.com/Blog/mcm/MCM/&#34;&gt;这篇文章&lt;/a&gt;中有比较具体的阐述，可以去看下。&lt;/p&gt;&#xA;&lt;h3 id=&#34;184号规则转换函数&#34;&gt;184号规则转换函数&lt;/h3&gt;&#xA;&lt;p&gt;转换函数如下所示~可以被直观的理解为汽车在一条道路上的阻塞情况。每一个元胞，代表一个车位，元胞中状态1理解为有车占据此位，0代表无车占据此位。这样来看下面的转换函数，就是当一个车辆前面的车位无车时，它就会前进一格，如果前面有车，那他就会停留在当前车位。&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;111-&amp;gt;1&#xA;110-&amp;gt;0&#xA;101-&amp;gt;1&#xA;100-&amp;gt;1&#xA;011-&amp;gt;1&#xA;010-&amp;gt;0&#xA;001-&amp;gt;0&#xA;000-&amp;gt;0&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;h2 id=&#34;模型简介&#34;&gt;模型简介&lt;/h2&gt;&#xA;&lt;p&gt;下面是在知网一篇论文中找到的介绍。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;该模型用一个一维点阵代表一条单车道，即将所研究的单车道分成n个长度为L的小路段(元胞)，点阵中每个位置代表一个元胞，每个位置或空闲或容纳一辆车。定义元胞长度L为道路阻塞时的平均车头间距；车辆速度的取值范围为0～VmaX，VmaX = 5，元胞长度Πs；时间步长可以认为是驾驶员的反应时间,通常取1s；每个位置的状态有7种，分别为:空闲、该位置车速为0、1、2、3、4和5。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;对比上面的介绍，可以发现，Nash模型跟应用184号转换函数的初等元胞自动机还是有比较大的不同的。首先就是状态集合变大了，由原本的有车，无车，两种状态，变成了考虑车速后的七种状态，同时给出了车位的具体定义，即L。既然状态变多了，那么相应的，就要多一些规则确定状态。具体的规则变成了下面这样。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;(1) 加速规则:如果V(t)≤Vmax，则V(t + 1) = min(Vmax , V + 1)。&lt;/p&gt;&#xA;&lt;p&gt;(2) 减速规则:如果 V(t) &amp;gt; gap，则V(t + 1) = gap。&lt;/p&gt;&#xA;&lt;p&gt;(3) 随机规则:在概率p下，V(t + 1) = max( V(t + 1) - 1, 0)。&lt;/p&gt;&#xA;&lt;p&gt;(4) 车辆运动:X(t + 1) = X(t) + V(t + 1)。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这里的gap，指的是此元胞中的车与前一辆车之间的空格数，物理上的意义为两辆车之间的距离。加速规则，是在说驾驶者总是倾向于开到最大速度。减速规则，是在说为了防止碰撞，驾驶员不得不适当减速。而因为反应时间为1s，因此需要他的速度为空格数，即可有效防止碰撞；如果反应时间不是1s，则此条规则会相应变化。随机规则，是往模型中加入了随机性，其物理上的意义是，驾驶者会随机减速。最后一个规则就是指车辆的运动啦，没什么。&lt;/p&gt;&#xA;&lt;h2 id=&#34;模型总结&#34;&gt;模型总结&lt;/h2&gt;&#xA;&lt;p&gt;这上面这些规则的基础上，就可以模拟汽车流在单车道上的情况了。而且这种元胞自动机的实现也是比较简洁的，就不写了=-=。根据随机概率p的变化，模型也会有不同的物理意义。比如p = 0的时候，就是始终以最大速度行进的交通流模型，等等。&lt;/p&gt;&#xA;&lt;p&gt;多车道与单车道相比，会多什么规则呢~？会多出关于换道的规则。对于换道的规则，就有很多论文在讲，这里就跳过了。&lt;/p&gt;&#xA;&lt;h1 id=&#34;参考资料&#34;&gt;参考资料&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;郑英力,翟润平,马社强. 交通流元胞自动机模型综述[J]. 公路交通科技,2006,01:110-115.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>初等元胞自动机学习记录</title>
+      <link>https://gaocegege.com/Blog/%E5%88%9D%E7%AD%89%E5%85%83%E8%83%9E%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Wed, 21 Jan 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E5%88%9D%E7%AD%89%E5%85%83%E8%83%9E%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;p&gt;最近在准备数学建模比赛，元胞自动机好像是比较有用的一个模型，或者说框架。&lt;/p&gt;&#xA;&lt;h1 id=&#34;初见&#34;&gt;初见&lt;/h1&gt;&#xA;&lt;p&gt;从去年准备国赛考试就一直听说这个元胞自动机这个名词，但是一直不懂这是什么东西，据说还跟可计算理论息息相关，当时我就对它印象很差。。。这个寒假有了更多的时间来准备这个比赛，因此就专门看了看这个模型，或者说框架，有了一点浅显的了解，可以先通过下面的例子开始对这个模型的了解。&lt;/p&gt;&#xA;&lt;h2 id=&#34;简单的例子戴帽子问题&#34;&gt;简单的例子&amp;ndash;戴帽子问题&lt;/h2&gt;&#xA;&lt;p&gt;现在假设这样一个场景，很多学生排成一排，其中带着帽子的用true表示，不带帽子的用false表示，他们戴帽子与否遵从这样一个规则：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Hat rule: a student will wear the hat in the following class if one or the other—but not both—of the two classmates sitting immediately on her left and on her right has the hat in the current class (let us say that if nobody wears the hat, then a hat is out of fashion; but if both neighbors wear it, it is too popular to be trendy).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Logistic Regression模型学习记录</title>
+      <link>https://gaocegege.com/Blog/logistic-regression%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Tue, 25 Nov 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/logistic-regression%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;p&gt;最近在为数学建模美赛做准备，上次坑了队友，这次不能继续坑下去了，就开始提前准备了=-=&lt;/p&gt;&#xA;&lt;h1 id=&#34;模型简介&#34;&gt;模型简介&lt;/h1&gt;&#xA;&lt;p&gt;Logistic Regression模型，被称为逻辑回归模型或对数回归模型。是一个可以用来解决分类问题的模型，由此模型实现的分类器被称作LR分类器。LR模型可以处理多变量，多类别的分类问题，还是十分全能的。&lt;/p&gt;&#xA;&lt;h1 id=&#34;模型介绍&#34;&gt;模型介绍&lt;/h1&gt;&#xA;&lt;h2 id=&#34;分类问题是什么&#34;&gt;分类问题是什么&lt;/h2&gt;&#xA;&lt;p&gt;所谓分类问题，就是指给定一个数据集，数据集中的数据分为N个类别，而我们知道所有数据的类别情况。那么我们希望给定一个新的数据，能够根据现有的数据集，判断出新数据是属于哪个类别。&lt;/p&gt;&#xA;&lt;p&gt;分类问题中比较有名的问题是蝗虫分类问题，比如这里有5个类别，每个类别20只蝗虫的身体数据，其中包括身长，体重，前翅长，后足骨节长等等。那么现在给我们一只新的蝗虫，希望能根据这\(5*20\)个数据立刻给出这个新的蝗虫属于哪个类别。分类问题就是类似这样的问题。&lt;/p&gt;&#xA;&lt;p&gt;下面就以线性二分类问题，来看看LR模型是怎么工作的。所谓线性二分类，就是指决策边界是线性函数，只有两个类别的分类问题，应该算是最简单的分类问题。&lt;/p&gt;&#xA;&lt;h2 id=&#34;线性回归模型在线性二分类问题上的局限性&#34;&gt;线性回归模型在线性二分类问题上的局限性&lt;/h2&gt;&#xA;&lt;p&gt;遇到分类问题，能不能用线性回归模型来做呢？这显然是不可以的。因为，在分类问题上，比如两个类别的分类问题，我们预期的输出是0和1，代表是属于第一类还是第二类。而线性回归模型是做不到这一点的，因为线性回归模型的输出是有很大的范围的，跟我们期望的输出相差很远。所以，我们就需要做一些操作，把线性回归模型的输出放缩到0到1之间，这样，我们就可以把输出值理解为“可能性”，既直观又靠谱。&lt;/p&gt;&#xA;&lt;h2 id=&#34;lr模型在该问题上的做法&#34;&gt;LR模型在该问题上的做法&lt;/h2&gt;&#xA;&lt;p&gt;那既然需要对线性回归模型做一些操作，那到底应该做什么操作呢。其实就是一个很简单的操作，比如原来的预测函数为：$h_\theta = \theta^T \cdot x$，其中\(\theta\)是回归系数，是一个向量类型的变量。那么，现在我们只需要做如下操作即可：&lt;/p&gt;&#xA;&lt;p&gt;\begin{aligned}&#xA;h_\theta = g(\theta^T \cdot x) \\&#xA;g(x) = \frac{1}{1 + e^{-x}}&#xA;\end{aligned}&lt;/p&gt;&#xA;&lt;p&gt;g(x)常常被称作sigmod函数，他连续，光滑，关于(0, 0.5)对称，最主要他的输出在[0, 1]区间上。在这里，$h_\theta$ 的意义是 $P(y=1|x; \theta)$ ，是一个条件概率，意思是在当前的回归系数下，x的输出为1的概率。h函数就是这样，接下来我们需要确定的是回归参数，为此我们需要建立一个代价函数，然后用样本训练。如果是线性二分类，有一个比较好的代价函数：&lt;/p&gt;&#xA;&lt;div&gt;$$&#xA;\begin{aligned}&#xA;J(\theta) &amp; = \frac{1}{n} \cdot \sum_{i=1}^{n} Cost(h_\theta(x), y) \\&#xA;Cost(h_\theta(x), y) &amp; = -y \cdot log(h_\theta(x)) - (1 - y) \cdot log(1-h_\theta(x))&#xA;\end{aligned}&#xA;$$&lt;/div&gt;&#xA;&lt;p&gt;如果把这个Cost函数的图像画出来，就会发现，当y = 1的时候，如果输出为1，代价为0，越偏向0代价越大，反之亦然。因此，我们需要做的就是求出\(Min_{\theta}(J(\theta))\)。具体做法，就是不断迭代，令\(\theta_j = \theta_j - \alpha \cdot \frac{\partial{J(\theta)}}{\partial {\theta_j}}\)，跟线性回归的梯度下降算法实现思路相同，实现难度也不是很大。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>云原生的弹性 AI 训练系列之二：PYTORCH 弹性分布式训练的设计与实现 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="云原生的弹性 AI 训练系列之二：PyTorch 弹性分布式训练的设计与实现">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云原生的弹性 AI 训练系列之二：PyTorch 弹性分布式训练的设计与实现">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E4%BA%91%E5%8E%9F%E7%94%9F%E7%9A%84%E5%BC%B9%E6%80%A7-ai-%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E4%B9%8B%E4%BA%8Cpytorch-%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>云原生的弹性 AI 训练系列之二：PyTorch 弹性分布式训练的设计与实现</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>机器学习工作负载与传统的工作负载相比，一个比较显著的特点是对 GPU 的需求旺盛。在之前的文章中介绍过，目前 GPU 的显存已经不足以跟上模型参数规模的发展。随着 Transformer 等新的模型结构的出现，这一问题越来越显著。算法工程师们训练模型所需要的资源越来越多，分布式训练也随之成为了工业界进行模型训练的标准方式。</p>
+<p>弹性训练能够在训练过程中动态地调整参与训练的实例数量，极大程度提高集群资源的利用率。同时，配合云上的竞价实例等资源类型，能够以更低的成本进行模型调优，进一步降本增效。在 PyTorch 最新发布的 1.9.0 版本中，其原本分布式训练的方式 <code>torch.distributed.launch</code> <a href="https://github.com/pytorch/pytorch/issues/60754">即将被废弃</a>，转而推荐用户使用弹性的分布式训练接口 <code>torch.distributed.run</code>。借此机会，我们对这一新特性进行简单地介绍，并且与 Horovod Elastic 进行简单地对比和分析。最后总结一下使用弹性训练时，需要注意的问题。</p>
+<h2 id="pytorch-190-之前的设计">PyTorch 1.9.0 之前的设计</h2>
+<p>PyTorch 是目前最流行的深度学习框架之一，它最让人称道的是易用性。无论是单机训练还是分布式训练，PyTorch 都提供了简洁的 API。PyTorch 1.9.0 版本之前，分布式训练的方式通常是通过如下的方式进行。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python -m torch.distributed.launch
+</span></span><span class="line"><span class="cl">        --nnodes<span class="o">=</span>NODE_SIZE
+</span></span><span class="line"><span class="cl">        --nproc_per_node<span class="o">=</span>TRAINERS_PER_NODE
+</span></span><span class="line"><span class="cl">        --node_rank<span class="o">=</span>NODE_RANK
+</span></span><span class="line"><span class="cl">        --master_port<span class="o">=</span>HOST_PORT
+</span></span><span class="line"><span class="cl">        --master_addr<span class="o">=</span>HOST_NODE_ADDR
+</span></span><span class="line"><span class="cl">        YOUR_TRAINING_SCRIPT.py <span class="o">(</span>--arg1 ... train script args...<span class="o">)</span>
+</span></span></code></pre></div><p>其中 <code>nnodes</code> 是参与训练的节点个数，<code>nproc_per_node</code> 是每个节点上运行的进程数量。<code>node_rank</code> 是当前节点的标识符，<code>master_addr</code> 和 <code>master_port</code> 是 master 监听的地址和端口。<code>torch.distributed.launch</code> 会设置一些环境变量，其中包括 <code>WORLD_SIZE</code> 和 <code>MASTER_PORT</code>、<code>MASTER_ADDR</code> 等。</p>
+<p>随后在当前机器上会创建对应进程进行训练，当前机器会有 <code>TRAINERS_PER_NODE</code> 个进程，这些进程组成了一个 local worker group。一共有 <code>NODE_SIZE</code> 个机器参与训练，一共有 <code>NODE_SIZE * TRAINERS_PER_NODE</code> 个进程。如果想要发起一个分布式训练任务，需要在所有的机器上执行相应的命令。</p>
+<h2 id="pytorch-190-中的新设计">PyTorch 1.9.0 中的新设计</h2>
+<p>在 PyTorch 1.9 中，<code>torch.distributed.launch</code> <a href="https://github.com/pytorch/pytorch/issues/60754">即将被废弃</a>，取而代之的是基于 <a href="https://github.com/pytorch/elastic">pytorch/elastic</a> 的 <code>torch.distributed.run</code>。这一新的方式与之前相比有一些使用上的改动，如下所示。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python -m torch.distributed.run
+</span></span><span class="line"><span class="cl">        --nnodes<span class="o">=</span>MIN_SIZE:MAX_SIZE
+</span></span><span class="line"><span class="cl">        --nproc_per_node<span class="o">=</span>TRAINERS_PER_NODE
+</span></span><span class="line"><span class="cl">        --rdzv_id<span class="o">=</span>JOB_ID
+</span></span><span class="line"><span class="cl">        --rdzv_backend<span class="o">=</span>c10d
+</span></span><span class="line"><span class="cl">        --rdzv_endpoint<span class="o">=</span>HOST_NODE_ADDR
+</span></span><span class="line"><span class="cl">        YOUR_TRAINING_SCRIPT.py <span class="o">(</span>--arg1 ... train script args...<span class="o">)</span>
+</span></span></code></pre></div><p>它提供了一些新的能力：首先是更好的容错，当 worker 失败后会自动重启继续训练；其次是 RANK 和 WORLD_SIZE 这些字段不再需要手动设置。最后也是最重要的，支持弹性训练，动态地增加或减少参与训练的 worker 数量。在上面的例子中，<code>nnodes</code> 的设置不再是一个固定的值，而是一个区间。训练任务可以容忍在这一区间范围内的 worker 数量变化。</p>
+<p>如果要支持弹性能力，训练代码也需要进行一些修改。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span></span><span class="line"><span class="cl">     <span class="n">state</span> <span class="o">=</span> <span class="n">load_checkpoint</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="n">initialize</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="c1"># torch.distributed.run ensure that this will work</span>
+</span></span><span class="line"><span class="cl">     <span class="c1"># by exporting all the env vars needed to initialize the process group</span>
+</span></span><span class="line"><span class="cl">     <span class="n">torch</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">init_process_group</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">total_num_epochs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">              <span class="n">train</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="n">state</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">          <span class="n">save_checkpoint</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</span></span></code></pre></div><p>其中比较明显的变化是，用户需要手动地处理 checkpoint。这是因为当 worker 出现失效时，所有的 worker 都会重启，所以需要 checkpoint 机制来保证重启后训练能够继续下去。这一新的分布式训练方式引入不少新的概念，包括 agent、rendezvous 等。接下来我们自用户能接触到的 <code>torch.distributed.run</code> 开始，介绍这些新的设计。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">standalone</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">args</span><span class="o">.</span><span class="n">rdzv_backend</span> <span class="o">=</span> <span class="s2">&#34;c10d&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">args</span><span class="o">.</span><span class="n">rdzv_endpoint</span> <span class="o">=</span> <span class="s2">&#34;localhost:29400&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">args</span><span class="o">.</span><span class="n">rdzv_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">**************************************</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;Rendezvous info:</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;--rdzv_backend=</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">rdzv_backend</span><span class="si">}</span><span class="s2"> &#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;--rdzv_endpoint=</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">rdzv_endpoint</span><span class="si">}</span><span class="s2"> &#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;--rdzv_id=</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">rdzv_id</span><span class="si">}</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="sa">f</span><span class="s2">&#34;**************************************</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">cmd_args</span> <span class="o">=</span> <span class="n">config_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">elastic_launch</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">entrypoint</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)(</span><span class="o">*</span><span class="n">cmd_args</span><span class="p">)</span>
+</span></span></code></pre></div><p>其中主要区分了两个模式，Standalone 模式和分布式模式。Standalone 模式是分布式模式的一种特例，它主要针对单机多 Worker 的方式提供了一些便利的设置，不再需要设置一些多余的参数如 <code>rdzv_backend</code> 和 <code>rdzv_endpoint</code> 等。</p>
+<p>两者最后都会通过 elastic_launch 发起真正的训练进程。elastic_launch 会通过 elastic agent 来管理 worker 的生命周期，它的返回是每个 worker 的输出。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">elastic_launch</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">launch_agent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entrypoint</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">launch_agent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span><span class="p">:</span> <span class="n">LaunchConfig</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">entrypoint</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span> <span class="o">=</span> <span class="n">LocalElasticAgent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">start_method</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">start_method</span><span class="p">,</span> <span class="n">log_dir</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">log_dir</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">return_values</span>
+</span></span></code></pre></div><h3 id="elastic-agent-的设计如何管理多个-worker-进程">Elastic Agent 的设计：如何管理多个 worker 进程</h3>
+<p>elastic agent 是一个独立的进程，负责管理其下的 workers。它起到了类似进程管理系统 supervisor 的作用，会在启动的时候确保每个 worker 的设置正确。由于有关 WORLD_SIZE 和 RANK 的信息不再需要用户提供，elastic agent 会负责处理。除此之外，worker 的失效也是由 elastic agent 负责捕获处理。可以说 elastic agent 是弹性训练中最核心的抽象概念。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/elastic-pytorch/agent_diagram.jpeg" height="500" width="500">
+    <figcaption>elastic agent</figcaption>
+</figure>
+<p>上图展示的是 elastic agent 的工作原理。不同的 elastic agent 之间通过 <code>rendezvous</code> 进行 worker 之间的相互发现和对成员变动的同步。与此同时，通过对 worker 进程的监控，来捕获训练过程中的失效。其中核心的逻辑都包装在 <code>LocalElasticAgent.run()</code> 这一函数调用中。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_ROLE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_run</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">result</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_invoke_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_ROLE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_workers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="o">...</span>
+</span></span><span class="line"><span class="cl">            <span class="n">run_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor_workers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">state</span> <span class="o">=</span> <span class="n">run_result</span><span class="o">.</span><span class="n">state</span>
+</span></span><span class="line"><span class="cl">            <span class="o">...</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">WorkerState</span><span class="o">.</span><span class="n">SUCCEEDED</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="o">...</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">run_result</span>
+</span></span><span class="line"><span class="cl">            <span class="k">elif</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="n">WorkerState</span><span class="o">.</span><span class="n">UNHEALTHY</span><span class="p">,</span> <span class="n">WorkerState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">}:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_restarts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">_restart_workers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">return</span> <span class="n">run_result</span>
+</span></span><span class="line"><span class="cl">            <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="n">WorkerState</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="o">...</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">num_nodes_waiting</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">_restart_workers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">] Worker group in </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> state&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>可以看到，核心的逻辑在 <code>_invoke_run</code> 中。其中 <code>_initialize_workers</code> 执行了大部分初始化的工作，其中包括为每个 worker 分配 RANK 等。在默认的实现中 elastic agent 和 workers 进程在同一机器上，因此 <code>self._monitor_workers(self._worker_group)</code> 通过 <code>multiprocessing</code> 对 workers 的运行状态进行了监控。并且根据不同的状态，进行不同的处理。</p>
+<p>elastic agent 的可扩展性非常好，在 1.9.0 版本中，一共有三个 Agent，分别是 <code>ElasticAgent</code>、<code>SimpleElasticAgent</code> 和 <code>LocalElasticAgent</code>。其中 <code>ElasticAgent</code> 是一个 Abstract Class，<code>SimpleElasticAgent</code> 对其中的某些函数进行了实现，而 <code>LocalElasticAgent</code> 则实现了管理单机上所有 worker 进程的 elastic agent。<code>SimpleElasticAgent</code> 这一个抽象主要是为了方便扩展新的 agent 实现，比如如果你想通过一个 agent 管理多机上所有的 worker，而不只是本机上的 worker，则可以通过扩展 <code>SimpleElasticAgent</code> 来实现。</p>
+<h3 id="rendezvous-的设计如何在不同的节点间确定-rank">rendezvous 的设计：如何在不同的节点间确定 RANK</h3>
+<p>接下来，我们再看另外一个核心的抽象 <code>rendezvous</code>。为了实现弹性训练，worker 之间要能够动态地进行 membership 的变更。<code>rendezvous</code> 就是实现这一特性的用于同步的组件。<code>rendezvous</code> 最核心的方法是：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="nd">@abstractmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">next_rendezvous</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Store</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Main entry-point into the rendezvous barrier.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Blocks until the rendezvous is complete and the current process is
+</span></span></span><span class="line"><span class="cl"><span class="s2">        included in the formed worker group, or a timeout occurs, or the
+</span></span></span><span class="line"><span class="cl"><span class="s2">        rendezvous was marked closed.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Returns:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            A tuple of :py:class:`torch.distributed.Store`, ``rank``, and
+</span></span></span><span class="line"><span class="cl"><span class="s2">            ``world size``.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Raises:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            RendezvousClosedError:
+</span></span></span><span class="line"><span class="cl"><span class="s2">                The rendezvous is closed.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            RendezvousConnectionError:
+</span></span></span><span class="line"><span class="cl"><span class="s2">                The connection to the rendezvous backend has failed.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            RendezvousStateError:
+</span></span></span><span class="line"><span class="cl"><span class="s2">                The rendezvous state is corrupt.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            RendezvousTimeoutError:
+</span></span></span><span class="line"><span class="cl"><span class="s2">                The rendezvous did not complete on time.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span></code></pre></div><p>如注释所示，这一函数调用会被阻塞，直到 worker 的数量达到了要求。在 worker 被初始化，或者重启的时候，这一函数都会被调用。当函数返回时，不同的 worker 会以返回中的 rank 作为唯一的标示。<code>rendezvous</code> 一共有四个实现，分别是 <code>etcd</code>、<code>etcd-v2</code>、<code>c10d</code> 和 <code>static</code>。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">EtcdRendezvousHandler</span><span class="p">(</span><span class="n">RendezvousHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">next_rendezvous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rdzv_version</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rdzv_impl</span><span class="o">.</span><span class="n">rendezvous_barrier</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Creating EtcdStore as the c10d::Store implementation&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rdzv_impl</span><span class="o">.</span><span class="n">setup_kv_store</span><span class="p">(</span><span class="n">rdzv_version</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">store</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span>
+</span></span></code></pre></div><p>其中 <code>etcd</code> 相关的是之前推荐使用的实现，在 <code>c10d</code> 出现后就不再推荐了。<code>etcd</code> 的实现中，不同 worker 之间的状态通过 etcd 的 kv 接口存储。确定参与训练的实例和对应的 <code>RANK</code> 的过程如下图所示。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/elastic-pytorch/etcd_rdzv_diagram.png" height="500" width="500">
+    <figcaption>elastic agent</figcaption>
+</figure>
+<p>首先会在 <code>/rdzv/active_version</code> 下尝试写一个值 <code>status: setup</code>。在整个过程中，<code>/rdzv/active_version</code> 会作为存储 <code>rendezvous</code> 过程中间状态的 KV store，以及 <code>rendezvous</code> 过程中的排他锁来使用。如果写失败了，说明目前已经有对应的 <code>rendezvous</code> 过程正在进行中。在成功后，会更新 <code>/rdzv/version_counter</code> 为原值加一。然后会创建一个目录 <code>/rdzv/v_${version_counter}</code>。这些操作做完后，会将 <code>/rdzv/active_version</code> 的状态写为 joinable，这时就进入了 join 阶段。</p>
+<p>在 join 阶段，不同的 agent 在锁的保护下，会依次更新 <code>/rdzv/active_version</code> 下的 <code>paticipants</code>，分配到递增的 rank，这里的 rank 并不是每个 worker 进程分配到的 global rank，而是 agent 自己的 rank。worker 进程的 rank 会根据 agent rank 经过一定的计算得到。这也是一个非常容易混淆的设计，窃以为有优化的空间。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">init_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">active_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_create_rendezvous</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">active_version</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;New rendezvous state created: &#34;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">etcd</span><span class="o">.</span><span class="n">EtcdAlreadyExist</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 已经有了一个新的 rendezvous 过程</span>
+</span></span><span class="line"><span class="cl">            <span class="n">active_version</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rdzv_state</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># Note: it is possible for above query to fail (etcd.EtcdKeyNotFound),</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># but this is ok for us - just means we&#39;ll restart from beginning.</span>
+</span></span><span class="line"><span class="cl">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Observed existing rendezvous state: &#34;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&#34;status&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;closed&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="n">RendezvousClosedError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&#34;status&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;joinable&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">join_phase</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&#34;version&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&#34;status&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;final&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">handle_existing_rendezvous</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&#34;version&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="n">EtcdRendezvousRetryImmediately</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">try_wait_for_state_change</span><span class="p">(</span><span class="n">etcd_index</span><span class="o">=</span><span class="n">active_version</span><span class="o">.</span><span class="n">etcd_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="n">EtcdRendezvousRetryableFailure</span><span class="p">()</span>
+</span></span></code></pre></div><p>在参与训练的节点达到 nnodes 的命令行参数中传入的最小值时，会等待一定时间，在等待时间结束或者参与训练的节点达到了 nnodes 设定的最大值时，会进入 frozen 阶段。在 fronzen 阶段中，每个参与训练的节点都需要通过在 <code>/rdzv/v_${version_counter}/rank_${agent_rank}</code> 下写值的方式进行确认。在所有节点都确认完毕后，会进入最后的 final 阶段。在最后的 final 阶段中，后续进入的 agent 都会 pending，已经达成 <code>rendezvous</code> 的节点上的 agent 会为其管理的 worker 进程分配 <code>RANK</code>。<code>RANK 0</code> 的实例会作为 master 的角色存在。随后就会直接创建对应的 worker 进程。在默认的 <code>LocalElasticAgent</code> 中，会利用 <code>python.multiprocessing</code> 在本地创建多个进程。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="nd">@prof</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_start_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_group</span><span class="p">:</span> <span class="n">WorkerGroup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">spec</span> <span class="o">=</span> <span class="n">worker_group</span><span class="o">.</span><span class="n">spec</span>
+</span></span><span class="line"><span class="cl">        <span class="n">store</span> <span class="o">=</span> <span class="n">worker_group</span><span class="o">.</span><span class="n">store</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">worker_group</span><span class="o">.</span><span class="n">workers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">local_rank</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">local_rank</span>
+</span></span><span class="line"><span class="cl">            <span class="n">worker_env</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;LOCAL_RANK&#34;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">local_rank</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;RANK&#34;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">worker</span><span class="o">.</span><span class="n">global_rank</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="o">...</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">...</span>
+</span></span><span class="line"><span class="cl">            <span class="n">args</span><span class="p">[</span><span class="n">local_rank</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">worker_args</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_pcontext</span> <span class="o">=</span> <span class="n">start_processes</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">name</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">role</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">entrypoint</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">envs</span><span class="o">=</span><span class="n">envs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">log_dir</span><span class="o">=</span><span class="n">attempt_log_dir</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">start_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_method</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">redirects</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">redirects</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tee</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">tee</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pcontext</span><span class="o">.</span><span class="n">pids</span><span class="p">()</span>
+</span></span></code></pre></div><h3 id="c10d-新的设计">c10d 新的设计</h3>
+<p>前文介绍了基于 etcd 的 <code>rendezvous</code> 实现，它可以保证多个实例之间对于参与训练的节点共识的强一致，但是这也为 PyTorch 运行训练任务引入了额外的依赖。因此 PyTorch 也提供了一个内置的实现 c10d。相比于基于 etcd 的实现，c10d 基于 TCP 来进行同步。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">RendezvousParameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">C10dRendezvousBackend</span><span class="p">,</span> <span class="n">Store</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">store_type</span> <span class="o">==</span> <span class="s2">&#34;file&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">store</span> <span class="o">=</span> <span class="n">_create_file_store</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">store_type</span> <span class="o">==</span> <span class="s2">&#34;tcp&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">store</span> <span class="o">=</span> <span class="n">_create_tcp_store</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">backend</span> <span class="o">=</span> <span class="n">C10dRendezvousBackend</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_create_tcp_store</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">RendezvousParameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TCPStore</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">host</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="n">parse_rendezvous_endpoint</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">default_port</span><span class="o">=</span><span class="mi">29400</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">is_server</span> <span class="ow">in</span> <span class="p">[</span><span class="n">is_host</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="n">store</span> <span class="o">=</span> <span class="n">TCPStore</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">is_master</span><span class="o">=</span><span class="n">is_server</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span><span class="line"><span class="cl">        <span class="k">break</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">store</span>
+</span></span></code></pre></div><p>c10d 是一个 client-server 的架构，其中的一个 agent 上会运行 c10d 的 TCPServer，它监听给定的端口，提供了 <code>compareAndSet</code>、<code>add</code> 等原语。它也可以被理解为一个简化的，提供 KV 接口的内存数据库，类似于 Redis。有关 <code>rendezvous</code> 的同步，都是由各个 agent 通过一个中心化的 agent 上的 c10d TCPServer 完成的。可以预见这样的实现在可用性上相比于 etcd 是有一定差距的，但是胜在易用性。用户如果使用 c10d，那么不再需要运维一个 etcd 集群。</p>
+<h2 id="pytorch-elastic-on-kubernetes">PyTorch Elastic on Kubernetes</h2>
+<p>为了能够享受到弹性训练带来的便利，PyTorch 同时提供了在 Kubernetes 上的支持。相比于 1.9.0 之前的版本，新版本的分布式训练添加了一些新的参数。因此 PyTorch 社区在 Kubeflow PyTorch operator 的基础上，对 CRD 进行了一些修改。一个典型的弹性训练示例如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">elastic.pytorch.org/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ElasticJob</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">imagenet</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">elastic-job</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c"># Use &#34;etcd-service:2379&#34; if you already apply etcd.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rdzvEndpoint</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;your_etcd_endpoint&gt;:&lt;your_etcd_port&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">replicaSpecs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">Worker</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">ExitCode</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">elasticjob-worker</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">torchelastic/examples:0.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">Always</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">args</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;--nproc_per_node=1&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;/workspace/examples/imagenet/main.py&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;--arch=resnet18&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;--epochs=20&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;--batch-size=32&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c"># number of data loader workers (NOT trainers)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c"># zero means load the data on the same process as the trainer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c"># this is set so that the container does not OOM since</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c"># pytorch data loaders use shm</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;--workers=0&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span>- <span class="s2">&#34;/workspace/data/tiny-imagenet-200&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nt">limits</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                  </span><span class="nt">nvidia.com/gpu</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span></code></pre></div><p>由于在最开始，基于 <code>c10d</code> 的 <code>rendezvous</code> 还没有被支持，所以 CRD 中需要定义 rdzvEndpoint，指向一个已经部署好的 etcd 集群。同时，用户需要指定 <code>minReplicas</code> 和 <code>maxReplicas</code>。其他就与 Kubeflow PyTorchJob 并无二致。</p>
+<h2 id="pytorch-elastic-与-horovod-elastic">PyTorch Elastic 与 Horovod Elastic</h2>
+<p>目前，两者的设计从原理上来说并无二致。相比于 Horovod Elastic，PyTorch Elastic 提供了更灵活的扩展性，它提供了 <code>agent</code>、<code>rendezvous</code> 等接口，用户可以根据需要进行扩展。但是从另外一个角度讲，Horovod 的易用性做的更好。PyTorch 并没有提供保存状态的内置支持，为了能够在 worker 进程失败，重建训练任务的时候，需要用户自己实现保存会加载 checkpoint 的逻辑；而 Horovod 则提供了内置的实现。</p>
+<p>Horovod 和 PyTorch 在同步机制上也具有比较大的差异。Horovod Elastic 需要用户提供一个脚本 <code>discovery_hosts.sh</code>，帮助其在运行时获得正在参与训练的节点。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ horovodrun -np <span class="m">8</span> --host-discovery-script discover_hosts.sh python train.py
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">$ ./discover_hosts.sh
+</span></span><span class="line"><span class="cl">host-1:29500
+</span></span><span class="line"><span class="cl">host-2:29500
+</span></span><span class="line"><span class="cl">host-3:29500
+</span></span></code></pre></div><p>这相当于将节点发现的逻辑交给用户来实现。反观 PyTorch，它利用 etcd、自身实现的 c10d 等组件解决节点间的相互发现问题，显得更为精巧。</p>
+<h2 id="总结">总结</h2>
+<p>最后，我们总结一下目前实现弹性训练需要注意的问题。首先，也是最重要的，弹性训练需要一种机制来解决节点/训练进程间相互发现的问题。训练过程中节点会动态地加入或者退出，如何让其他的节点感知到这一变化，是这一机制主要面对的问题。目前的设计中，Horovod 将这一问题交给用户来解决，Horovod 定期执行用户定义的逻辑来发现目前的节点。PyTorch 通过第三方的分布式一致性中间件 etcd 等来实现高可用的节点发现。除此之外，也有一些探索性的工作，利用<a href="https://ieeexplore.ieee.org/document/1028914">基于 Gossip 的协议</a>来进行同步，在兼顾高可用的同时也没有引入过多的组件。</p>
+<p>其次，要实现弹性训练还需要捕获训练失效。Horovod 和 PyTorch 都通过一个后台进程（Horovod 中是 Driver，PyTorch 中是每个节点的 Local Elastic Agent）来实现这一逻辑。当进程 crash，或在梯度通信中遇到问题时，后台进程会捕获到失效并且重新进行节点发现，然后重启训练。</p>
+<p>最后，训练时的数据切分的逻辑和学习率/ batch size 的设置也要对应进行修改。由于参与训练的进程会动态的增减，因此可能需要根据新的训练进程的规模来重新设置学习率和数据分配的逻辑，避免影响模型收敛。</p>
+<p>在本文中，我们首先介绍了 PyTorch 1.9.0 版本中弹性训练的设计与实现。然后分析总结了实现弹性训练的方式和不同框架之间的设计差异。从我们的角度来看，弹性训练能够很好地贴合云原生的趋势，以极致的弹性来降低成本提高资源利用率，是未来的趋势。因此目前我们也在积极参与 TensorFlow、PyTorch 和 Kubeflow 等社区的弹性训练的社区贡献工作，后续会发布更多的相关文章，感谢关注。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

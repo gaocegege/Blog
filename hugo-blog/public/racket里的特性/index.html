@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>RACKET里的特性 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="fp, racket">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Racket里的特性">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Racket里的特性">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/racket%E9%87%8C%E7%9A%84%E7%89%B9%E6%80%A7/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Racket里的特性</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>今天在复习程序语言基础的考试，偶有所获，记录下来~</p>
+<h1 id="延迟求值相关">延迟求值相关</h1>
+<h2 id="thunk">Thunk</h2>
+<p>首先，先看看函数式里面延迟求值的方式之一，Thunk。这里有一个函数，他的作用是用来取代原本的If判断，代码是这样的~</p>
+<pre><code>(define (my-if-bad x y z) (if x y z))
+</code></pre>
+<p>初步看上去，代码很不错，简单易懂，但，如果我们以这样的方式进行调用，就会出问题~</p>
+<pre><code>(define (factorial-wrong x)
+	(my-if-bad (= x 0)
+		1
+		(* x (factorial-wrong (- x 1)))))
+</code></pre>
+<p>这里会出什么问题呢~程序会陷入无尽的递归中。这是因为以Racket为代表的大部分函数式编程语言的设定造成的，对于函数的参数，会在执行函数之前先进行求值。所以，my-if-bad的第三个参数，会先进行求值。而在求值的时候，就陷入了无限的递归求值当中。</p>
+<p>那既然会有问题，该如何解决呢<del>方法也很简单，只需要修改下my-if-bad的定义</del></p>
+<pre><code>(define (my-if x y z) (if x (y) (z)))
+
+(define (factorial x)
+(my-if (= x 0)
+	(lambda () 1)
+	(lambda () (* x (factorial (- x 1))))))
+</code></pre>
+<p>这里利用的是以Racket为代表的大部分函数式编程语言的另一设定，直到函数被调用的时候才对函数体进行求值。所以这样将原本的参数变成一个没有参数的匿名函数后，就不会在把它们作为参数传入函数的时候就进行求值，而是在使用到它的时候才进行求值。这样程序就可以正常工作了。所以这种方法就叫做Thunk，在这里我们把参数y和z给Thunk了。</p>
+<h2 id="delay-and-force">Delay and Force</h2>
+<p>上面的Thunk，在某些情况下，不太能满足要求。比如，Thunk是将参数写成匿名函数，如果参数需要大量计算，那Thunk会使得每次调用的时候都要求值一次，会比较浪费资源，于是有了另外一种方式，利用Delay和Force，这种方法又被叫做Call by need，因为它既做到了延迟求值，有Call by name的性质，又只需要求值一次，有Call by value的性质。</p>
+<pre><code>(define (my-delay f)
+	(mcons #f f))
+(define (my-force th)
+	(if (mcar th)
+		(mcdr th)
+		(begin 	(set-mcar! th #t)
+				(set-mcdr! th ((mcdr th)))
+				(mcdr th))))
+</code></pre>
+<p>这里用了Racket相比于SML的动态特性，其List中的元素不需要是同一类型。所以在delay函数中，把原本的Thunk与一个布尔变量构成一个List，或者说Pair更好一点，(False, Thunk)然后，在force的时候，如果该布尔变量取值为false，那就意味着Thunk还没有被求值，那就对其求值，并把这一对Pair的值变为(True, Evaluated value)，这样以后调用，就可以直接返回已经被求值过一次的值。</p>
+<h2 id="stream">Stream</h2>
+<p>一个流是一个有无数个数值的序列，不知道翻译的对不对。Racket可以通过自己来实现按需生成的流，之所以能做到按需，还是用到了之前的Thunk。流的实现，基本是通过(Item in the stream, Thunk of the function which is responsible for generating new item)的方式来实现的。举个例子~</p>
+<pre><code>(define nats
+	(letrec ([f (lambda (x) (cons x (lambda () (f (+ x 1)))))])
+	(lambda () (f 1))))
+</code></pre>
+<p>这里f是一个接受参数x的函数，然后其产生一个形如(x, Thunk{f(x + 1)})的Pair。所以Nats就会产生(1, Thunk{f(2)}))，当继续展开这个Stream，((cdr (nats)))，就会产生(2, Thunk{f(3)})，通过这样的方式就可以假装产生了一个有无数个元素的序列。</p>
+<h2 id="memo">Memo</h2>
+<p>Memo想做的事情，是对于那些，给定一样的参数，函数的返回值也是固定的这一些函数，缓存它们的(参数，结果)，然后在之后有同样参数的调用，那直接返回结果就可以了。实现这一点，需要对于每一个函数维护一个Pair类型的List，其实就是拿来模拟Map。然后每当调用函数的时候，都会先去列表中查看是否能找到之前的调用产生的Pair，有的话就直接返回Pair中的结果，没有的话就进行计算，然后把参数和结果组成一个Pair存入List中。看看示例代码~</p>
+<pre><code>(define fibonacci
+	(letrec([memo null]
+		[f (lambda (x)
+			(let ([ans (assoc x memo)])
+			(if ans
+				(cdr ans)
+				(let ([new-ans (if (or (= x 1) (= x 2))
+									1
+									(+ (f (- x 1)) (f (- x 2))))])
+					(begin
+					(set! memo (cons (cons x new-ans) memo)) newans)))))])
+		f))
+</code></pre>
+<p>这门语言实在太丑了= =这段代码中用到了一个库函数，assoc。它接受一个参数，从一个Pair类型的List中找到第一个Pair的Key与传入的参数相等的Pair，正好用来查找是否已经缓存结果在Memo中。如果有，就直接返回这个Pair的cdr，否则就去计算答案，然后把答案存入Memo。</p>
+<h1 id="macros">Macros</h1>
+<p>关于Racket的宏，让人印象最深的一点，就是它不会扩展宏到variable definitions中，比如说~</p>
+<pre><code>(let ([hd 0] [car 1]) hd) ; evaluates to 0
+(let* ([hd 0] [car 1]) hd) ; evaluates to 0
+</code></pre>
+<p>如果有一个宏是把替换car为hd，同时宏定义可以扩展到variable definitions中，那第一条语句会报错，let: duplicate identifier in: hd。所以为了解决类似的问题，Racket的宏定义不会扩展到variable definitions中。variable definitions中的与宏定义中一样的字段会shadow住所有关于它的宏定义。</p>
+<p>但是，需要注意的一点就是，不要把所有的函数都妄图写成宏定义。因为两者概念上的区别会导致一些情况下两者功能不是完全一样的。比方说，之前的Force函数，</p>
+<pre><code>(define-syntax my-force
+	(syntax-rules ()
+		[(my-force e)
+			(if (mcar e)
+				(mcdr e)
+				(begin (set-mcar! e #t) 
+						(set-mcdr! e ((mcdr e))) 
+						(mcdr e)))]))
+</code></pre>
+<p>总之，我觉得如果函数可以实现，就不要用充满了谜的Macros。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chrome Developer Tools on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/chrome-developer-tools/</link>
+    <description>Recent content in Chrome Developer Tools on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 29 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/chrome-developer-tools/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>更改Chrome Developer Tools的字体</title>
+      <link>https://gaocegege.com/Blog/%E6%9B%B4%E6%94%B9chrome-developer-tools%E7%9A%84%E5%AD%97%E4%BD%93/</link>
+      <pubDate>Fri, 29 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E6%9B%B4%E6%94%B9chrome-developer-tools%E7%9A%84%E5%AD%97%E4%BD%93/</guid>
+      <description>&lt;p&gt;本子是15寸的1080p的屏幕，导致chrome F12的工具里字特别小，于是找了找修改大小的方法。&lt;/p&gt;&#xA;&lt;h2 id=&#34;位置&#34;&gt;位置&lt;/h2&gt;&#xA;&lt;p&gt;我的系统是&lt;code&gt;win8.1 64bit&lt;/code&gt;，chrome的版本是&lt;code&gt;38.0.2125.24 dev-m (64-bit)&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;改动是针对Custom.css进行的，文件位置是在&lt;code&gt;C:\Users\&amp;lt;user&amp;gt;\AppData\Local\Google\Chrome\User Data\Default\User StyleSheets&lt;/code&gt;，至于linux下是在&lt;code&gt;~/.config/chromium/Default/User StyleSheets&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;##修改&lt;/p&gt;&#xA;&lt;p&gt;win下的修改如下&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;body.platform-windows .monospace, body.platform-windows .source-code {  &#xA;    font-size: 16px !important;  &#xA;    font-family: Consolas, Lucida Console, monospace;  &#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;linux下&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;body.platform-linux .monospace, body.platform-linux .source-code {  &#xA;&#x9;font-size: 16px !important;  &#xA;&#x9;font-family: dejavu sans mono, monospace;  &#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;font-size是字体大小，font-family是字体。&lt;/p&gt;&#xA;&lt;h2 id=&#34;更多&#34;&gt;更多&lt;/h2&gt;&#xA;&lt;p&gt;你甚至可以改变developer tool的代码主题，&#xA;&lt;a href=&#34;http://be-evil.org/custom-your-chrome-inspector-code-theme.html&#34;&gt;个性化你的Chrome开发者工具代码主题&lt;/a&gt;。&lt;/p&gt;&#xA;&lt;p&gt;看起来特别虎！&lt;/p&gt;&#xA;&lt;p&gt;嗯，就是这样&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

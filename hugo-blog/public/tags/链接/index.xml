@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>链接 on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/%E9%93%BE%E6%8E%A5/</link>
+    <description>Recent content in 链接 on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <atom:link href="https://gaocegege.com/Blog/tags/%E9%93%BE%E6%8E%A5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>友情链接</title>
+      <link>https://gaocegege.com/Blog/link/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/link/</guid>
+      <description>&lt;table align=&#39;center&#39;&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#39;http://www.flygon.net/&#39;&gt;龙哥盟&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;大学同学，看起来是个大神，你觉得呢&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#39;http://azard.me/blog&#39;&gt;Azard的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;也是大学同学，引领全院Lab的男人&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#34;http://marsrocky.github.io/&#34;&gt;Rocky Prime的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;小学同学，身高1.9，实习月薪8000的男人~？&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#34;http://s684373.github.io/&#34;&gt;Zhou的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;大学同班同学，挺厉害的&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#34;http://hczhcz.github.io/&#34;&gt;hcz的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;大学里一学弟～挺萌的&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#34;https://notebookie.github.io&#34;&gt;Jin Jianian的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;素未谋面的学弟。。。&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;tr&gt;&#xA;&lt;th&gt;&lt;a href=&#34;http://mrmiywj.github.io/&#34;&gt;mrmiywj的博客&lt;/a&gt;&lt;/th&gt;&#xA;&lt;td&gt;电院CS的学弟&lt;/td&gt;&#xA;&lt;/tr&gt;&#xA;&lt;/table&gt;&#xA;&lt;div class=&#34;cf&#34;&gt;&lt;/div&gt;&#xA;&lt;section class=&#34;summer-disqus row&#34;&gt;&#xA;&lt;div class=&#34;small-12 columns&#34;&gt;&#xA;&lt;h1 class=&#34;summer-comments-header&#34;&gt;Comments&lt;/h1&gt;&#xA;&lt;div id=&#34;disqus_thread&#34;&gt;&lt;/div&gt;&#xA;{% include duoshuo_comments.html %}&#xA;&lt;/div&gt;&#xA;&lt;/section&gt;</description>
+    </item>
+  </channel>
+</rss>

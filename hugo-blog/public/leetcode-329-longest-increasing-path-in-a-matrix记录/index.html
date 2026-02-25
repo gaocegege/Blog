@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>LEETCODE-329 LONGEST INCREASING PATH IN A MATRIX记录 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="Algorithm">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Leetcode-329 Longest Increasing Path in a Matrix记录">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode-329 Longest Increasing Path in a Matrix记录">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/leetcode-329-longest-increasing-path-in-a-matrix%E8%AE%B0%E5%BD%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Leetcode-329 Longest Increasing Path in a Matrix记录</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="问题描述">问题描述</h1>
+<blockquote>
+<p>Given an integer matrix, find the length of the longest increasing path.
+From each cell, you can either move to four directions: left, right, up or down. You may NOT move diagonally or move outside of the boundary (i.e. wrap-around is not allowed).</p>
+</blockquote>
+<h1 id="想法与实现">想法与实现</h1>
+<p>这道题一开始看到就直接想用深度优先搜索来实现，没什么想不出的地方。</p>
+<pre><code>class Solution {
+private:
+    int max;
+    vector&lt;vector&lt;bool&gt;&gt; flag;
+    int sizeX;
+    int sizeY;
+    
+    bool isValid(int i, int j) {
+        if (i &gt;= 0 &amp;&amp; i &lt; sizeX &amp;&amp; j &gt;= 0 &amp;&amp; j &lt; sizeY) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; matrix, int posX, int posY, int sum) {
+        if (flag[posX][posY] == true) {
+            flag[posX][posY] = false;
+            sum++;
+            vector&lt;vector&lt;int&gt;&gt; dirs = {
+            	{-1, 0}, 
+            	{1, 0}, 
+            	{0, -1}, 
+            	{0, 1}
+            };
+            int sz = dirs.size();
+            for (int i = 0; i &lt; sz; i++) {
+                int newPosX = posX + dirs[i][0];
+                int newPosY = posY + dirs[i][1];
+                if (isValid(newPosX, newPosY) &amp;&amp; flag[newPosX][newPosY] == true &amp;&amp; 
+                    matrix[posX][posY] &lt; matrix[newPosX][newPosY]) {
+                    
+                    dfs(matrix, newPosX, newPosY, sum);     
+                }
+            }
+            if (sum &gt; max) {
+                max = sum;
+            }
+            flag[posX][posY] = true;
+            return;
+        }
+    }
+    
+public:
+    int longestIncreasingPath(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
+        max = 0;
+        sizeX = matrix.size();
+        sizeY = matrix[0].size();
+        flag = vector&lt;vector&lt;bool&gt;&gt;(sizeX, vector&lt;bool&gt;(sizeY, true));
+        for (int i = 0; i &lt; sizeX; i++) {
+            for (int j = 0; j &lt; sizeY; j++) {
+                dfs(matrix, i, j, 0);
+            }
+        }
+        return max;
+    }
+};
+</code></pre>
+<p>但是在写完后会发现，这样写是超时的。这时候就要基于观察，来优化一下。在深度优先搜索中，做了很多无用功，对于每个点，都会执行很多次dfs函数，因此可以Memo的方式，来缓存每次执行的结果，由此就不需要多次计算。</p>
+<pre><code>class Solution {
+private:
+    int max;
+    vector&lt;vector&lt;int&gt;&gt; flag;
+    int sizeX;
+    int sizeY;
+    
+    bool isValid(int i, int j) {
+        if (i &gt;= 0 &amp;&amp; i &lt; sizeX &amp;&amp; j &gt;= 0 &amp;&amp; j &lt; sizeY) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    int getMax(int a, int b) {
+        if (a &gt; b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+    
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; matrix, int posX, int posY) {
+        if (flag[posX][posY] == 0) {
+            int sum = 0;
+            vector&lt;vector&lt;int&gt;&gt; dirs = {
+            	{-1, 0}, 
+            	{1, 0}, 
+            	{0, -1}, 
+            	{0, 1}
+            };
+            int sz = dirs.size();
+            for (int i = 0; i &lt; sz; i++) {
+                int newPosX = posX + dirs[i][0];
+                int newPosY = posY + dirs[i][1];
+                if (isValid(newPosX, newPosY) &amp;&amp; 
+                    matrix[posX][posY] &lt; matrix[newPosX][newPosY]) {
+                    
+                    sum = getMax(dfs(matrix, newPosX, newPosY), sum);
+                }
+            }
+            
+            flag[posX][posY] = sum + 1;
+            return sum + 1;
+        } else {
+            return flag[posX][posY];
+        }
+    }
+    
+public:
+    int longestIncreasingPath(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
+        max = 0;
+        sizeX = matrix.size();
+        if (sizeX == 0) {
+            return max;
+        }
+        sizeY = matrix[0].size();
+        if (sizeY == 0) {
+            return max;
+        }
+        flag = vector&lt;vector&lt;int&gt;&gt;(sizeX, vector&lt;int&gt;(sizeY, 0));
+        for (int i = 0; i &lt; sizeX; i++) {
+            for (int j = 0; j &lt; sizeY; j++) {
+                max = getMax(max, dfs(matrix, i, j));
+            }
+        }
+        return max;
+    }
+};
+</code></pre>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+name = 'Notepad China'
+license = 'MIT'
+licenselink = 'https://github.com/yourname/notepad-china/blob/master/LICENSE'
+description = 'A modified Notepad theme for Hugo, migrated from Jekyll'
+homepage = 'https://github.com/yourname/notepad-china'
+demosite = 'https://gaocegege.com/Blog'
+tags = ['blog', 'personal', 'responsive', 'minimal']
+features = ['responsive', 'blog', 'pagination', 'analytics', 'comments']
+min_version = '0.123.0'
+
+[author]
+  name = 'Gao Ce'
+  homepage = 'https://gaocegege.com'

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/golang/</link>
+    <description>Recent content in Golang on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Thu, 28 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>golang中的array与slice</title>
+      <link>https://gaocegege.com/Blog/golang%E4%B8%AD%E7%9A%84array%E4%B8%8Eslice/</link>
+      <pubDate>Thu, 28 Apr 2016 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/golang%E4%B8%AD%E7%9A%84array%E4%B8%8Eslice/</guid>
+      <description>&lt;p&gt;最开始使用golang是在进了实验室后，因为要做docker方面的事情，就先学习了下写docker的语言。后来的毕设，和在做的MIT 6.824的Lab都有在用golang来写。一开始觉得这门语言好丑，用着用着就发现其实还是很不错的一门语言，要是感觉没错的话应该是一门强类型的静态语言。语言的表达能力也蛮强的，不像Java那样非常容易产生代码的膨胀。在我自己看来，golang是一门跟C++比较接近的语言，因为都有指针的概念Orz。从大二以来，就没写过这么方便的语言了hhhh&lt;/p&gt;&#xA;&lt;p&gt;在使用golang的过程中，有一个肯定要接触的概念，那就是Array和Slice。这两者都是为了描述数组而存在的，但其内在的含义有一些不同。下面先谈谈Array，然后再讲讲Slice相比于Array的不同。&lt;/p&gt;&#xA;&lt;h2 id=&#34;array&#34;&gt;Array&lt;/h2&gt;&#xA;&lt;p&gt;Array是一个非常经典的概念了，就是在内存里一块连续的空间，用以存储相同类型的变量。在golang中，声明Array的方式也非常简单：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;var buffer [256]byte&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;声明Array时，Array的类型包括它的Element的类型，以及Size。正是因为需要指定Size，所以使得很多时候在golang中很少使用它，这个之后再说。Array的概念跟在C++，Java这些语言中没有什么不同，那下面就来看看golang中比较独特的概念，Slice。&lt;/p&gt;&#xA;&lt;h2 id=&#34;slice&#34;&gt;Slice&lt;/h2&gt;&#xA;&lt;p&gt;上面提到Array是一个在内存中连续的空间，而声明的变量就指代这个空间。而Slice并不是这样的，**Slice并不是Array，而是描述Array的一部分的数据结构(A slice is not an array. A slice describes a piece of an array.)**其声明跟Array有一点点不同：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;var slice []byte&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在声明一个Array的时候，programmer需要指定这个Array的Size，这样才会使得golang知道要向内存申请多大的空间。而在声明一个Slice的时候，只需要包括其Element的类型即可。那到底Slice是怎么实现的呢？作为一个一般的programmer，只需要知道它是这样的一个结构就好了：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;type sliceHeader struct {&#xA;    Length        int&#xA;    ZerothElement *byte&#xA;}&#xA;&#xA;slice := buffer[100:150]&#xA;&#xA;slice := sliceHeader{&#xA;    Length:        50,&#xA;    ZerothElement: &amp;amp;buffer[100],&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Slice是由Length和指向第一个Element的指针构成，因此相比于Array而言，有着更大的表现力。下面针对Slice的一些特性写了一些Test代码：&lt;/p&gt;&#xA;&lt;h3 id=&#34;length--capacity&#34;&gt;Length &amp;amp; Capacity&lt;/h3&gt;&#xA;&lt;pre&gt;&lt;code&gt;var buffer [256]byte&#xA;&#xA;func main() {&#xA;    slice := buffer[10:20]&#xA;    fmt.Printf(&amp;quot;The capacity of the slice is %d, and the length of the slice is %d\n&amp;quot;, cap(slice), len(slice))&#xA;    slice = buffer[100:200]&#xA;    fmt.Printf(&amp;quot;The capacity of the new slice is %d, and the length of the new slice is %d\n&amp;quot;, cap(slice), len(slice))&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Output是这样的：&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

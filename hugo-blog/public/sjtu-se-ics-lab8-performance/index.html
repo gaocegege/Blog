@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>SJTU-&gt;SE-&gt;ICS-&gt;LAB8 PERFORMANCE | 高策</title>
+<meta name="description" content="ICS课程的第八个Lab">
+<meta name="keywords" content="cpp, computer system, Lab">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="SJTU-&gt;SE-&gt;ICS-&gt;LAB8 Performance">
+<meta name="twitter:description" content="ICS课程的第八个Lab">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SJTU-&gt;SE-&gt;ICS-&gt;LAB8 Performance">
+<meta property="og:description" content="ICS课程的第八个Lab">
+<meta property="og:url" content="https://gaocegege.com/Blog/sjtu-se-ics-lab8-performance/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>SJTU-&gt;SE-&gt;ICS-&gt;LAB8 Performance</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>这个lab，本来是打算着压着DeadLine写完的，但是后来发现并不是很难，不像上一个lab，简直就是逆天的难度。总体来说，这次的lab还是不难- -前几天在熊神的博客里看到了这个lab的经验，妈蛋要是早点看到就好了。</p>
+<h2 id="代码">代码</h2>
+<p>我的代码在<a href="https://github.com/gaocegege/ICS-Labs/tree/master/lab8">这里</a>，仅供参考哦</p>
+<h2 id="第一道题目">第一道题目</h2>
+<p>第一个题目rotate，就是把这个矩阵90度旋转嘛，似乎这个题目也可以分块做（其实我也是分块啦），把矩阵分为16<em>16或者32</em>32的size的块，按块转，其实差不多，都是一样的写缓存命中率吧（大概）。</p>
+<p>我的做法是先分成32*dim的块，然后把读取src的缓存命中改为dst的写缓存命中，因为在上课的时候问了鑫爷他说写缓存命中更划算（也不知道是不是真的），但是改完以后真的快好多- -至于为什么这么分块，我也不知道，只是觉得32这个数字不错（其实只要跟测试数据整除就好了吧）- -大概直白点说我的方法就是先把矩阵第一列的前32个元素转到最后一行的前32个元素的位置，然后再把第二列的前32个元素转到倒数第二行的前32个元素的位置，转完前32行的所有以后再转接下去的32行。（横的是行，纵的是列）这样做了以后还是不够满分啊，再做些小优化，位运算什么的，就差不多了。</p>
+<p>总体的思路就是<strong>变读缓存命中为写缓存命中</strong>。</p>
+<h2 id="第二道题目">第二道题目</h2>
+<p>至于第二题，都说很容易，可是我现在都没满分0 0真是惨，大神们是厉害啊。他的要求是求元素所在九宫格的平均数，放到这个元素中。我最初的想法是：因为很多加法是会重复去做，那我为何不把他们先存起来，用的时候直接拿出来用就可以了嘛，但是这样不是很快，效果不是很明显，至于问题出在哪里，不知道&gt;_C等找到再说吧0 0这样做，SpeedUp是1.6似乎。</p>
+<p>接下来我完全抛弃了这种做法，转而进行了一个艰苦卓绝的改动，<strong>把各种情况分开讨论</strong>，这种做法本质是很好的，最终我用这个方法达到了3.8，最初的时候，我把这个方法想的太复杂，做了很多自己认为是优化的优化，但是反而只有2.6。</p>
+<p>但是其实就是单纯把情况分开讨论，然后再简简单单的把九宫格里的值一次加起来再求平均赋值给dst对应的位置，这样就有3.8了，我做了很多改动反而很低，不知道为啥。</p>
+<p>其实在优化第二个函数的时候，我偶然间看到了一种优化方法，虽然可能实现以后提高不是很大（我没能成功），但是似乎很有意思。就是说，<strong>把除法转换成乘法</strong>。这个我也不是很懂， 自己试了试，发现如果是int类型的变量，只有整除的时候才能转换，这个鸡肋啊- -但是如果是无符号数，似乎可以万能转换。具体可以参考这个网站：<a href="http://www.cppblog.com/huyutian/articles/124742.html">http://www.cppblog.com/huyutian/articles/124742.html</a>，但是用到这个函数里面，例如把<code>/6</code>变成<code>*0x2aab&gt;&gt;16</code>,老是不能通过test，但是我自己写一个测试程序发现是可以这么做转换的啊，我也不知道为啥- -希望有知道原因的可以告诉我下- -</p>
+<p>题外话，我看到的最夸张的做法就是这个<a href="http://www.cs.utah.edu/~jking/lab3/kernels.c">http://www.cs.utah.edu/~jking/lab3/kernels.c</a>，这位名叫jeremy的神人对测试数据分情况讨论，代码长的吓人0 0，理论上来说我觉得会很快，但是其实慢的不行- -我也不知道是为什么- -很多时候自己认为很牛逼的优化实现以后反而cpe更大了0 0不科学。</p>
+<h2 id="结果">结果</h2>
+<p>最终的结果就是如图所示，印象中没有拿到满分啊=-=</p>
+<p><img src="http://gaocegege.github.io/Blog/images/lab8/score.jpg" alt="Score"></p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

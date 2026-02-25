@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Resource on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/resource/</link>
+    <description>Recent content in Resource on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 27 Dec 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/resource/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>12306数据统计</title>
+      <link>https://gaocegege.com/Blog/12306%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/</link>
+      <pubDate>Sat, 27 Dec 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/12306%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/</guid>
+      <description>&lt;p&gt;在github上下载到了泄漏的数据，找了找规律。。。&lt;/p&gt;&#xA;&lt;h1 id=&#34;email地址rank&#34;&gt;Email地址Rank&lt;/h1&gt;&#xA;&lt;div&gt;&#xA;  &lt;div class=&#34;chart&#34; id=&#34;addr&#34; style=&#34;width: 100%; height: 500px; margin-bottom: 20px;&#34; &gt;&lt;/div&gt;&#xA;  &lt;figcaption&gt;地址后缀统计（前17位）&lt;/figcaption&gt;&#xA;&lt;/div&gt;&#xA;&lt;script type=&#34;text/javascript&#34;&gt;&#xA;  AmCharts.makeChart(&#34;addr&#34;,&#xA;    {&#xA;      &#34;type&#34;: &#34;pie&#34;,&#xA;      &#34;pathToImages&#34;: &#34;http://cdn.amcharts.com/lib/3/images/&#34;,&#xA;      &#34;balloonText&#34;: &#34;[[title]]&lt;br&gt;&lt;span style=&#39;font-size:14px&#39;&gt;&lt;b&gt;[[value]]&lt;/b&gt; ([[percents]]%)&lt;/span&gt;&#34;,&#xA;      &#34;theme&#34;: &#34;none&#34;,&#xA;      &#34;labelsEnabled&#34;: false,&#xA;      &#34;legend&#34;: {&#xA;        &#34;markerType&#34;: &#34;circle&#34;,&#xA;        &#34;position&#34;: &#34;right&#34;,&#xA;        &#34;marginRight&#34;: 80,    &#xA;        &#34;autoMargins&#34;: false&#xA;      },&#xA;      &#34;innerRadius&#34;: &#34;40%&#34;,&#xA;      &#34;labelRadius&#34;: 10,&#xA;      &#34;labelRadiusField&#34;: &#34;Not set&#34;,&#xA;      &#34;startRadius&#34;: &#34;10%&#34;,&#xA;      &#34;colorField&#34;: &#34;Not set&#34;,&#xA;      &#34;descriptionField&#34;: &#34;Not set&#34;,&#xA;      &#34;hoverAlpha&#34;: 0.75,&#xA;      &#34;outlineThickness&#34;: 0,&#xA;      &#34;startEffect&#34;: &#34;elastic&#34;,&#xA;      &#34;titleField&#34;: &#34;address&#34;,&#xA;      &#34;valueField&#34;: &#34;number&#34;,&#xA;      &#34;allLabels&#34;: [],&#xA;      &#34;balloon&#34;: {},&#xA;      &#34;titles&#34;: [],&#xA;      &#34;dataProvider&#34;: [&#xA;{ &#39;address&#39;:&#39; qq.com &#39;,&#xA;&#39;number&#39;: 73444 },&#xA;{ &#39;address&#39;:&#39; 163.com &#39;,&#xA;&#39;number&#39;: 30448 },&#xA;{ &#39;address&#39;:&#39; 126.com &#39;,&#xA;&#39;number&#39;: 11871 },&#xA;{ &#39;address&#39;:&#39; sina.com &#39;,&#xA;&#39;number&#39;: 4900 },&#xA;{ &#39;address&#39;:&#39; hotmail.com &#39;,&#xA;&#39;number&#39;: 1966 },&#xA;{ &#39;address&#39;:&#39; yahoo.com.cn &#39;,&#xA;&#39;number&#39;: 1775 },&#xA;{ &#39;address&#39;:&#39; vip.qq.com &#39;,&#xA;&#39;number&#39;: 1679 },&#xA;{ &#39;address&#39;:&#39; gmail.com &#39;,&#xA;&#39;number&#39;: 1575 },&#xA;{ &#39;address&#39;:&#39; sohu.com &#39;,&#xA;&#39;number&#39;: 1100 },&#xA;{ &#39;address&#39;:&#39; yahoo.cn &#39;,&#xA;&#39;number&#39;: 544 },&#xA;{ &#39;address&#39;:&#39; yeah.net &#39;,&#xA;&#39;number&#39;: 359 },&#xA;{ &#39;address&#39;:&#39; tom.com &#39;,&#xA;&#39;number&#39;: 352 },&#xA;{ &#39;address&#39;:&#39; 21cn.com &#39;,&#xA;&#39;number&#39;: 296 },&#xA;{ &#39;address&#39;:&#39; foxmail.com &#39;,&#xA;&#39;number&#39;: 214 },&#xA;{ &#39;address&#39;:&#39; 139.com &#39;,&#xA;&#39;number&#39;: 174 },&#xA;{ &#39;address&#39;:&#39; live.cn &#39;,&#xA;&#39;number&#39;: 173 },&#xA;{ &#39;address&#39;:&#39; msn.com &#39;,&#xA;&#39;number&#39;: 144 },&#xA;    ]&#xA;    }&#xA;  );&#xA;&lt;/script&gt;&#xA;&lt;p&gt;不出意料，QQ独领风骚，不过hotmail和gmail也有1000多，也是没有预料到。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>请收下学长的代码</title>
+      <link>https://gaocegege.com/Blog/%E8%AF%B7%E6%94%B6%E4%B8%8B%E5%AD%A6%E9%95%BF%E7%9A%84%E4%BB%A3%E7%A0%81/</link>
+      <pubDate>Fri, 24 Jan 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E8%AF%B7%E6%94%B6%E4%B8%8B%E5%AD%A6%E9%95%BF%E7%9A%84%E4%BB%A3%E7%A0%81/</guid>
+      <description>&lt;p&gt;整个内容已经移到&lt;a href=&#34;https://github.com/SJTU-SE/awesome-se&#34;&gt;https://github.com/SJTU-SE/awesome-se&lt;/a&gt;里了，请前往Github查看~&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

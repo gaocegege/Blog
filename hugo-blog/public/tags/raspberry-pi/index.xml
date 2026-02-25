@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Raspberry Pi on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/raspberry-pi/</link>
+    <description>Recent content in Raspberry Pi on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 12 Mar 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在无显示器的环境下给Raspberry Pi装系统</title>
+      <link>https://gaocegege.com/Blog/%E5%9C%A8%E6%97%A0%E6%98%BE%E7%A4%BA%E5%99%A8%E7%9A%84%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BB%99raspberry-pi%E8%A3%85%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sat, 12 Mar 2016 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E5%9C%A8%E6%97%A0%E6%98%BE%E7%A4%BA%E5%99%A8%E7%9A%84%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BB%99raspberry-pi%E8%A3%85%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;p&gt;Raspberry Pi 3 Model B，最近到手了，是托在hackshanghai 2014上认识的同学，现在在&lt;a href=&#34;https://knewone.com/&#34;&gt;knewone&lt;/a&gt;做事的鞠春利同学代购的，感觉自己最近花钱有些不知分寸，于是就把基本处于积灰状态的Raspberry Pi 2和Leap Motion都卖掉了。&lt;/p&gt;&#xA;&lt;p&gt;上次Raspberry Pi是直接买了淘宝的bundle，所以基本没有涉及到装系统之类的事情，这次是图新鲜买了裸机，然后因为身边没有HDMI线，显示器也在学院的实验室里，就打算能不能不带图形化去装系统，后来发现，这样确实是可以的，国外也有了很多现成的解决方案。大概操作的逻辑是，设定为静默安装，这样只要给板子提供电源和网络环境，就可以完成安装。&lt;/p&gt;&#xA;&lt;p&gt;只需要做一步就好了，把recovery.cmdline中原本的&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt; runinstaller quiet vt.cur_default=1 coherent_pool=6M elevator=deadline&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;改为&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt; runinstaller quiet vt.cur_default=1 coherent_pool=6M elevator=deadline silentinstall&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后把卡插入，等上一段时间就好了，我是从西区走到一餐浴室洗澡走回来，就发现可以ssh上去了。至于怎么找到Raspberry Pi的IP，我试过两种方法。一种是登录路由器，去看有哪些设备，分别分配到了哪些IP。第二种方法是用网线把电脑和Raspberry Pi连起来，然后用Wireshark去抓有线网卡来的包，就几个192.168.*.*的IP，一个个试一下就好了。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

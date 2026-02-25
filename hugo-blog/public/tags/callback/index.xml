@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Callback on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/callback/</link>
+    <description>Recent content in Callback on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 17 Jul 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/callback/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java如何实现Callback</title>
+      <link>https://gaocegege.com/Blog/java%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0callback/</link>
+      <pubDate>Fri, 17 Jul 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/java%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0callback/</guid>
+      <description>&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;&#xA;&lt;p&gt;最近来到了支付宝杭州做Java研发的实习，进组后马上就去了一个项目组，开始接触项目代码。一周做下来感觉收获还是挺大的，见到了很多新奇的模式，实现等等。不过确实也挺辛苦的，很少能挤出时间来学习学习新知识。周四的时候今秋给我和虎二科普了下关于Callback的Java实现方式。以前用CPP或者函数式的时候，都没有在意过这一块。CPP都是直接函数指针，粗暴地解决。函数式都可以把函数作为参数，也不存在什么问题。到了Java的时候，必须要完全用面向对象的问题去解决这个问题，还是遇到了一些障碍的。今晚利用实习结束的时间，忙里偷忙地学习了一下这方面的内容。&lt;/p&gt;&#xA;&lt;h2 id=&#34;从头谈起&#34;&gt;从头谈起&lt;/h2&gt;&#xA;&lt;h3 id=&#34;java-interface&#34;&gt;Java Interface&lt;/h3&gt;&#xA;&lt;p&gt;首先，需要讨论下Java Interface。接口是C++中没有的概念，与之前学的Scala中的trait有些类似。从语言语义的角度，Interface具有类型的功能，跟类是有些相像的，但同时接口不能包含实现，其中的方法都是抽象方法。同时还不能有自己的非静态成员变量。因此，感觉在语义上，接口是跟类等价的东西。但两个东西还是有一些不同的。&lt;/p&gt;&#xA;&lt;p&gt;就我今晚的尝试来看，最大的不同，是在实例化的时候。比如我们定义如下的一个接口：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;interface Index {&#xA;&#x9;public void a();&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在InterfaceTest类中，我们实例化两个Index接口类型的变量：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;class InterfaceTest {&#xA;&#x9;public static void main(String[] args) {&#xA;&#x9;&#x9;Index i = new Index() {&#xA;&#x9;&#x9;&#x9;@Override&#xA;&#x9;&#x9;&#x9;public void a() {&#xA;&#x9;&#x9;&#x9;&#x9;System.out.println(&amp;quot;end back!!!&amp;quot;);&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;};&#xA;&#x9;&#x9;Index j = new Index() {&#xA;&#x9;&#x9;&#x9;@Override&#xA;&#x9;&#x9;&#x9;public void a() {&#xA;&#x9;&#x9;&#x9;&#x9;System.out.println(&amp;quot;end back!!!&amp;quot;);&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;};&#xA;&#x9;}&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在编译的时候，InterfaceTest会编译产生三个字节码文件，分别叫做InterfaceTest，InterfaceTest$1，InterfaceTest$2。用javap去看他们的编码，会发现InterfaceTest是这样的：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;class TestInterfaceTest extends java.lang.Object{&#xA;TestInterfaceTest();&#xA;  Code:&#xA;   0:&#x9;aload_0&#xA;   1:&#x9;invokespecial&#x9;#1;&#xA;   4:&#x9;return&#xA;&#xA;public static void main(java.lang.String[]);&#xA;  Code:&#xA;   0:&#x9;new&#x9;#2; //class TestInterfaceTest$1&#xA;   3:&#x9;dup&#xA;   4:&#x9;invokespecial&#x9;#3;&#xA;   7:&#x9;astore_1&#xA;   8:&#x9;new&#x9;#4; //class TestInterfaceTest$2&#xA;   11:&#x9;dup&#xA;   12:&#x9;invokespecial&#x9;#5; //Method TestInterfaceTest$2.&amp;quot;&amp;lt;init&amp;gt;&amp;quot;:()V&#xA;   15:&#x9;astore_2&#xA;   16:&#x9;return&#xA;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;而InterfaceTest$1和Interface$2内容是基本一致的（除了类名）：&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

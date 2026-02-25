@@ -1,0 +1,24 @@
+{{ define "bodyClass" }}post-template page{{ end }}
+{{ define "main" }}
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="{{ "/" | relURL }}">
+                <img src="{{ "/images/" | relURL }}{{ .Site.Params.logo }}" alt="Blog Logo">
+            </a>
+            {{ partial "menu.html" (dict "page" .) }}
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>{{ .Title }}</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div>{{ .Content }}</div>
+    </article>
+    <div class="cf"></div>
+    {{ partial "footer.html" . }}
+</main>
+{{ end }}

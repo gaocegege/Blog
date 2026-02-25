@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Deck.js on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/deck.js/</link>
+    <description>Recent content in Deck.js on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 30 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/deck.js/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTML Slide尝试</title>
+      <link>https://gaocegege.com/Blog/html-slide%E5%B0%9D%E8%AF%95/</link>
+      <pubDate>Sat, 30 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/html-slide%E5%B0%9D%E8%AF%95/</guid>
+      <description>&lt;p&gt;最近喜欢上了用HTML做PPT的感觉，于是尝试了Ascensor.js，Deck.js，reveal.js三个不同的工具。&lt;/p&gt;&#xA;&lt;h1 id=&#34;html-presentation&#34;&gt;HTML Presentation&lt;/h1&gt;&#xA;&lt;p&gt;第一次接触这个是在参加一次答辩的时候，一学长用了deck.js做的Web Slides，当时感觉非常新奇。后来去大众点评，一前辈在讲自己的经历的时候，也用了类似的方法，后来才知道是reveal.js。从此就感觉这种用HTML做Slides的方法似乎很有意思啊，于是就在暑假的时间里学习了一下下。&lt;/p&gt;&#xA;&lt;h1 id=&#34;三个不同的实现&#34;&gt;三个不同的实现&lt;/h1&gt;&#xA;&lt;p&gt;到现在为止，一共尝试过三个不同的javascript框架吧~分别是Ascensor，Deck，Reveal。其中，reveal.js是实现地最完善的，deck.js次之，而asensor.js最次。如果说要推荐一个的话，那么reveal.js无疑是最好用的。不过说起来，三个各有各的特色，并不好一概而论。&lt;/p&gt;&#xA;&lt;h2 id=&#34;deckjs&#34;&gt;Deck.js&lt;/h2&gt;&#xA;&lt;p&gt;一个一个来吧~Deck.js是最早接触的一个框架，对它最深的印象是：&lt;strong&gt;文档的字体好丑啊&lt;/strong&gt;。Deck.js应该是三个里面最贴合常规Slides的一个框架，用起来的感觉就是能写出完全替代PPT的幻灯片。因为文档的字体实在让人没有看下去的欲望，于是对这个了解不是很多&lt;code&gt;_(:3」∠)_&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;框架的Demo在&lt;a href=&#34;http://imakewebthings.com/deck.js/&#34;&gt;这里&lt;/a&gt;，感兴趣的可以去看一下喔，我觉得字体真的好丑。&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/HTML-presentation/deck.JPG&#34; alt=&#34;Deck.js Demo&#34; height=&#34;500&#34; width=&#34;500&#34;&gt;&#xA;&#x9;&lt;figcaption&gt;Deck.js Demo&lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&lt;h2 id=&#34;revealjs&#34;&gt;Reveal.js&lt;/h2&gt;&#xA;&lt;p&gt;这是三个框架中最成熟最好用的一个啦。看Github上的star就能知道Deck.js跟这个比还是有差距滴。Reveal.js给人的第一感觉就是狂拽酷炫，而且简单好用~基本上想得到的功能都能在其中找到，只需要简单地写写HTML就能写出一个比较像样的Slides。其在内容上最大的特色是，Reveal.js不仅支持左右翻动Slides，也可以上下翻动。左右为主分支，而上下的翻动支持可以更好地将关键的内容用多页展示出来又不失逻辑性，确实很有新意，是三个当中的首选。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://lab.hakim.se/reveal-js/&#34;&gt;Demo&lt;/a&gt;&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/HTML-presentation/reveal.JPG&#34; alt=&#34;Reveal.js Demo&#34; height=&#34;500&#34; width=&#34;500&#34;&gt;&#xA;&#x9;&lt;figcaption&gt;Reveal.js Demo&lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&lt;h2 id=&#34;asensorjs&#34;&gt;Asensor.js&lt;/h2&gt;&#xA;&lt;p&gt;Asensor.js并不像前面的两个框架，比较成熟，它看上去像是个半成品。但是我却最喜欢这个框架。虽然学习起来的难度比上面两个框架高一点，但是它是基于jquery的一个插件，所以熟悉jquery的话还是比较方便的。我觉得它最吸引我的功能是自定义Slides的前进方向，这样会更加自由一些。不过缺点也是很明显的，自由带来的就是写起来比较麻烦，要自己写一点jquery，不像上面的两个框架完全只需要写HTML就足够了。&lt;/p&gt;&#xA;&lt;p&gt;我的&lt;a href=&#34;http://gaocegege.github.io/&#34;&gt;主页&lt;/a&gt;就是用Ascensor写的，可以去看看喔。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

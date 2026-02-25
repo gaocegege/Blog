@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>KUBEFLOW PIPELINES: 面向机器学习场景的流水线系统的使用与实现 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Kubeflow Pipelines: 面向机器学习场景的流水线系统的使用与实现">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubeflow Pipelines: 面向机器学习场景的流水线系统的使用与实现">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/kubeflow-pipelines-%E9%9D%A2%E5%90%91%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9C%BA%E6%99%AF%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Kubeflow Pipelines: 面向机器学习场景的流水线系统的使用与实现</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p><a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 是 Kubeflow 社区新近开源的端到端的 ML/DL 工作流系统。近些年来，随着深度学习带来的 AI 领域的繁荣，对 ML/DL 业务的端到端支持成为了工业界关注的一个热点。本文主要从使用与实现的角度，分析 <a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 的功能，以及对其的看法。</p>
+<h2 id="核心概念">核心概念</h2>
+<p><a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 实现了一个工作流模型。所谓工作流，或者称之为流水线（pipeline），可以将其当做一个有向无环图（DAG）。其中的每一个节点，在 <a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 的语义下被称作组件（component）。组件在图中作为一个节点，其会处理真正的逻辑，比如预处理，数据清洗，模型训练等等。每一个组件负责的功能不同，但有一个共同点，即组件都是以 Docker 镜像的方式被打包，以容器的方式被运行的。这也是与 kubeflow 社区的 Run ML on Kubernetes 这一愿景相统一的。</p>
+<figure>
+	<img src="https://raw.githubusercontent.com/kubeflow/pipelines/master/docs/images/run.png" height="500" width="500">
+    <p>流水线</p>
+</figure>
+<p>实验（experiment）是一个工作空间，在其中可以针对流水线尝试不同的配置。运行（run）是流水线的一次执行，用户在执行的过程中可以看到每一步的输出文件，以及日志。步（step）是组件的一次运行，步与组件的关系就像是运行与流水线的关系一样。步输出工件（step output artifacts）是在组件的一次运行结束后输出的，能被系统的前端理解并渲染可视化的文件。</p>
+<figure>
+	<img src="https://raw.githubusercontent.com/kubeflow/pipelines/master/docs/images/roc.png" height="300" width="300">
+    <p>步输出工件的可视化</p>
+</figure>
+<p>在介绍完核心的概念之后，<a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 的功能便容易理解了，它就是一个支持自定义的流水线系统，用户可以通过它定义自己的机器学习流水线，并且在执行时输出一定的用于可视化过程的文件，系统的前端会将其可以理解的文件进行可视化，方便用户跟踪学习过程。</p>
+<h2 id="实现第一个流水线">实现第一个流水线</h2>
+<p>这里有一个基于 jupyterhub 的例子：<a href="https://github.com/kubeflow/pipelines/blob/master/samples/notebooks/KubeFlow%20Pipeline%20Using%20TFX%20OSS%20Components.ipynb">KubeFlow Pipeline Using TFX OSS Components</a>，利用 TensorFlow 作为示例，实现了一个完整的 kubeflow 流水线。</p>
+<p>流水线的定义可以分为两步，首先是定义组件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">tf_train_op</span><span class="p">(</span><span class="n">transformed_data_dir</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="s1">&#39;GcsUri[text/json]&#39;</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">hidden_layer_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">preprocess_module</span><span class="p">:</span> <span class="s1">&#39;GcsUri[text/code/python]&#39;</span><span class="p">,</span> <span class="n">training_output</span><span class="p">:</span> <span class="s1">&#39;GcsUri[Directory]&#39;</span><span class="p">,</span> <span class="n">step_name</span><span class="o">=</span><span class="s1">&#39;training&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ContainerOp</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span> <span class="o">=</span> <span class="n">step_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">image</span> <span class="o">=</span> <span class="s1">&#39;gcr.io/ml-pipeline/ml-pipeline-kubeflow-tf-trainer:0.0.42&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--transformed-data-dir&#39;</span><span class="p">,</span> <span class="n">transformed_data_dir</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--schema&#39;</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--learning-rate&#39;</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--hidden-layer-size&#39;</span><span class="p">,</span> <span class="n">hidden_layer_size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--steps&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--target&#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--preprocessing-module&#39;</span><span class="p">,</span> <span class="n">preprocess_module</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;--job-dir&#39;</span><span class="p">,</span> <span class="n">training_output</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="n">file_outputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="s1">&#39;/output.txt&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span></code></pre></div><p>这里的例子定义了一个组件，其负责模型的训练。这一组件只是简单地定义了一个 Docker 容器，利用了镜像中已有的 TensorFlow 框架进行训练。在更加高级的用法中，组件可以从镜像开始完全自定义。有时用户需要自定义其使用的组件，这里介绍一下自定义的方式。首先需要打包一个 Docker 镜像，这个镜像是组件的依赖，每一个组件的运行，就是一个 Docker 容器。其次需要为其定义一个 python 函数，描述组件的输入输出等信息，这一定义是为了能够让流水线理解组件在流水线中的结构，有几个输入节点，几个输出节点，等等。接下来组件的使用就与普通的组件并无二致了。</p>
+<p>实现流水线的第二步，就是根据定义好的组件组成流水线：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># The pipeline definition</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@dsl.pipeline</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;TFX Taxi Cab Classification Pipeline Example&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Example pipeline that does classification with model analysis based on a public BigQuery dataset.&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">taxi_cab_classification</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">project</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">column_names</span><span class="o">=</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;column-names&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;gs://ml-pipeline-playground/tfx/taxi-cab-classification/column-names.json&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">key_columns</span><span class="o">=</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;key-columns&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;trip_start_timestamp&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">train</span><span class="o">=</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;gs://ml-pipeline-playground/tfx/taxi-cab-classification/train.csv&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">evaluation</span><span class="o">=</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;evaluation&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;gs://ml-pipeline-playground/tfx/taxi-cab-classification/eval.csv&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">preprocess</span> <span class="o">=</span> <span class="n">dataflow_tf_transform_op</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">evaluation</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">preprocess_mode</span><span class="p">,</span> <span class="n">preprocess_module</span><span class="p">,</span> <span class="n">transform_output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">training</span> <span class="o">=</span> <span class="n">tf_train_op</span><span class="p">(</span><span class="n">preprocess</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">hidden_layer_size</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">preprocess_module</span><span class="p">,</span> <span class="n">training_output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span></code></pre></div><p>在流水线中，由输入输出关系会确定图上的边以及方向。在上例中，training 的输入是 preprocess 的输出，因此 preprocess 会有一条边指向 training，代表两者的拓扑顺序。在定义好流水线后，可以通过 python 中实现好的流水线客户端提交到系统中运行。</p>
+<h3 id="实现思路">实现思路</h3>
+<p>虽然 <a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 的使用略显复杂，但它的实现其实并不麻烦。整个的架构可以分为五个部分，分别是 ScheduledWorkflow CRD 以及其 operator，流水线前端，流水线后端， Python SDK 和 persistence agent。ScheduledWorkflow CRD 扩展了 <a href="https://github.com/argoproj/argo">argoproj/argo</a> 的 Workflow 定义，其 API 在<a href="https://github.com/kubeflow/pipelines/blob/master/backend/src/crd/pkg/apis/scheduledworkflow/v1alpha1/types.go">此处</a>可见。这也是流水线项目中的核心部分，它负责真正地在 Kubernetes 上按照拓扑序创建出对应的容器完成流水线的逻辑。</p>
+<p>Python SDK 负责构造出流水线，并且根据流水线构造出 ScheduledWorkflow 的 YAML 定义，随后将其作为参数传递给流水线系统的后端服务。后端服务依赖关系存储数据库（如 MySQL）和对象存储（如 Amazon S3），处理所有流水线中的 CRUD 请求。前端负责可视化整个流水线的过程，以及获取日志，发起新的运行等。Persistence agent 负责把数据从 Kubernetes Master 的 etcd 中 sync 到后端服务的关系型数据库中，其实现的方式与 CRD operator 类似，通过 informer 来监听 Kubernetes apiserver 对应资源实现。</p>
+<h3 id="结语">结语</h3>
+<p><a href="https://github.com/kubeflow/pipelines">kubeflow/pipelines</a> 的介绍基本到此为止，本身这是一个值得参考的流水线系统。其中最令我称道的地方是关于每一步输出工件的渲染支持上。这样的设定能够支持每一个组件都可以输出一定程度的可视化，非常有助于帮助工程师了解在运行中的状态。但是不得不说，这是一个非常复杂的系统，看上去更像是谷歌实现给自己的工程师用的工具，在其中能嗅到 ksonnet 的味道。至今笔者仍然不能理解自定义组件的应用场景，在有了 Docker 镜像的支持下，这一层抽象有点多余的感觉。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

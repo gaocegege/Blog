@@ -1,0 +1,89 @@
+<meta charset="utf-8">
+<title>{{ if .Title }}{{ .Title | upper }} | {{ end }}{{ .Site.Title | upper }}</title>
+<meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ with .Params.tags }}<meta name="keywords" content="{{ delimit . ", " }}">{{ end }}
+
+<!-- cache -->
+<meta http-equiv="Cache-control" content="public">
+
+<!-- Twitter Cards -->
+{{ if .Params.imagefeature }}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ "images/" | relURL }}{{ .Params.imagefeature }}">
+{{ else }}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="{{ "images/" | relURL }}{{ .Site.Params.logo }}">
+{{ end }}
+<meta name="twitter:title" content="{{ if .Title }}{{ .Title }}{{ else }}{{ .Site.Title }}{{ end }}">
+<meta name="twitter:description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta name="twitter:creator" content="@{{ .Site.Params.author.twitter }}">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ if .Title }}{{ .Title }}{{ else }}{{ .Site.Title }}{{ end }}">
+<meta property="og:description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="{{ "css/font-awesome.min.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/normalize.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/foundation.min.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/nprogress.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/post.css" | relURL }}">
+
+<!-- jQuery -->
+<script src="{{ "js/jquery.min.js" | relURL }}"></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="{{ "js/vendor/highlight/styles/tomorrow.css" | relURL }}">
+<script src="{{ "js/vendor/highlight/highlight.pack.js" | relURL }}"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+{{ if .Params.mathjax }}
+<!-- MathJax -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+{{ end }}
+
+{{ if .Params.chart }}
+<!-- amCharts -->
+<script type="text/javascript" src="{{ "js/vendor/amcharts/amcharts.js" | relURL }}"></script>
+<script type="text/javascript" src="{{ "js/vendor/amcharts/pie.js" | relURL }}"></script>
+<script type="text/javascript" src="{{ "js/vendor/amcharts/serial.js" | relURL }}"></script>
+<script type="text/javascript" src="{{ "js/vendor/amcharts/themes/dark.js" | relURL }}"></script>
+{{ end }}
+
+<!-- Icons -->
+<link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
+<link rel="shortcut icon" href="{{ "favicon.png" | relURL }}">
+
+<!-- RSS -->
+<link href="{{ "index.xml" | relURL }}" type="application/atom+xml" rel="alternate" title="{{ .Site.Title }} Feed">

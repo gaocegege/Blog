@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>比大更大：AMAZON SAGEMAKER 新功能一览 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="比大更大：Amazon SageMaker 新功能一览">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="比大更大：Amazon SageMaker 新功能一览">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E6%AF%94%E5%A4%A7%E6%9B%B4%E5%A4%A7amazon-sagemaker-%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B8%80%E8%A7%88/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>比大更大：Amazon SageMaker 新功能一览</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>AWS re:Invent 2019 上，SageMaker 发布不少新功能，其中包括：Deep Graph Library 支持，机器学习训练流程管理能力（Experiment），自动机器学习工具 Autopilot，数据处理和模型评估的管理（Processing），模型自动监控工具 Monitor，模型训练过程的调试工具 Debugger，ML 场景下的 IDE Studio。这篇文章介绍并分析了这些新特性的功能，同时夹杂一点个人对这些特性的看法和观点。</p>
+<h2 id="deep-graph-library-支持">Deep Graph Library 支持</h2>
+<p><a href="https://www.dgl.ai/">Deep Graph Library</a>（以下称作 DGL） 是一个用来构建 GNN 的 Python 库。<a href="https://www.dgl.ai/">DGL</a> 目前支持 PyTorch 和 MXNet，它为 GNN 的构建提供了高层的 API。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">dgl</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch</span> <span class="k">as</span> <span class="nn">th</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">g</span> <span class="o">=</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">g</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>                          <span class="c1"># add 5 nodes</span>
+</span></span><span class="line"><span class="cl"><span class="n">g</span><span class="o">.</span><span class="n">add_edges</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span> <span class="c1"># add 4 edges 0-&gt;1, 0-&gt;2, 0-&gt;3, 0-&gt;4</span>
+</span></span><span class="line"><span class="cl"><span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>           <span class="c1"># assign one 3D vector to each node</span>
+</span></span><span class="line"><span class="cl"><span class="n">g</span><span class="o">.</span><span class="n">edata</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>           <span class="c1"># assign one 4D vector to each edge</span>
+</span></span></code></pre></div><p>上面的示例来自 <a href="https://www.dgl.ai/">DGL</a>，其构建了一个简单的 GNN 网络，它对 GCN 等都有对应的支持。目前 SageMaker 通过其 Estimator 接口支持发起一次 DGL 训练。这一特性并无太多值得称道之处，算是一个常规的特性。</p>
+<h2 id="机器学习训练管理能力experiment">机器学习训练管理能力（Experiment）</h2>
+<p>众所周知，机器学习的模型训练是一个迭代的过程。对于一个模型的训练，往往有多次的调参-训练的迭代。Experiment 就是对这一迭代过程的抽象。在介绍训练之前，首先介绍一下 Trial。Trial 是一次训练的过程。其中包括数据预处理，模型训练，模型评估等。而 Experiment，是由多个 Trial 组成的一个集合，比如一组相关的训练任务等。因此 Experiment 跟 Google Vizier 中的 Study，<a href="https://github.com/kubeflow/katib">Katib</a> 中的 Experiment 概念类似。</p>
+<p>利用 SageMaker 提供的 SDK，Experiment 可以发起多次 Trial，并且提供一些数据的比对等功能。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">smexperiments.experiment</span> <span class="kn">import</span> <span class="n">Experiment</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Create experiment.</span>
+</span></span><span class="line"><span class="cl"><span class="n">mnist_experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">experiment_name</span><span class="o">=</span><span class="s2">&#34;mnist-hand-written-digits-classification&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">description</span><span class="o">=</span><span class="s2">&#34;Classification of mnist hand-written digits&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">sagemaker_boto_client</span><span class="o">=</span><span class="n">sm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Create trials</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num_hidden_channel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">32</span><span class="p">]):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">trial_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;cnn-training-job-</span><span class="si">{</span><span class="n">num_hidden_channel</span><span class="si">}</span><span class="s2">-hidden-channels-</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cnn_trial</span> <span class="o">=</span> <span class="n">Trial</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">trial_name</span><span class="o">=</span><span class="n">trial_name</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">experiment_name</span><span class="o">=</span><span class="n">mnist_experiment</span><span class="o">.</span><span class="n">experiment_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sagemaker_boto_client</span><span class="o">=</span><span class="n">sm</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cnn_trial</span><span class="o">.</span><span class="n">add_trial_component</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">trial_component</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">cnn_training_job_name</span> <span class="o">=</span> <span class="s2">&#34;cnn-training-job-</span><span class="si">{}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create one PyTorch or Tensorflow job.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">estimator</span> <span class="o">=</span> <span class="n">PyTorch</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;mnist.py&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sagemaker_session</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">framework_version</span><span class="o">=</span><span class="s1">&#39;1.1.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">train_instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">train_instance_type</span><span class="o">=</span><span class="s1">&#39;ml.p3.2xlarge&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hyperparameters</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;hidden_channels&#39;</span><span class="p">:</span> <span class="n">num_hidden_channels</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="n">metric_definitions</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span><span class="s1">&#39;train:loss&#39;</span><span class="p">,</span> <span class="s1">&#39;Regex&#39;</span><span class="p">:</span><span class="s1">&#39;Train Loss: (.*?);&#39;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span><span class="s1">&#39;test:loss&#39;</span><span class="p">,</span> <span class="s1">&#39;Regex&#39;</span><span class="p">:</span><span class="s1">&#39;Test Average loss: (.*?),&#39;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span><span class="s1">&#39;test:accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;Regex&#39;</span><span class="p">:</span><span class="s1">&#39;Test Accuracy: (.*?)%;&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Training.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inputs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;training&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">},</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">job_name</span><span class="o">=</span><span class="n">cnn_training_job_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">experiment_config</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;ExperimentName&#34;</span><span class="p">:</span> <span class="n">mnist_experiment</span><span class="o">.</span><span class="n">experiment_name</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;TrialName&#34;</span><span class="p">:</span> <span class="n">cnn_trial</span><span class="o">.</span><span class="n">trial_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;TrialComponentDisplayName&#34;</span><span class="p">:</span> <span class="s2">&#34;Training&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span></code></pre></div><p>上述代码是一次完整的训练过程。这次训练暴力搜索了 num_hidden_channel 的取值，并且所有的训练都归属于一个 Experiment。可以看到，其中的概念与 <a href="https://github.com/kubeflow/katib">katib</a> Experiment 非常类似。不过其采取的思路与 <a href="https://github.com/microsoft/nni">NNI</a> 更相似，为用户提供了一个 SDK。这样的方式对用户的代码有一定的侵入性。</p>
+<h2 id="自动机器学习工具-autopilot">自动机器学习工具 Autopilot</h2>
+<p>SageMaker 之前已经有了一个做模型调优的功能 <a href="https://aws.amazon.com/cn/blogs/aws/sagemaker-automatic-model-tuning/">Model Tuning</a>，它支持进行超参数优化。而新退出的这一功能 Autopilot，支持更多的特性：</p>
+<ul>
+<li>支持 tabular 格式的输入，可以自动地进行模型输入的预处理工作</li>
+<li>传统机器学习算法的自动模型选择（Automatic algorithm selection）</li>
+<li>自动超参数优化</li>
+<li>分布式训练</li>
+<li>自动的集群大小调整</li>
+</ul>
+<p>通过下面的代码，就可以发起一次基于 Autopilot 的训练。看上去就跟 autosklearn 非常接近。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">auto_ml_job_name</span> <span class="o">=</span> <span class="s1">&#39;automl-dm-&#39;</span> <span class="o">+</span> <span class="n">timestamp_suffix</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;AutoMLJobName: &#39;</span> <span class="o">+</span> <span class="n">auto_ml_job_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sm</span><span class="o">.</span><span class="n">create_auto_ml_job</span><span class="p">(</span><span class="n">AutoMLJobName</span><span class="o">=</span><span class="n">auto_ml_job_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">InputDataConfig</span><span class="o">=</span><span class="n">input_data_config</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">OutputDataConfig</span><span class="o">=</span><span class="n">output_data_config</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">RoleArn</span><span class="o">=</span><span class="n">role</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">candidates</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">list_candidates_for_auto_ml_job</span><span class="p">(</span><span class="n">AutoMLJobName</span><span class="o">=</span><span class="n">auto_ml_job_name</span><span class="p">,</span> <span class="n">SortBy</span><span class="o">=</span><span class="s1">&#39;FinalObjectiveMetricValue&#39;</span><span class="p">)[</span><span class="s1">&#39;Candidates&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">model_arn</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="n">Containers</span><span class="o">=</span><span class="n">best_candidate</span><span class="p">[</span><span class="s1">&#39;InferenceContainers&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">ModelName</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">ExecutionRoleArn</span><span class="o">=</span><span class="n">role</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ep_config</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">create_endpoint_config</span><span class="p">(</span><span class="n">EndpointConfigName</span> <span class="o">=</span> <span class="n">epc_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                      <span class="n">ProductionVariants</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;InstanceType&#39;</span><span class="p">:</span><span class="s1">&#39;ml.m5.2xlarge&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                           <span class="s1">&#39;InitialInstanceCount&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                           <span class="s1">&#39;ModelName&#39;</span><span class="p">:</span><span class="n">model_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                           <span class="s1">&#39;VariantName&#39;</span><span class="p">:</span><span class="n">variant_name</span><span class="p">}])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">create_endpoint_response</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">create_endpoint</span><span class="p">(</span><span class="n">EndpointName</span><span class="o">=</span><span class="n">ep_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                              <span class="n">EndpointConfigName</span><span class="o">=</span><span class="n">epc_name</span><span class="p">)</span>
+</span></span></code></pre></div><p>训练一共会被分为如下步骤：</p>
+<ul>
+<li>数据切分，划分为训练集和验证集</li>
+<li>数据分析，推荐合理的流水线（应该是算法的意思）</li>
+<li>特征工程，其中包括数据转换等</li>
+<li>选择合适的流水线，调整超参数</li>
+</ul>
+<p>除此之外，Autopilot 会生成两个 Jupyter Notebook：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">job</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">describe_auto_ml_job</span><span class="p">(</span><span class="n">AutoMLJobName</span><span class="o">=</span><span class="n">auto_ml_job_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">job_data_notebook</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">&#39;AutoMLJobArtifacts&#39;</span><span class="p">][</span><span class="s1">&#39;DataExplorationNotebookLocation&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">job_candidate_notebook</span> <span class="o">=</span> <span class="n">job</span><span class="p">[</span><span class="s1">&#39;AutoMLJobArtifacts&#39;</span><span class="p">][</span><span class="s1">&#39;CandidateDefinitionNotebookLocation&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">job_data_notebook</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">job_candidate_notebook</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">s3</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">PREFIX_REMOVED</span><span class="o">&gt;/</span><span class="n">notebooks</span><span class="o">/</span><span class="n">SageMakerAutopilotCandidateDefinitionNotebook</span><span class="o">.</span><span class="n">ipynb</span>
+</span></span><span class="line"><span class="cl"><span class="n">s3</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">PREFIX_REMOVED</span><span class="o">&gt;/</span><span class="n">notebooks</span><span class="o">/</span><span class="n">SageMakerAutopilotDataExplorationNotebook</span><span class="o">.</span><span class="n">ipynb</span>
+</span></span></code></pre></div><p>这两个 notebook 中的第一个记录了搜索到的候选模型的一些信息，而且所有的代码都是可用的。第二个记录了数据集相关的信息，不确定有没有特征工程有关的内容。</p>
+<p>总体来说，是一个主打自动模型选择的功能，这一功能在传统机器学习算法领域会更有价值。</p>
+<h2 id="数据处理和模型评估的管理">数据处理和模型评估的管理</h2>
+<p>在模型训练的流水线中，数据的准备工作是比较麻烦的。SageMaker 基于 sklearn 的 <a href="https://scikit-learn.org/stable/data_transforms.html">data transform</a> 功能，提供了一种内置的数据处理功能的支持。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sagemaker.sklearn.processing</span> <span class="kn">import</span> <span class="n">SKLearnProcessor</span>
+</span></span><span class="line"><span class="cl"><span class="n">sklearn_processor</span> <span class="o">=</span> <span class="n">SKLearnProcessor</span><span class="p">(</span><span class="n">framework_version</span><span class="o">=</span><span class="s1">&#39;0.20.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                     <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                     <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                     <span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;ml.m5.xlarge&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sagemaker.processing</span> <span class="kn">import</span> <span class="n">ProcessingInput</span><span class="p">,</span> <span class="n">ProcessingOutput</span>
+</span></span><span class="line"><span class="cl"><span class="n">sklearn_processor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">code</span><span class="o">=</span><span class="s1">&#39;preprocessing.py&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># arguments = [&#39;arg1&#39;, &#39;arg2&#39;],</span>
+</span></span><span class="line"><span class="cl">    <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">ProcessingInput</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">source</span><span class="o">=</span><span class="s1">&#39;dataset.csv&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/opt/ml/processing/input&#39;</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">ProcessingOutput</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;/opt/ml/processing/output/train&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ProcessingOutput</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;/opt/ml/processing/output/validation&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ProcessingOutput</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;/opt/ml/processing/output/test&#39;</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><p>上述代码是其中的输入输出配置。本质上，它是利用容器来实现的，在 SDK 定义的函数中，用户需要指定运行的代码文件，输入和输出，就可以进行标准化的处理。其中 preprocessing.py 就是用户提供的预处理代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Read data locally </span>
+</span></span><span class="line"><span class="cl"><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/opt/ml/processing/input/dataset.csv&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Preprocess the data set</span>
+</span></span><span class="line"><span class="cl"><span class="n">downsampled</span> <span class="o">=</span> <span class="n">apply_mad_data_science_skills</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Split data set into training, validation, and test</span>
+</span></span><span class="line"><span class="cl"><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">downsampled</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">train</span><span class="p">,</span> <span class="n">validation</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Create local output directories</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;/opt/ml/processing/output/train&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;/opt/ml/processing/output/validation&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;/opt/ml/processing/output/test&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">pass</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Save data locally</span>
+</span></span><span class="line"><span class="cl"><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;/opt/ml/processing/output/train/train.csv&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">validation</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;/opt/ml/processing/output/validation/validation.csv&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">test</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;/opt/ml/processing/output/test/test.csv&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finished running processing job&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><p>基本来说，是一个对容器的应用。值得一提的是，Amazon 对于资源采取了简化的处理，分成了大中小等不同资源容量的机器，这里用的就是 <code>ml.m5.xlarge</code>。这种思路值得参考，它可以简化用户申请资源的配置选择，但是也一定程度上限制了用户的自由。</p>
+<p>既然是使用容器来实现的，这一功能同样支持自定义容器，其中差异就是需要提供一个镜像的路径。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sagemaker.processing</span> <span class="kn">import</span> <span class="n">ScriptProcessor</span>
+</span></span><span class="line"><span class="cl"><span class="n">script_processor</span> <span class="o">=</span> <span class="n">ScriptProcessor</span><span class="p">(</span><span class="n">image_uri</span><span class="o">=</span><span class="s1">&#39;123456789012.dkr.ecr.us-west-2.amazonaws.com/sagemaker-spacy-container:latest&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="n">instance_type</span><span class="o">=</span><span class="s1">&#39;ml.m5.xlarge&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><h2 id="模型服务自动监控工具">模型服务自动监控工具</h2>
+<p>模型服务上线后，如何对它的效果和请求进行分析，是一个困难的问题。模型服务自动监控功能，就是通过对上线的服务进行监控和分析，来更好的了解模型服务情况。它的功能可以概括为：</p>
+<ul>
+<li>查看模型服务的历史输入输出</li>
+<li>查看模型服务的表现和统计数据</li>
+</ul>
+<p>其中对数据的最简单的观察就是查看输入和输出，DataCaptureConfig 的配置支持这一特性：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">data_capture_configuration</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;EnableCapture&#34;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;InitialSamplingPercentage&#34;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;DestinationS3Uri&#34;</span><span class="p">:</span> <span class="n">s3_capture_upload_path</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;CaptureOptions&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="s2">&#34;CaptureMode&#34;</span><span class="p">:</span> <span class="s2">&#34;Output&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="s2">&#34;CaptureMode&#34;</span><span class="p">:</span> <span class="s2">&#34;Input&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;CaptureContentTypeHeader&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="s2">&#34;CsvContentTypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;text/csv&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">       <span class="s2">&#34;JsonContentTypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;application/json&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">create_endpoint_config_response</span> <span class="o">=</span> <span class="n">sm_client</span><span class="o">.</span><span class="n">create_endpoint_config</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">EndpointConfigName</span> <span class="o">=</span> <span class="n">endpoint_config_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ProductionVariants</span><span class="o">=</span><span class="p">[{</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;InstanceType&#39;</span><span class="p">:</span><span class="s1">&#39;ml.m5.xlarge&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;InitialInstanceCount&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;InitialVariantWeight&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;ModelName&#39;</span><span class="p">:</span><span class="n">model_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;VariantName&#39;</span><span class="p">:</span><span class="s1">&#39;AllTrafficVariant&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}],</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DataCaptureConfig</span> <span class="o">=</span> <span class="n">data_capture_configuration</span><span class="p">)</span>
+</span></span></code></pre></div><p>在利用 DataCaptureConfig 创建好 Endpoint 后，可以查看其历史输入输出：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl">    <span class="s2">&#34;endpointInput&#34;</span><span class="err">:</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;observedContentType&#34;</span><span class="p">:</span><span class="s2">&#34;text/csv&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;mode&#34;</span><span class="p">:</span><span class="s2">&#34;INPUT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;data&#34;</span><span class="p">:</span><span class="s2">&#34;132,25,113.2,96,269.9,107,229.1,87,7.1,7,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;encoding&#34;</span><span class="p">:</span><span class="s2">&#34;CSV&#34;</span>
+</span></span><span class="line"><span class="cl">     <span class="p">}</span><span class="err">,</span>
+</span></span><span class="line"><span class="cl">     <span class="s2">&#34;endpointOutput&#34;</span><span class="err">:</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;observedContentType&#34;</span><span class="p">:</span><span class="s2">&#34;text/csv; charset=utf-8&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;mode&#34;</span><span class="p">:</span><span class="s2">&#34;OUTPUT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;data&#34;</span><span class="p">:</span><span class="s2">&#34;0.01076381653547287&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;encoding&#34;</span><span class="p">:</span><span class="s2">&#34;CSV&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">     <span class="err">},</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;eventMetadata&#34;</span><span class="err">:</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;eventId&#34;</span><span class="p">:</span><span class="s2">&#34;6ece5c74-7497-43f1-a263-4833557ffd63&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;inferenceTime&#34;</span><span class="p">:</span><span class="s2">&#34;2019-11-22T08:24:40Z&#34;</span><span class="p">}</span><span class="err">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;eventVersion&#34;</span><span class="err">:</span><span class="s2">&#34;0&#34;</span><span class="err">}</span>
+</span></span></code></pre></div><p>除了简单的输入和输出之外，可以通过 S3 上的三个对象 constraints.json，statistics.json 和 constraints_violations.json 查看更抽象的数据分析结果：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;version&#34;</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;features&#34;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;Churn&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;inferred_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;Integral&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;completeness&#34;</span> <span class="p">:</span> <span class="mf">1.0</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;Account Length&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;inferred_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;Integral&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;completeness&#34;</span> <span class="p">:</span> <span class="mf">1.0</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>比如 constraints.json 会显示推导的数据的类型等信息。而下列的 statistics.json 展示了数据的分布情况和统计信息。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;Day Mins&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;inferred_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;Fractional&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;numerical_statistics&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;common&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;num_present&#34;</span> <span class="p">:</span> <span class="mi">2333</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;num_missing&#34;</span> <span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mean&#34;</span> <span class="p">:</span> <span class="mf">180.22648949849963</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;sum&#34;</span> <span class="p">:</span> <span class="mf">420468.3999999996</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;std_dev&#34;</span> <span class="p">:</span> <span class="mf">53.987178959901556</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;min&#34;</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;max&#34;</span> <span class="p">:</span> <span class="mf">350.8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;distribution&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;kll&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;buckets&#34;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;lower_bound&#34;</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;upper_bound&#34;</span> <span class="p">:</span> <span class="mf">35.08</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;count&#34;</span> <span class="p">:</span> <span class="mf">14.0</span>
+</span></span><span class="line"><span class="cl">          <span class="p">},</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;lower_bound&#34;</span> <span class="p">:</span> <span class="mf">35.08</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;upper_bound&#34;</span> <span class="p">:</span> <span class="mf">70.16</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;count&#34;</span> <span class="p">:</span> <span class="mf">48.0</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span> <span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;sketch&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;parameters&#34;</span> <span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;c&#34;</span> <span class="p">:</span> <span class="mf">0.64</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="nt">&#34;k&#34;</span> <span class="p">:</span> <span class="mf">2048.0</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;data&#34;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">[</span> <span class="mf">178.1</span><span class="p">,</span> <span class="mf">160.3</span> <span class="err">...</span><span class="p">]</span> <span class="p">]</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="模型训练过程的调试工具">模型训练过程的调试工具</h2>
+<p>刚刚提到的模型服务的监控工具，而模型训练的过程调试也一直是个很困难的事情，传统软件开发有 gdb 等 debug 工具，而模型训练目前还没有完善的解决方案。SageMaker 提出了自己的尝试。Debugger 是一个 Python SDK。它提供了如下功能：</p>
+<ul>
+<li>提供 TensorFlow 的 Session Hook，用来收集数据和训练指标，如权重，梯度等</li>
+<li>提供 SaveConfig 配置，可以让用户指定收集频率</li>
+<li>（可选）Optimizer 的封装，用来支持收集梯度</li>
+<li>（可选）ReductionConfig，用来收集部分 Tensor 而不是全部</li>
+</ul>
+<p>基本来说，就是围绕 SessionHook 的增强与优化，其示例如下。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">reduc</span> <span class="o">=</span> <span class="n">smd</span><span class="o">.</span><span class="n">ReductionConfig</span><span class="p">(</span><span class="n">reductions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">],</span> <span class="n">abs_reductions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">],</span> <span class="n">norms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;l1&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">hook</span> <span class="o">=</span> <span class="n">smd</span><span class="o">.</span><span class="n">SessionHook</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug_path</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                       <span class="n">include_collections</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;gradients&#39;</span><span class="p">,</span> <span class="s1">&#39;losses&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                       <span class="n">save_config</span><span class="o">=</span><span class="n">smd</span><span class="o">.</span><span class="n">SaveConfig</span><span class="p">(</span><span class="n">save_interval</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug_frequency</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                       <span class="n">reduction_config</span><span class="o">=</span><span class="n">reduc</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;initialize&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 2-dimensional input sample</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initial weights: [10, 10]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">initial_value</span><span class="o">=</span><span class="p">[[</span><span class="mf">10.</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight1&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># True weights, i.e. the ones we&#39;re trying to learn</span>
+</span></span><span class="line"><span class="cl">    <span class="n">w0</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;multiply&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Compute true label</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Compute &#34;predicted&#34; label</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y_hat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;loss&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Compute loss</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">((</span><span class="n">y_hat</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&#34;loss&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hook</span><span class="o">.</span><span class="n">add_to_collection</span><span class="p">(</span><span class="s1">&#39;losses&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">wrap_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">hook</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">smd</span><span class="o">.</span><span class="n">modes</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">MonitoredSession</span><span class="p">(</span><span class="n">hooks</span><span class="o">=</span><span class="p">[</span><span class="n">hook</span><span class="p">])</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">steps</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">scale</span>
+</span></span><span class="line"><span class="cl">        <span class="n">_loss</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">loss</span><span class="p">,</span> <span class="n">optimizer_op</span><span class="p">],</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Step=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, Loss=</span><span class="si">{</span><span class="n">_loss</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><p>不过值得一提的是，在 SageMaker Debugger 的开源代码中，它给出了和博文不同的 API 使用方式：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sagemaker</span> <span class="k">as</span> <span class="nn">sm</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sagemaker.debugger</span> <span class="kn">import</span> <span class="n">rule_configs</span><span class="p">,</span> <span class="n">Rule</span><span class="p">,</span> <span class="n">CollectionConfig</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Choose a built-in rule to monitor your training job</span>
+</span></span><span class="line"><span class="cl"><span class="n">rule</span> <span class="o">=</span> <span class="n">Rule</span><span class="o">.</span><span class="n">sagemaker</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rule_configs</span><span class="o">.</span><span class="n">exploding_tensor</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># configure your rule if applicable</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rule_parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;tensor_regex&#34;</span><span class="p">:</span> <span class="s2">&#34;.*&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># specify collections to save for processing your rule</span>
+</span></span><span class="line"><span class="cl">    <span class="n">collections_to_save</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CollectionConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;weights&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CollectionConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;losses&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Pass the rule to the estimator</span>
+</span></span><span class="line"><span class="cl"><span class="n">sagemaker_simple_estimator</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tensorflow</span><span class="o">.</span><span class="n">TensorFlow</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">entry_point</span><span class="o">=</span><span class="s2">&#34;script.py&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">role</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">get_execution_role</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">framework_version</span><span class="o">=</span><span class="s2">&#34;1.15&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">py_version</span><span class="o">=</span><span class="s2">&#34;py3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># argument for smdebug below</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rules</span><span class="o">=</span><span class="p">[</span><span class="n">rule</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sagemaker_simple_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">tensors_path</span> <span class="o">=</span> <span class="n">sagemaker_simple_estimator</span><span class="o">.</span><span class="n">latest_job_debugger_artifacts_path</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">smdebug</span> <span class="k">as</span> <span class="nn">smd</span>
+</span></span><span class="line"><span class="cl"><span class="n">trial</span> <span class="o">=</span> <span class="n">smd</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">create_trial</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="n">tensors_path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Saved these tensors: </span><span class="si">{</span><span class="n">trial</span><span class="o">.</span><span class="n">tensor_names</span><span class="p">()</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Loss values during evaluation were </span><span class="si">{</span><span class="n">trial</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="s1">&#39;CrossEntropyLoss:0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">smd</span><span class="o">.</span><span class="n">modes</span><span class="o">.</span><span class="n">EVAL</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>核心思路差不多，但是 API 变动挺大的，不知道是哪个版本更老一些。整体而言，是一个蛮有趣的功能，这种方式，通过对用户代码的侵入性修改，可以把训练过程的一些训练指标推送到远端。与其他如 MLFlow 等收集方式的实现相比，它直接提供了 SessionHook，稍微友好一些。</p>
+<h2 id="ml-场景下的-ide">ML 场景下的 IDE</h2>
+<p>刚刚我们提到的 Experiment 特性，使得 SageMaker 有了自己独立的逻辑概念。而算法科学家喜爱的 Jupyter Notebook， 是不能原生地展示这些概念的，它并不能“理解”一个 Experiment 会与多个 Trials 相互关联。尽管 SageMaker 在文章里把 Motivation，但从我个人的角度，我认为最大的动机就是支持 Experiment 和 Trials 等新的特性。</p>
+<p>所以，带着这样的思想，来看下它的 UI：</p>
+<figure>
+	<img src="https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2019/12/03/exp_mg.png" height="700" width="700">
+    <figcaption>SageMaker Studio</figcaption>
+</figure>
+<figure>
+	<img src="https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2019/12/03/debug.png" height="700" width="700">
+    <figcaption>SageMaker Studio</figcaption>
+</figure>
+<p>可以看到，基本都是围绕 Trial 和 Experiment 展开的。SageMaker 把 Jupyter 作为了本地模型开发的事实标准，对它进行了增强和修改，代表了业界的一种探索方向。不过我们也可以看到，有越来越多除了 Jupyter 之外的其他选择，所以这样的思路是否奏效，需要时间的检验了。</p>
+<h2 id="参考文档">参考文档</h2>
+<ul>
+<li><a href="https://aws.amazon.com/cn/blogs/aws/category/artificial-intelligence/sagemaker/">AWS SageMaker Blog</a></li>
+</ul>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

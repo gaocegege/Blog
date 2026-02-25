@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>DATAGOD：一个用来伪造数据的PYTHON LIBRARY | 高策</title>
+<meta name="description" content="项目介绍">
+<meta name="keywords" content="github, python, pip">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="datagod：一个用来伪造数据的python library">
+<meta name="twitter:description" content="项目介绍">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="datagod：一个用来伪造数据的python library">
+<meta property="og:description" content="项目介绍">
+<meta property="og:url" content="https://gaocegege.com/Blog/datagod%E4%B8%80%E4%B8%AA%E7%94%A8%E6%9D%A5%E4%BC%AA%E9%80%A0%E6%95%B0%E6%8D%AE%E7%9A%84python-library/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>datagod：一个用来伪造数据的python library</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="datagod">datagod</h1>
+<p>datagod是一个用来『伪造』数据的python库，已经提交到了pypi上了，可以使用<code>pip install datagod</code>来安装使用，项目的地址在<a href="https://github.com/gaocegege/Data-God">https://github.com/gaocegege/Data-God</a>，请各位菊苣请拍~</p>
+<h2 id="想法来源">想法来源</h2>
+<p>曾经在参加数学建模比赛的时候，苦于绘图无力，曾经向队友抱怨过。队友提到，如果有现成的工具，可以直接拿来造出一些漂亮的图，那就再好不过了。当时觉得很有趣，但是一直以来都没有时间去写，最近刚刚过完几个Deadline，有时间去跳坑了。根据wakatime的记录，大概一共花了九个小时在这上面，还是挺浪费时间的Orz。总之希望能在有生之年再参加一次数学建模比赛，让它派上用场~</p>
+<h2 id="使用">使用</h2>
+<p>datagod想实现的功能是，给定一个函数，以及相应的参数，比如作用域之类的。首先，程序会根据函数的图像，在其周围产生一些点，然后根据这些点，再去拟合，这样拟合得到的数据，既有原函数的大致性质，又有一些拟合参数的属性可以得到，就可以用在MCM的论文中了^_^</p>
+<h3 id="示例">示例</h3>
+<p>比如说，给定一个函数<code>y = x</code>，作用域为[-10, 10]，代码如下所示：</p>
+<pre><code>from datagod import *
+def main():
+    testcase = DataGodBuilder()
+    testcase.setType(GraphType.getPolynomialType())\
+    .setTermList([0, 1])\
+    .setLowRange(-10)\
+    .setHighRange(10)\
+    .build()\
+    .draw()
+main()
+</code></pre>
+<p>程序就会返回一张图：</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/datagod/example.png" alt="example" height="300">
+	<figcaption>示例图</figcaption>
+</figure>
+<p>这张图中，名为raw data的就是根据给定的函数生成的数据，而fitting curve就是根据生成的数据拟合的曲线，同样会得到一些拟合参数：</p>
+<pre><code>Info: coff: [-0.03219724  0.99218986]
+Info: residuals: [ 6.13295169]
+Info: rank: 2
+Info: singular_values: [ 1.  1.]
+Info: rcond: 1.11022302463e-14
+</code></pre>
+<p>其中coff是函数的参数，<code>y = coff[0] * 1 + coff[1] * x</code>，其他则是一些拟合的误差等等的数据。</p>
+<p>说了这么多，那该如何给定输入呢。</p>
+<h3 id="输入格式">输入格式</h3>
+<p>datagod有一个主构造器类型，所有的所有都需要<code>DataGodBuilder</code>对象来构建。用户通过调用构造器的诸多set方法来设定参数，并在设定完所有参数后调用build函数来构建对象，构建出来的对象会有draw方法，负责绘制相应图像。</p>
+<p>目前呢，datagod一共支持两种类型的函数，一种是多项式类型的，一种是对数类型的，还在完善中。</p>
+<h4 id="多项式类型">多项式类型</h4>
+<p>对于一个多项式类型的函数而言，可以表示成：<code>y = p[0] * 1 + p[1] * x + p[2] * x ** 2 + ... + p[n] * x ** n</code>，那如果给定了参数数组p，就可以唯一地确定这个函数，所以如果要构建多项式类型的函数，需要有以下的设定：</p>
+<ul>
+<li><code>setType(GraphType.getPolynomialType())</code> 用来确定函数类型。</li>
+<li><code>setTermList(termlist: float List)</code> 用来确定函数参数，termlist里面的元素是项数，比如<code>[1, 2, 3]</code>，那就意味着函数是<code>1 + 2*x + 3*x**2</code>。</li>
+</ul>
+<h4 id="对数类型">对数类型</h4>
+<p>对于一个对数类型的函数而言，可以表示成：<code>y = term * log(base)[x] + intercept</code>，所以需要的设定为：</p>
+<ul>
+<li><code>setType(GraphType.getLogType())</code></li>
+<li><code>setLogTerm(term: float)</code></li>
+<li><code>setBase(base: float)</code></li>
+<li><code>setIntercept(intercept: float)</code></li>
+</ul>
+<h4 id="tobecontinued">ToBeContinued</h4>
+<h3 id="输出">输出</h3>
+<p>所有的draw方法的输出，都是一张使用matplotlib绘制出来的图像，同时会在terminal中反馈拟合的相关数据。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

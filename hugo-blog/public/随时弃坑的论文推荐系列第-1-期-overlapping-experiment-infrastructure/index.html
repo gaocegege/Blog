@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>随时弃坑的论文推荐系列第 1 期 OVERLAPPING EXPERIMENT INFRASTRUCTURE | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="随时弃坑的论文推荐系列第 1 期 Overlapping Experiment Infrastructure">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随时弃坑的论文推荐系列第 1 期 Overlapping Experiment Infrastructure">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E9%9A%8F%E6%97%B6%E5%BC%83%E5%9D%91%E7%9A%84%E8%AE%BA%E6%96%87%E6%8E%A8%E8%8D%90%E7%B3%BB%E5%88%97%E7%AC%AC-1-%E6%9C%9F-overlapping-experiment-infrastructure/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>随时弃坑的论文推荐系列第 1 期 Overlapping Experiment Infrastructure</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>随着年龄的增加，能够留给自己的时间越来越少。大部分时间都贡献给了工作、家庭和其他各种各样的事务。能够静下心来阅读论文、书籍的机会变得越来越宝贵。这一系列希望能够介绍个人在<a href="https://github.com/dyweb/papers-notebook/" title="阅读论文的过程">阅读论文的过程</a>中比较令我印象深刻的论文。不知道能够坚持多久，</p>
+<p>今天的主角是 Google 在 2010 年发表在 KDD'10 上的，关于 A/B 测试的论文 <a href="https://github.com/dyweb/papers-notebook/issues/232" title="Overlapping Experiment Infrastructure: More, Better, Faster Experimentation">Overlapping Experiment Infrastructure: More, Better, Faster Experimentation</a>。论文的一作是 <a href="https://www.linkedin.com/in/diane-tang-2a2477/" title="Diane Tang">Diane Tang</a>，Google Fellow。她在 Udacity 上有一门<a href="https://classroom.udacity.com/courses/ud257" title="关于 AB 测试的课程">关于 AB 测试的课程</a>，如果有兴趣可以额外关注一下。</p>
+<p>这篇文章可以视作是互联网大规模 A/B 测试（之前的工作主要关注在 web-based experiment 和小规模）系统领域的开山之作。工业界无论是 ToB 的 A/B 测试产品，还是内部的 A/B 测试工具，都或多或少借鉴了这篇论文的思想：</p>
+<ul>
+<li><a href="https://firebase.google.com/docs/ab-testing/abtest-config">https://firebase.google.com/docs/ab-testing/abtest-config</a> 谷歌 Firebase AB 测试</li>
+<li><a href="http://ab.testin.cn/docs/">http://ab.testin.cn/docs/</a> Testin 云测 AB 测试产品</li>
+<li><a href="https://www.optimizely.com/">https://www.optimizely.com/</a> Optimizely AB 测试产品</li>
+<li><a href="https://www.volcengine.cn/product/datatester">https://www.volcengine.cn/product/datatester</a> 字节跳动火山引擎 AB 测试产品</li>
+</ul>
+<p>谷歌在一些算法的改动，和 UI 的改动等方面，都在上线前进行 A/B 测试。比如一个按钮的样式是 A 好还是 B 好，一个算法的改动对 CTR 是否真的有帮助，都是需要通过线上的 A/B 实验来验证的。谷歌的这篇文章所描述的系统的目标是：</p>
+<ul>
+<li>高并行：支持更多的并行实验和更灵活的实验配置。谷歌作为世界上最成功的互联网公司之一，对 A/B 测试的需求是非常旺盛的，因此需要在线上支持同时运行不同的 A/B 测试实验，同时也需要支持对流量进行更多灵活配置。比如某些实验只想在日本地区的流量中进行等</li>
+<li>易用性：不合法的实验和质量较低的实验应该在运行前就被识别出来，同时一些标准的指标，如点击率等，应该被通用化，可以被任何实验使用而不需要做过多的采集工作</li>
+<li>通用性：系统的受众不只是软件工程师，应该可以让业务 BP 也能够简单快捷地建立实验。同时也应该支持流量灰度上线的功能，支持将效果好的实验组快速灰度发布到线上</li>
+<li>一个最简单的实现：实现一个系统，能够对流量根据实验中实验组的数量进行分流。这样流量很容易就不够用了，因为每一个实验都需要占用一部分流量，如果流量不够多，就不够得到统计学意义上有价值的结果。谷歌对这个问题的方案是分层实验的设计。</li>
+</ul>
+<p>在谷歌内部的 web search 架构中，所有的功能可以理解是微服务（文章里把它称作 binary）的，一个微服务有 binary 和 data 两部分，对应现在的微服务概念就是镜像和配置两部分。其中镜像的更新频率大约在周级别，而配置的更新会更加频繁，比如几个小时。一个微服务可能有几百个配置，一个新的 feature 通常也会有一到几个配置控制。</p>
+<p>因此一个典型的最简单的 A/B 测试，会将一个微服务的一个参数选不同的取值，比如 A 和 B，建立对比实验。参数会更新到不同的微服务实例中，流量导到不同取值的对照组上，观察它们的指标差异，得出统计学的观察，取值对指标是否有显著影响，什么取值更合适等。</p>
+<p>这里会涉及到分流算法的问题，怎么把用户到这一实验的流量划分到不同的对照组中。一个最简单的算法是随机分配，但是这样存在一个很大的问题，那就是一个用户的多个请求可能会被路由到不同的对照组中，这会对它的用户体验造成很大困扰。因此我们可以根据 user_id 分桶。比如将 user_id 哈希到不同的桶中，不同的桶分配给不同的对照组，这样可以保证不同的对照组有相同的流量，同时同一个用户的请求会路由到同一个对照组中。</p>
+<p>但是，这样还存在其他的问题：为每一个实验都需要占用一部分流量，如果流量不够多，就不够得到统计学意义上有价值的结果。谷歌对这个问题的方案是分层实验的设计。</p>
+<p>为了解决这个问题，谷歌扩展了之前的单层分流的方式，设计了多层的方案，并且引入了三个抽象：</p>
+<ul>
+<li>A domain is a segmentation of traffic.</li>
+<li>A layer corresponds to a subset of the system parameters.</li>
+<li>An experiment is a segmentation of traffic where zero or more system parameters can be given alternate values that change how the incoming request is processed.</li>
+</ul>
+<p><img src="https://static01.imgkr.com/temp/1783f730bf8c414da66ea8a7534b690f.png" alt=""></p>
+<p>在引入多层的概念后，不同的实验可以放置在不同层中。有些实验的取值是互斥的，比如蓝色背景对照组和蓝色字体对照组，是不应该同时对一个用户开启的。所以这样的实验可以放在同一层中。同一层的流量会保证一个请求只会经过一个实验。而独立的实验，则可以放在不同层中。</p>
+<p>在分流时，流量不再按照 hash(user_id) % 桶数量去划分，而是会根据 hash(user_id, layer_id) % 桶数量去划分。带上 layer_id 的目的是为了在层与层之间把流量打散。</p>
+<p>目前有公开资料的 AB 测试系统基本都是多层的设计，这样可以尽最大的可能复用流量，在流量有限的情况下进行更多的实验。作为 AB 测试系统的鼻祖，这篇论文无论从 writing 还是内容都非常扎实，推荐一读。</p>
+<p>PS：目前我也在基于这篇论文造一个轮子：<a href="https://github.com/dyweb/cloudab">github.com/dyweb/cloudab</a>，求关注（不知道啥时候能发布第一个版本</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

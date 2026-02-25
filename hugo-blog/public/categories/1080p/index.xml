@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>1080p on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/1080p/</link>
+    <description>Recent content in 1080p on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 30 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/1080p/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sublime Text2 Sidebar的字体大小修改</title>
+      <link>https://gaocegege.com/Blog/sublime-text2-sidebar%E7%9A%84%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E4%BF%AE%E6%94%B9/</link>
+      <pubDate>Sat, 30 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/sublime-text2-sidebar%E7%9A%84%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F%E4%BF%AE%E6%94%B9/</guid>
+      <description>&lt;p&gt;人生苦短，时间都浪费在调整字体上了~&lt;/p&gt;&#xA;&lt;h2 id=&#34;吐槽&#34;&gt;吐槽&lt;/h2&gt;&#xA;&lt;p&gt;=-=15寸的1080p的屏幕真是奇葩的存在。windows系统下的字体显示实在是捉急的不行。sublime text的侧边栏在1080p下字小的有点吓人。于是去找了找怎么修改侧边栏的字体。最终功夫不负有心人，在&lt;a href=&#34;http://www.sublimetext.com/forum/viewtopic.php?f=2&amp;amp;t=4799&#34;&gt;sublime text的官方论坛&lt;/a&gt;上找到了解决方法。&lt;/p&gt;&#xA;&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;&#xA;&lt;p&gt;首先需要要找到&lt;code&gt;.sublime-theme&lt;/code&gt;文件，一般如果没有对sublime做过修改的话是在&lt;code&gt;package&lt;/code&gt;里的&lt;code&gt;Theme-Default&lt;/code&gt;下的&lt;code&gt;default.sublime-theme&lt;/code&gt;，然后就是把所有&lt;code&gt;class&lt;/code&gt;名字是&lt;code&gt;sidebar_label&lt;/code&gt;的声明里都追加一句&lt;code&gt;font.size&amp;quot;: 15&lt;/code&gt;，这样就可以啦~&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>更改Chrome Developer Tools的字体</title>
+      <link>https://gaocegege.com/Blog/%E6%9B%B4%E6%94%B9chrome-developer-tools%E7%9A%84%E5%AD%97%E4%BD%93/</link>
+      <pubDate>Fri, 29 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E6%9B%B4%E6%94%B9chrome-developer-tools%E7%9A%84%E5%AD%97%E4%BD%93/</guid>
+      <description>&lt;p&gt;本子是15寸的1080p的屏幕，导致chrome F12的工具里字特别小，于是找了找修改大小的方法。&lt;/p&gt;&#xA;&lt;h2 id=&#34;位置&#34;&gt;位置&lt;/h2&gt;&#xA;&lt;p&gt;我的系统是&lt;code&gt;win8.1 64bit&lt;/code&gt;，chrome的版本是&lt;code&gt;38.0.2125.24 dev-m (64-bit)&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;改动是针对Custom.css进行的，文件位置是在&lt;code&gt;C:\Users\&amp;lt;user&amp;gt;\AppData\Local\Google\Chrome\User Data\Default\User StyleSheets&lt;/code&gt;，至于linux下是在&lt;code&gt;~/.config/chromium/Default/User StyleSheets&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;##修改&lt;/p&gt;&#xA;&lt;p&gt;win下的修改如下&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;body.platform-windows .monospace, body.platform-windows .source-code {  &#xA;    font-size: 16px !important;  &#xA;    font-family: Consolas, Lucida Console, monospace;  &#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;linux下&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;body.platform-linux .monospace, body.platform-linux .source-code {  &#xA;&#x9;font-size: 16px !important;  &#xA;&#x9;font-family: dejavu sans mono, monospace;  &#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;font-size是字体大小，font-family是字体。&lt;/p&gt;&#xA;&lt;h2 id=&#34;更多&#34;&gt;更多&lt;/h2&gt;&#xA;&lt;p&gt;你甚至可以改变developer tool的代码主题，&#xA;&lt;a href=&#34;http://be-evil.org/custom-your-chrome-inspector-code-theme.html&#34;&gt;个性化你的Chrome开发者工具代码主题&lt;/a&gt;。&lt;/p&gt;&#xA;&lt;p&gt;看起来特别虎！&lt;/p&gt;&#xA;&lt;p&gt;嗯，就是这样&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

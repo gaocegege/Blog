@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>强化学习框架 RAY 在 KUBERNETES 上的自动伸缩设计与实现 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="强化学习框架 Ray 在 Kubernetes 上的自动伸缩设计与实现">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习框架 Ray 在 Kubernetes 上的自动伸缩设计与实现">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6-ray-%E5%9C%A8-kubernetes-%E4%B8%8A%E7%9A%84%E8%87%AA%E5%8A%A8%E4%BC%B8%E7%BC%A9%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>强化学习框架 Ray 在 Kubernetes 上的自动伸缩设计与实现</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h2 id="背景">背景</h2>
+<p>强化学习，特别是深度强化学习，在近年来取得了令人瞩目的进展。除了应用于模拟器和游戏领域，在工业领域也正取得长足的进步。<a href="https://ray.readthedocs.io/en/latest/">Ray</a> 是一个为了强化学习或者类似的场景设计的机器学习框架，在最近，<a href="https://ray.readthedocs.io/en/latest/">Ray</a> 合并了在 Kubernetes 上实现 Ray 集群自动伸缩的<a href="https://github.com/ray-project/ray/pull/5492">代码请求</a>。因此，我们希望在本文中介绍这一新特性，以及上游社区采取的设计方案和其中的考量。</p>
+<h2 id="相关知识与工作">相关知识与工作</h2>
+<h3 id="强化学习">强化学习</h3>
+<p>在正文之前，首先简单介绍下 Ray 面向的场景：强化学习。强化学习是机器学习方法中的一种，这一问题可以被抽象为代理与环境之间的互动关系。环境是代理所处的外部环境，会与代理产生交互。在每次迭代时，代理会观察到部分或者全部的环境，然后决定采取某种行动，而采取的行动又会对环境造成影响。不同的行动会收到来自环境的不同反馈（Reward），而代理的目标就是最大化累积反馈（Return）[1]。</p>
+<p>其中，代理可以采取的行动的空间（Action Space）可能是离散的，如围棋等。也可能是连续的。而不少的强化学习算法只能支持连续的空间或者离散的空间。</p>
+<p>在采取行动时，代理会根据某种策略（Policy）选择行动。策略可以是确定性的，也可以是带有随机性的。在深度强化学习中，策略会是参数化的，即策略的输出是输入是一组参数的函数（参数比如神经网络的权重和 bias）</p>
+<p>强化学习领域有一个非常生动的例子：游戏 Flappy Bird 的 AI [2]。在这一个例子中，代理就是玩家控制的小鸟，而环境就是充满了管道的飞行环境。小鸟的行动空间只有两个动作：向上飞或者什么都不做，原地下坠。同时小鸟的目标就是不断续命，飞行下去。这一问题可以被很好地用强化学习的方法建模解决。具体可见参考文献 [2]。</p>
+<h2 id="正文">正文</h2>
+<h3 id="ray-架构">Ray 架构</h3>
+<p>在介绍 Ray 如何在 Kubernetes 上实现自动伸缩之前，先大致介绍一下如何使用 Ray。Ray 本身其实并没有实现强化学习的算法，而是一个基于 <a href="https://en.wikipedia.org/wiki/Actor_model">Actor 模型</a>实现的并行计算库。而诸多高层次的强化学习算法则是由 <a href="https://ray.readthedocs.io/en/latest/rllib.html">RLLib</a> 实现。这里为了简化问题，不多讨论 <a href="https://ray.readthedocs.io/en/latest/rllib.html">RLLib</a> 是如何利用 Ray 提供的功能实现强化学习算法的过程。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/ray/ray.png" height="500" width="500">
+    <figcaption>RLLib 与 Ray 的关系</figcaption>
+</figure>
+<p>万物先从 Hello World 开始，Ray 下的 Hello World 如下所示。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ray</span>
+</span></span><span class="line"><span class="cl"><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@ray.remote</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s2">&#34;Hello world !&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">object_id</span> <span class="o">=</span> <span class="n">hello</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">hello_obj</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">object_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">hello_obj</span><span class="p">)</span>
+</span></span></code></pre></div><p>这一例子尽管很简单，但用到了许多 Ray 特有的功能。首先，是 <code>@ray.remote</code> 的注解。这一注解的作用是声明这一函数是可以被远程，且异步地执行的。为了实现远程执行，函数的返回并不是在函数中定义的 <code>Hello world!</code>，而是一个 Object ID（确切地说，是一个 Future 对象），随后创建一个任务（Task），并且会在未来的某个时刻，交由一个 Worker 进程执行，而结果可以利用 Object ID 通过 <code>ray.get(object_id)</code> 获得。</p>
+<p>Ray 的<a href="https://arxiv.org/abs/1703.03924">论文</a>中有一个 Ray 的整体架构图，但论文发布于 2017 年 3 月份，Ray 开源实现与它相比，有不少出入。这里以代码实现为主，介绍一下 Ray 的一些关键组件。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/ray/arch.png" height="500" width="500">
+    <figcaption>Ray 论文中的架构图</figcaption>
+</figure>
+<p>Ray 的节点需要运行两个进程，一个是 RayLet 进程，一个是 Plasma Store（对应图中的 Object Store）进程。其中 RayLet 进程中维护着一个 Node Manager，和一个 Object Manager。Ray 提供了 Python 的 API，而 RayLet 是用 C++ 实现的。其中的 Node Manager 充当了论文中 Local Scheduler 的角色，主要负责管理 Node 下的 Worker，调度在 Node 上的任务，管理任务间的依赖顺序等。而其中的 Object Manager，主要提供了从其他的 Object Manager Pull/Push Object 的能力。</p>
+<p><a href="https://github.com/ray-project/plasma">Plasma Store</a> 进程，是一个共享内存的对象存储进程。原本 Plasma 是 Ray 下的，而目前已经是 Apache Arrow 的一部分了。之前介绍 Ray 在执行带有 <code>remote</code> 注解的函数时并不会立刻运行，而是会将其作为任务分发，而返回也会被存入 Object Store 中。这里的 Object Store 就是 Plasma[4]。</p>
+<p>而论文中的 Control State，在实现中被叫做 GCS，是基于 Redis 的存储。而 GCS 是运行在一类特殊的节点上的。这类特殊的节点被称作 Head Node。它不仅会运行 GCS，还会运行对其他节点的 Monitor 进程等。</p>
+<p>Ray 提交任务的方式与 Spark 非常类似，需要利用 Driver 来提交任务，而任务会在 Worker 上进行执行。Ray 支持的任务分为两类，分别是任务（Task）和 Actor 方法（ActorMethod）。其中任务就是之前的例子中的被打上了 <code>remote</code> 注解的函数。而 Actor 方法是被打上了 <code>remote</code> 注解的类（或叫做 Actor）的成员方法和构造方法。两者的区别在于任务都是无状态的，而 Actor 会保有自己的状态，因此所有的 Actor 方法需要在 Actor 所在的节点才能执行。这也是 Ray 跟 Spark 最大的不一样的地方。Spark 提交的是静态的 DAG，而 Ray 提交的是函数。</p>
+<h3 id="ray-的集群化运行">Ray 的集群化运行</h3>
+<p>因此，如果需要一个 Ray 集群，那么一共需要两个角色的节点，分别是 Head 和 Worker。如果是在传统服务器上部署，可以参考 <a href="https://ray.readthedocs.io/en/latest/using-ray-on-a-cluster.html">Manual Cluster Setup</a>。而如果是在 Kubernetes 上部署，可以参考 <a href="https://ray.readthedocs.io/en/latest/deploy-on-kubernetes.html">Deploying on Kubernetes</a>。</p>
+<p>除此之外，还有一种相对而言更简单的方式，那就是利用 <a href="https://ray.readthedocs.io/en/latest/autoscaling.html">Ray Autoscaler</a> 自动地创建集群。Autoscaler 是 Ray 实现的一个与 Kubernetes HPA 类似的特性。它可以根据集群的负载情况，自动地调整集群的规模。</p>
+<p>其需要的配置大致如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># A unique identifier for the head node and workers of this cluster.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">cluster_name</span><span class="p">:</span><span class="w"> </span><span class="l">minimal</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># The maximum number of worker nodes to launch in addition to the head</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># node. This takes precedence over min_workers. min_workers default to 0.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">max_workers</span><span class="p">:</span><span class="w"> </span><span class="m">5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># Cloud-provider specific configuration.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">provider</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">gcp</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l">us-west1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">availability_zone</span><span class="p">:</span><span class="w"> </span><span class="l">us-west1-a</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">project_id</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="c"># Globally unique project id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># How Ray will authenticate with newly launched nodes.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">auth</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ssh_user</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu</span><span class="w">
+</span></span></span></code></pre></div><p>用户只需要提供期望的 Worker Node 数量，以及<strong>节点资源的提供者</strong>（上面的例子中是 GCP），Ray 就会根据负载（默认的阈值是 80%）进行自动扩缩容。</p>
+<h3 id="自动扩缩容特性在-kubernetes-上的设计与实现">自动扩缩容特性在 Kubernetes 上的设计与实现</h3>
+<p>自动扩缩容是一个非常具有吸引力的特性。Ray 在之前只支持在 Kubernetes 上运行 Ray 集群，而不支持自动扩缩容。这一功能最近刚刚被实现并且合并到了代码库中。在实现的过程中，Ray 社区尝试了不少思路。</p>
+<h4 id="kubernetes-native-的实现思路">Kubernetes Native 的实现思路</h4>
+<p>首先出现在社区中的是 Kubernetes Native 的实现思路。社区创建了 <a href="https://github.com/ray-project/ray-operator/">ray-project/ray-operator</a>。这一思路有两个探索性质的实现：<a href="https://github.com/gaocegege/ray-operator">gaocegege/ray-operator</a> 和 <a href="https://github.com/silveryfu/ray-operator">silveryfu/ray-operator</a>。其中前者是定义了一个 CRD <code>Ray</code>，利用 Deployment 创建 Head 和 Worker 节点。一个最小化的配置如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">ray.kubeflow.org/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Ray</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sample-cluster</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">worker</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">header</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span></code></pre></div><p>在这样的设计中，可以直接依赖 Kubernetes HPA 进行自动伸缩。但是，这里有一个比较严重的缺陷。Ray 在做 Scale Down 的时候，会根据 Worker 节点的一些状态来判断最适合被回收的节点。一个最直观的例子是要尽可能回收没有运行 Actor 或者没有正在运行的任务的节点。而目前 Kubernetes HPA 不支持如此细粒度的逻辑。在 HPA 的实现中，它是通过操纵 Deployment 的 Replicas 来实现自动扩缩容的。而 Deployment 通过 ReplicaSet 来删除多余的实例。而 ReplicaSet Controller 在删除的时候，通过<a href="https://github.com/kubernetes/kubernetes/blob/7e4c3096fe71afc6a23c273b3309ed5db7289d8c/pkg/controller/controller_utils.go#L703">排序</a>来确定应该删除哪些实例。排序算法本身不具备扩展性，会先从 UnReady 的 Pod 开始，依次删除，直到所有的实例都被删除或者删除到了指定数量。利用 <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/0007-pod-ready%2B%2B.md">Readiness Gate</a>，可以实现这样的特性，但是首先这一特性比较新，在 1.14 才刚刚 Stable。其次这样的实现方式需要非常多的 Dirty Work，并且比较难以维护和调试。</p>
+<p><a href="https://github.com/silveryfu/ray-operator">silveryfu/ray-operator</a> 的实现，定义了两个 CRD，<code>RayHead</code> 和 <code>RayWorker</code>，同样采取 Deployment 来创建 Head 和 Worker。这样的实现同样具有上述问题。</p>
+<h4 id="ray-native-的实现思路">Ray Native 的实现思路</h4>
+<p>由于 Ray 本身也有节点的概念，因此 Ray 自身也存在具有一定扩展性的自动扩缩容的实现。既然利用 Kubernetes HPA 很难实现精细化的 Scale Down，那利用 Ray 自身的 Autoscaler 抽象，是否可以实现这样的特性呢？答案是肯定的，社区目前的实现也是如此思路。</p>
+<p>在之前介绍 Ray 的扩缩容的时候，提到了<strong>节点资源的提供者</strong>这样一个概念。这其实就是 Ray 自身提供的，为了支持不同的平台的扩缩容的抽象。任何平台，只要可以实现 <code>Provider</code> 接口，就可以利用 Ray 原生的命令进行集群的扩缩容：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">NodeProvider</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Interface for getting and returning nodes from a Cloud.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    NodeProviders are namespaced by the `cluster_name` parameter; they only
+</span></span></span><span class="line"><span class="cl"><span class="s2">    operate on nodes within that namespace.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Nodes may be in one of three states: {pending, running, terminated}. Nodes
+</span></span></span><span class="line"><span class="cl"><span class="s2">    appear immediately once started by `create_node`, and transition
+</span></span></span><span class="line"><span class="cl"><span class="s2">    immediately to terminated when `terminate_node` is called.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_config</span><span class="p">,</span> <span class="n">cluster_name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">provider_config</span> <span class="o">=</span> <span class="n">provider_config</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_name</span> <span class="o">=</span> <span class="n">cluster_name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">non_terminated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_filters</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Return a list of node ids filtered by the specified tags dict.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        This list must not include terminated nodes. For performance reasons,
+</span></span></span><span class="line"><span class="cl"><span class="s2">        providers are allowed to cache the result of a call to nodes() to
+</span></span></span><span class="line"><span class="cl"><span class="s2">        serve single-node queries (e.g. is_running(node_id)). This means that
+</span></span></span><span class="line"><span class="cl"><span class="s2">        nodes() must be called again to refresh results.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Examples:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &gt;&gt;&gt; provider.non_terminated_nodes({TAG_RAY_NODE_TYPE: &#34;worker&#34;})
+</span></span></span><span class="line"><span class="cl"><span class="s2">            [&#34;node-1&#34;, &#34;node-2&#34;]
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Return whether the specified node is running.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Return whether the specified node is terminated.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">node_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Returns the tags of the given node (string dict).&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">external_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Returns the external ip of the given node.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">internal_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Returns the internal ip (Ray ip) of the given node.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">create_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_config</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Creates a number of nodes within the namespace.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">set_node_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Sets the tag values (string dict) for the specified node.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">terminate_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Terminates the specified node.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">terminate_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_ids</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Terminates a set of nodes. May be overridden with a batch method.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="n">node_ids</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;NodeProvider: &#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;</span><span class="si">{}</span><span class="s2">: Terminating node&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_id</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">terminate_node</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Clean-up when a Provider is no longer required.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">pass</span>
+</span></span></code></pre></div><p>仔细观察接口，就会发现其实这些接口都可以利用 Python 的 kubernetes client 来完成。</p>
+<p>比如 <code>non_terminated_nodes</code>，这一接口的返回是当前集群还在运行的节点，我们可以获得 Ray 所有的实例 Pod，进而排除 Failed/Unknown/Succeeded/Terminating 的 Pod 获得。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">non_terminated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_filters</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Match pods that are in the &#39;Pending&#39; or &#39;Running&#39; phase.</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Unfortunately there is no OR operator in field selectors, so we</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># have to match on NOT any of the other phases.</span>
+</span></span><span class="line"><span class="cl">        <span class="n">field_selector</span> <span class="o">=</span> <span class="s2">&#34;,&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;status.phase!=Failed&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;status.phase!=Unknown&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;status.phase!=Succeeded&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;status.phase!=Terminating&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">tag_filters</span><span class="p">[</span><span class="n">TAG_RAY_CLUSTER_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_name</span>
+</span></span><span class="line"><span class="cl">        <span class="n">label_selector</span> <span class="o">=</span> <span class="n">to_label_selector</span><span class="p">(</span><span class="n">tag_filters</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pod_list</span> <span class="o">=</span> <span class="n">core_api</span><span class="p">()</span><span class="o">.</span><span class="n">list_namespaced_pod</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">field_selector</span><span class="o">=</span><span class="n">field_selector</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">label_selector</span><span class="o">=</span><span class="n">label_selector</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">[</span><span class="n">pod</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">pod</span> <span class="ow">in</span> <span class="n">pod_list</span><span class="o">.</span><span class="n">items</span><span class="p">]</span>
+</span></span></code></pre></div><p>其他接口也有类似的实现。通过这样的方式，用户可以利用 Ray 原生的命令，实现在 Kubernetes 集群上的扩缩容，具有非常统一的用户体验。</p>
+<h2 id="结">结</h2>
+<p>本文介绍的内容到这里就结束了，不过值得深入的内容仍然有很多。Spark 目前可以直接<a href="http://spark.apache.org/docs/latest/running-on-kubernetes.html">利用 Kubernetes 作为 Executor</a> 把 Spark 应用利用 <code>spark-submit</code> 提交给 Kubernetes 执行。而 Ray 是否也可以做到这样的方式呢？Ray 本身依赖着 GCS，和运行在各个节点的 Object Store，这种按需执行的方式无疑比 Spark 要更加复杂。而且与 <a href="https://ray.readthedocs.io/en/latest/rllib.html">RLLib</a> 的兼容性也是一个问题。目前 Ray 自身有着 SCRIPT_MODE 这样一个模式。在这样的模式下，可能是可以尝试的。除此之外，Kubernetes Native 的实现在不需要自动扩缩容的场景下，是否具有一定的优势？这里不再展开讨论了，Ray 作为 RISE Lab 新推出的系统，从设计而言，还是有非常多值得称道之处，希望能够在后续文章中再一起探讨。</p>
+<h2 id="参考文献">参考文献</h2>
+<ul>
+<li>[1]: <a href="https://spinningup.openai.com/en/latest/spinningup/rl_intro.html">Part 1: Key Concepts in RL - OpenAI</a></li>
+<li>[2]: <a href="https://zhuanlan.zhihu.com/p/38308513">带你走进强化学习－Flappy Bird游戏自学习 - 知乎文章</a></li>
+<li>[3]: <a href="https://ray.readthedocs.io/en/latest/walkthrough.html">Ray Walkthrough</a></li>
+<li>[4]: <a href="https://ray-project.github.io/2017/08/08/plasma-in-memory-object-store.html">The Plasma In-Memory Object Store</a></li>
+</ul>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>在 KUBERNETES 上运行 SPARK 的一次有趣的 DEBUG 之旅 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="在 Kubernetes 上运行 Spark 的一次有趣的 Debug 之旅">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Kubernetes 上运行 Spark 的一次有趣的 Debug 之旅">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%9C%A8-kubernetes-%E4%B8%8A%E8%BF%90%E8%A1%8C-spark-%E7%9A%84%E4%B8%80%E6%AC%A1%E6%9C%89%E8%B6%A3%E7%9A%84-debug-%E4%B9%8B%E6%97%85/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>在 Kubernetes 上运行 Spark 的一次有趣的 Debug 之旅</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>Spark 是大数据领域目前的事实标准之一，Google 开源的 <a href="https://github.com/GoogleCloudPlatform/spark-on-k8s-operator">spark-on-k8s-operator</a>，使得在 Kubernetes 上也可以便捷地运行 Spark 任务，因此被微软，Salesforce，才云科技（我司）等公司广泛应用。然而在采用的过程中，一个近期出现在测试环境中的问题，出现在了我们的面前。问题的表象与<a href="https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/537">这一 Issue</a> 一样，在创建 Spark Application 时，spark-on-k8s-operator 报错：</p>
+<pre tabindex="0"><code>I0702 08:24:10.298358      11 controller.go:522] Trying to update SparkApplication spark/test-volume-claim, from: [{  2019-07-02 07:26:25 +0000 UTC 0001-01-01 00:00:00 +0000 UTC { 0    } {FAILED failed to run spark-submit for SparkApplication spark/test-volume-claim: Exception in thread &#34;main&#34; io.fabric8.kubernetes.client.KubernetesClientException: Operation: [create]  for kind: [Pod]  with name: [null]  in namespace: [spark]  failed.
+	at io.fabric8.kubernetes.client.KubernetesClientException.launderThrowable(KubernetesClientException.java:62)
+	at io.fabric8.kubernetes.client.KubernetesClientException.launderThrowable(KubernetesClientException.java:71)
+	at io.fabric8.kubernetes.client.dsl.base.BaseOperation.create(BaseOperation.java:363)
+	at org.apache.spark.deploy.k8s.submit.Client$$anonfun$run$2.apply(KubernetesClientApplication.scala:141)
+	at org.apache.spark.deploy.k8s.submit.Client$$anonfun$run$2.apply(KubernetesClientApplication.scala:140)
+	at org.apache.spark.util.Utils$.tryWithResource(Utils.scala:2543)
+	at org.apache.spark.deploy.k8s.submit.Client.run(KubernetesClientApplication.scala:140)
+	at org.apache.spark.deploy.k8s.submit.KubernetesClientApplication$$anonfun$run$5.apply(KubernetesClientApplication.scala:250)
+	at org.apache.spark.deploy.k8s.submit.KubernetesClientApplication$$anonfun$run$5.apply(KubernetesClientApplication.scala:241)
+	at org.apache.spark.util.Utils$.tryWithResource(Utils.scala:2543)
+	at org.apache.spark.deploy.k8s.submit.KubernetesClientApplication.run(KubernetesClientApplication.scala:241)
+	at org.apache.spark.deploy.k8s.submit.KubernetesClientApplication.start(KubernetesClientApplication.scala:204)
+	at org.apache.spark.deploy.SparkSubmit.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:849)
+	at org.apache.spark.deploy.SparkSubmit.doRunMain$1(SparkSubmit.scala:167)
+	at org.apache.spark.deploy.SparkSubmit.submit(SparkSubmit.scala:195)
+	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:86)
+	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:924)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:933)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+Caused by: java.net.SocketTimeoutException: timeout
+    ...
+	... 16 more
+Caused by: java.net.SocketException: Socket closed
+	at java.net.SocketInputStream.read(SocketInputStream.java:204)
+    ...
+	... 43 more
+</code></pre><p>在原 Issue 中，这一问题通过 <code>-enable-webhook=false</code> 禁用掉 Spark 的 Mutating Webhook 后，可以被避免，但在我们遇到的问题环境中，禁用 Webhook 并不能解决问题。至于为什么在原 Issue 中禁用 Webhook 可以奏效，这里就要介绍一下 spark-on-k8s-operator 的工作流程了。</p>
+<figure>
+	<img src="https://raw.githubusercontent.com/GoogleCloudPlatform/spark-on-k8s-operator/master/docs/architecture-diagram.png" height="500" width="500">
+    <figcaption>spark-on-k8s-operator 的设计</figcaption>
+</figure>
+<p>当用户提交了一个 SparkApplication（一个由 spark-on-k8s-operator 定义的 CRD）时，spark-on-k8s-operator 会为这一 SparkApplication 创建一个进程执行 spark-submit 。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">runSparkSubmit</span><span class="p">(</span><span class="nx">submission</span><span class="w"> </span><span class="o">*</span><span class="nx">submission</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">sparkHome</span><span class="p">,</span><span class="w"> </span><span class="nx">present</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nf">LookupEnv</span><span class="p">(</span><span class="nx">sparkHomeEnvVar</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">present</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">glog</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="s">&#34;SPARK_HOME is not specified&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">filepath</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">sparkHome</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;/bin/spark-submit&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">cmd</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">execCommand</span><span class="p">(</span><span class="nx">command</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">args</span><span class="o">...</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">glog</span><span class="p">.</span><span class="nf">V</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nf">Infof</span><span class="p">(</span><span class="s">&#34;spark-submit arguments: %v&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">cmd</span><span class="p">.</span><span class="nx">Args</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">cmd</span><span class="p">.</span><span class="nf">Output</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">glog</span><span class="p">.</span><span class="nf">V</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nf">Infof</span><span class="p">(</span><span class="s">&#34;spark-submit output: %s&#34;</span><span class="p">,</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">output</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">errorMsg</span><span class="w"> </span><span class="kt">string</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">exitErr</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">err</span><span class="p">.(</span><span class="o">*</span><span class="nx">exec</span><span class="p">.</span><span class="nx">ExitError</span><span class="p">);</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">errorMsg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">exitErr</span><span class="p">.</span><span class="nx">Stderr</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// The driver pod of the application already exists.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="nx">errorMsg</span><span class="p">,</span><span class="w"> </span><span class="nx">podAlreadyExistsErrorCode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">glog</span><span class="p">.</span><span class="nf">Warningf</span><span class="p">(</span><span class="s">&#34;trying to resubmit an already submitted SparkApplication %s/%s&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">errorMsg</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to run spark-submit for SparkApplication %s/%s: %s&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">errorMsg</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to run spark-submit for SparkApplication %s/%s: %v&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span><span class="w"> </span><span class="nx">submission</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>spark-submit 其实是一个 bash 脚本，最后真正执行的命令类似如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/home/gaocegege/.jenv/versions/1.8/bin/java -cp /home/gaocegege/Applications/spark/conf/:/home/gaocegege/Applications/spark/jars/* -Xmx1g org.apache.spark.deploy.SparkSubmit <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span> java -Xmx128m -cp /home/gaocegege/Applications/spark/jars/* org.apache.spark.launcher.Main org.apache.spark.deploy.SparkSubmit <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span></code></pre></div><p>Operator 创建进程来执行 spark-submit，它会通过 Kubernetes 的 Java Client，利用 SparkApplication CRD 提供的配置，在集群上创建出对应的 Driver Pod 和 Service。随后，Driver 会再利用配置和 Kubernetes 的 Java Client，在集群上创建出对应的 Executor。</p>
+<p>而我们遇到的问题，就出现在第一步，在 spark-submit 创建 Driver Pod 时遇到了 Timeout。在 Issue 中作者通过禁用了 Webhook 的方式，避免了因为 Webhook 导致响应时间超时的问题。而在我们遇到的问题中，这一方式并没有奏效。</p>
+<p>在初步走读了 <code>spark/resource-managers/kubernetes</code> 的代码后，我们发现了一个可能的原因：在与 Kubernetes APIServer 交互时的 cert 问题可能会导致 timeout。随后我们尝试把宿主机的 crt 拷贝到容器中，然后手动指定 <code>spark.kubernetes.authenticate.submission.caCertFile</code> 参数：</p>
+<pre tabindex="0"><code>kubectl -n kube-system cp /etc/kubernetes/certs/server.crt clever-spark-operator-operator-v1-0-78bc4b5b6b-klfvm:server.crt
+/opt/spark/bin/spark-submit --conf spark.kubernetes.authenticate.submission.caCertFile=/opt/spark/work-dir/server.crt  --class org.apache.spark.examples.SparkPi --master k8s://https://10.254.0.1:443 --deploy-mode cluster --conf spark.kubernetes.namespace=smoking-test --conf spark.app.name=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.driver.pod.name=sparkapplication-20200110040748-rqb5mlkf-driver --conf spark.kubernetes.submission.waitAppCompletion=false --conf spark.kubernetes.namespace=smoking-test --conf spark.eventLog.dir=/clever/events --conf spark.eventLog.enabled=true --conf spark.kubernetes.driver.label.sparkoperator.k8s.io/app-name=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.driver.label.sparkoperator.k8s.io/launched-by-spark-operator=true --conf spark.kubernetes.driver.label.sparkoperator.k8s.io/submission-id=fbdf4adb-e336-44f7-b817-9937da8c37ca --conf spark.kubernetes.driver.pod.name=sparkapplication-20200110040748-rqb5mlkf-driver --conf spark.kubernetes.driver.container.image=******** --conf spark.driver.cores=200.000000 --conf spark.kubernetes.driver.limit.cores=300 --conf spark.driver.memory=500m --conf spark.driver.memoryOverhead=750m --conf spark.kubernetes.authenticate.driver.serviceAccountName=default --conf spark.kubernetes.driver.label.job-name=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.driver.annotation.helm.sh/path=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.driver.annotation.helm.sh/release=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.driver.annotation.helm.sh/namespace=smoking-test --conf spark.kubernetes.executor.label.sparkoperator.k8s.io/app-name=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.executor.label.sparkoperator.k8s.io/launched-by-spark-operator=true --conf spark.kubernetes.executor.label.sparkoperator.k8s.io/submission-id=fbdf4adb-e336-44f7-b817-9937da8c37ca --conf spark.executor.instances=1 --conf spark.kubernetes.executor.container.image=******* --conf spark.executor.cores=1 --conf spark.kubernetes.executor.limit.cores=1500m --conf spark.executor.memory=600m --conf spark.executor.memoryOverhead=900m --conf spark.kubernetes.executor.label.job-name=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.executor.annotation.helm.sh/release=sparkapplication-20200110040748-rqb5mlkf --conf spark.kubernetes.executor.annotation.helm.sh/namespace=smoking-test --conf spark.kubernetes.executor.annotation.helm.sh/path=sparkapplication-20200110040748-rqb5mlkf local:///library/spark-examples_2.11-2.4.0.jar
+</code></pre><p>但问题仍然没有得到解决，报错还是与之前一样。于是我们开始寻找其他的可能。后来，在检查 operator 的资源配额时，我们发现它的内存配额与其他的 operator 一样，被统一配置了较小的内存资源的 Limit 值。而 spark-on-k8s-operator 由于在创建 SparkApplication 后，会创建 JVM 来执行 spark-submit，所以它需要的内存应该会比其他 operator 更多。所以，我们尝试调整了 spark-on-k8s-operator 的资源配额，结果问题果然解决了。</p>
+<p>而正当我们松了一口气时，在调整完配额的几天后，我们又遇到了同样的报错，而这一次，无论怎么调整配额，都不能解决这一问题了。在之前，有同事（我司 CTO 邓老师）提过有可能与 JDK 版本有关，我们在容器内的 JDK 版本是 1.8.0_181。再一次遇到这一问题后，我们尝试升级了 SparkApplication 的版本，以及上游 Spark 的版本，和 JDK 的版本（1.8.0_232），但问题仍然还是会出现。所以我们断定，这应该与我们集群环境有关，而不是上游版本的问题。</p>
+<p>于是，我们开始在 operator 容器内，利用 serviceaccount，开始手动地访问 APIServer 测试是否能够与其正常交互。结果，确实发现了问题。在通过 APIServer 的 API 去创建 Pod 时，发现请求的响应时间确实非常久，大约需要 30 秒。这可能超出了 spark-submit 使用的 Kubernetes Java Client 的默认等待时间。</p>
+<pre tabindex="0"><code>CA_CERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+curl --cacert $CA_CERT -H &#34;Authorization: Bearer $TOKEN&#34;  -w &#34;@curl-format.txt&#34; -o /dev/null -s &#34;https://kubernetes:443/api/v1/namespaces/default/pods/&#34;  -H &#39;Content-Type: application/json&#39; -d @pod.json
+
+    time_namelookup:  0.000096
+       time_connect:  0.001206
+    time_appconnect:  0.009772
+   time_pretransfer:  0.010172
+      time_redirect:  0.000000
+ time_starttransfer:  0.010246
+                    ----------
+         time_total:  30.022177
+</code></pre><p>通过代码阅读，我们发现 <a href="https://github.com/fabric8io/kubernetes-client#configuring-the-client">spark-submit 使用的 Kubernetes Java Client</a> 支持通过环境变量 <code>KUBERNETES_REQUEST_TIMEOUT</code> 来设置请求的超时时间。在设置了一个相对较大的值后，终于解决了这一问题。</p>
+<p>但是，spark-submit 成功创建了 Driver Pod 后，Driver Pod 也报错，报错与 spark-submit 的报错基本一致，请求超时。随后我们照猫画虎，在为 Driver Pod 也配置了相应的环境变量 <code>KUBERNETES_REQUEST_TIMEOUT</code> 后，终于彻底圆满地解决了这一问题。而后续发现，创建 Pod 的高延迟，来自于环境上某个 Webhook 的原因。虽然不是 spark-on-k8s-operator 自身的，但原 Issue 中关于 Webhook 的回复其实也暗示了问题的根本原因。</p>
+<p>在存储与计算分离的大势所趋下，Spark on Kubernetes 一定会得到越来越多的使用和关注。而技术堆栈的复杂程度也随之越来越高。在复杂的系统中，找出引起问题的导火索，并且修复它，真的是件非常有乐趣的事情。做 Manneken Pis 的感觉，还真的是很棒呢（</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

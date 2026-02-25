@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>LEETCODE-4 MEDIAN-OF-TWO-SORTED-ARRAYS记录 | 高策</title>
+<meta name="description" content="LeetCode做题记录">
+<meta name="keywords" content="Algorithm">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="LeetCode-4 Median-of-Two-Sorted-Arrays记录">
+<meta name="twitter:description" content="LeetCode做题记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode-4 Median-of-Two-Sorted-Arrays记录">
+<meta property="og:description" content="LeetCode做题记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/leetcode-4-median-of-two-sorted-arrays%E8%AE%B0%E5%BD%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>LeetCode-4 Median-of-Two-Sorted-Arrays记录</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="问题描述">问题描述</h1>
+<blockquote>
+<p>There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
+</blockquote>
+<h1 id="想法与实现">想法与实现</h1>
+<p>这道题跟前面的题目都有些不一样，不一样的地方在于它规定了算法的时间复杂度。一开始我想先写一个简单的AC版本，先合并有序的数组，然后再在常数时间内找到他们的Median Number。这样的时间复杂度是O(min(m, n))。实现很简单，就不贴了。</p>
+<p>本来是想看看这个方法的报错会是什么，没想到直接AC了。这说明他们的OJ服务器应该不检查代码的时间复杂度。你把合并的数组用sort方法去合并，还是能过。</p>
+<p>后来就开始想题目要求复杂度的算法了，看到log，应该比较自然会想到二分，或者说分治。我最先想到的是快速选择。借鉴这种思想，我觉得是可以这样来实现的：将中位数的问题转换为求第K大元素的问题。而求解第K大元素的问题，应该怎么来做呢。首先，这是有序数组，那求第K大问题应该还是比较自然可以想到，类似二分查找的做法。而这个问题的二分查找跟一般的二分查找不同的地方在于，他是对两个数组进行二分查找，需要不断缩小两个数组的搜索范围。</p>
+<h2 id="logm--logn">log(m) + log(n)</h2>
+<p>我自己做了半天，老是遇到问题，于是就放弃了= =后来参考了一篇文章，感觉这种方法，还是挺难想的。首先需要说一个简单的观察：</p>
+<pre><code>Maintaining the invariant
+i + j = k – 1,
+If Bj-1 &lt;= Ai &lt;= Bj, then Ai must be the k-th smallest,
+Else if Ai-1 &lt;= Bj &lt;= Ai, then Bj must be the k-th smallest.
+</code></pre>
+<p>这个观察，就是在i+j=k-1的基础上，确定第K小的元素的方法。那接下来就要看看如何缩减这个问题的规模。缩减规模，也是建立在一个观察上的。大致就是说，如果在满足上面的约束的情况下，如果Ai和Bj都不是第K大的元素，那么必定一个大于第K大的元素，另外一个小于第K大的元素。所以就可以对问题的范围进行缩减了，每次判断，对于小的那个元素，可以排除掉在该数组中比该元素更小的那些，对于大的元素，可以排除掉比他更大的元素，这样就可以不断的减小问题的规模。整个的代码就是这样的~</p>
+<pre><code>double findKthElement(int A[], int m, int B[], int n, int k) 
+{
+    int i = (int)((double)m / (m+n) * (k-1));
+    int j = (k-1) - i;
+    // invariant: i + j = k-1
+    // Note: A[-1] = -INF and A[m] = +INF to maintain invariant
+    int Ai_1 = ((i == 0) ? INT_MIN : A[i-1]);
+    int Bj_1 = ((j == 0) ? INT_MIN : B[j-1]);
+    int Ai   = ((i == m) ? INT_MAX : A[i]);
+    int Bj   = ((j == n) ? INT_MAX : B[j]);
+
+    if (Bj_1 &lt;= Ai &amp;&amp; Ai &lt;= Bj)
+        return Ai;
+    else if (Ai_1 &lt;= Bj &amp;&amp; Bj &lt;= Ai)
+        return Bj;
+
+    // if none of the cases above, then it is either:
+    if (Ai &lt; Bj)
+    // exclude Ai and below portion
+    // exclude Bj and above portion
+        return findKthElement(A+i+1, m-i-1, B, j, k-i-1);
+    else /* Bj &lt; Ai */
+    // exclude Ai and above portion
+    // exclude Bj and below portion
+        return findKthElement(A, i, B+j+1, n-j-1, k-j-1);
+}
+
+double findMedianSortedArrays(int A[], int m, int B[], int n) {
+	int k = (m + n + 1) / 2;
+    if ((m + n) % 2 == 1)
+        return findKthElement(A, m, B, n, k);
+    else
+    {
+        return ((double) findKthElement(A, m, B, n, k) + (double) findKthElement(A, m, B, n, k + 1)) / 2.0;
+    }
+}
+</code></pre>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

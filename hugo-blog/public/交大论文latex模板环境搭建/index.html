@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>交大论文LATEX模板环境搭建 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="随笔">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="交大论文latex模板环境搭建">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="交大论文latex模板环境搭建">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E4%BA%A4%E5%A4%A7%E8%AE%BA%E6%96%87latex%E6%A8%A1%E6%9D%BF%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>交大论文latex模板环境搭建</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近准备开始着手毕设论文的事情了，首先的首先就是先决定是用word写还是用latex，作为一个假装自己很厉害的程序员🤔，感觉很有必要学习一下latex。于是就进入配环境的噩梦中无法自拔，latex真的真的非常不友好=-=</p>
+<p>决定使用latex后，就需要选择一个latex的模板，对于本科的毕业论文来说，一共有两个选择，一个是用<a href="http://bysj.jwc.sjtu.edu.cn/shownews.aspx?newsno=0/r29o3qDXFnM/Hwnz1p4A....">上海交通大学毕业设计论文智能管理系统</a>上提供的latex模板，另一个是用<a href="https://github.com/weijianwen/SJTUThesis">github.com/weijianwen/SJTUThesis</a>，前者配环境配了一万年，最后还是以失败告终，所以只好选择了后者。后者在Github上已经有了接近300个star，而且有版本控制和构建脚本，十分之方便。</p>
+<p>如果之前像我一样完全没有使用过latex，机器上也没有latex的环境，那从零开始配这样一个可以编译latex的环境在我看来实在是麻烦。主要的问题在于各种包和各种字体，latex似乎有一个包管理工具，tlmgr，但感觉并不是非常友好，<code>sudo tlmgr update --all</code>后还是会遇到各种各样的依赖报错。字体的话，只有一个getnonfreefonts的脚本，似乎是可以自动化地下载几个少的可怜的字体，基本等于没有。作为一个萌新，感觉latex的曲线太陡峭了。</p>
+<p>所以在遇到了交大官方给的模板里的一万个编译报错时，果断地选择了放弃，转移到了github上的那个模板。github上的模板就要简单好多好多，只需要安装tex live再加上一点点字体后就可以使用了。怕自己之后忘了，这里就记录下配置的流程。</p>
+<h3 id="安装tex-live">安装Tex live</h3>
+<p>Tex live在<a href="https://github.com/weijianwen/SJTUThesis/wiki/texlive-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97">texlive 安装指南</a>里有比较清楚的阐述，在OS X下的话推荐下载MacTex，然后无脑下一步就好了。安装完后，需要在.bashrc或者如果是用zsh的话在.zshrc里把texlive的二进制目录加到PATH下：</p>
+<pre tabindex="0"><code>export PATH=&#34;/usr/local/texlive/2015/bin/x86_64-darwin:$PATH&#34;
+</code></pre><p>最后source下.bashrc或者.zshrc，或者重启terminal，这样latex就配置好了。接下来，为了编译交大的模板，需要装一些字体。</p>
+<h3 id="安装字体">安装字体</h3>
+<p>安装字体，有两个方法，一个是装在系统上，然后让latex用系统的字体，或者直接装在latex里。前者比较简单，交大的模板用到了五种字体，中英文分别依赖 Adobe 的四套简体中文字体和 TeX Gyre Termes 西文字体。这些字体，可以在<a href="https://github.com/mingchen/mac-osx-chinese-fonts">github.com/mingchen/mac-osx-chinese-fonts</a>和<a href="http://www.gust.org.pl/projects/e-foundry/tex-gyre/termes">http://www.gust.org.pl/projects/e-foundry/tex-gyre/termes</a>下载到，安装的话就双击otf就好了的样子。</p>
+<h3 id="最后">最后</h3>
+<p>最后，在目录下<code>make validate</code>下，看下是不是真正可以编译了，这样之后应该是没有问题了。对了，有一个小坑，没事不要tlmgr update所有的包，会出现各种奇葩的问题，别问我怎么知道的，全是泪。。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>递归下降与LL(1) | 高策</title>
+<meta name="description" content="编译原理词法分析">
+<meta name="keywords" content="compiler">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/images//compiler/onme.jpg">
+
+<meta name="twitter:title" content="递归下降与LL(1)">
+<meta name="twitter:description" content="编译原理词法分析">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="递归下降与LL(1)">
+<meta property="og:description" content="编译原理词法分析">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E4%B8%8Ell1/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>递归下降与LL(1)</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>编译原理第二次答辩的时候，出了一点点问题。答辩时天神说递归下降是可以hold住所有语法的，不需要保证语法是没有左递归的。到现在一直还是不是很理解，于是就看了看课本。PS: 课本为龙书～</p>
+<h2 id="关于大作业">关于大作业</h2>
+<p>大作业是跟<a href="https://github.com/hczhcz">橙汁大腿(大腿无误)</a>以及<a href="https://github.com/qikangqi">QKQ</a>一起在写。<s>其实说是三个人一起写，多是橙汁写，我们看着<code>_(:з」∠)_</code></s></p>
+<p>项目开源在Github上-&gt;<a href="https://github.com/gaocegege/CompilerLab">https://github.com/gaocegege/CompilerLab</a>，定位是一个LL语法的编译器前端生成器。据橙汁说，我们的大作业是用递归下降的方法来做的，嗯。</p>
+<h1 id="递归下降语法分析">递归下降语法分析</h1>
+<p>关于这个，书上的定义是这样的：</p>
+<blockquote>
+<p>一个递归下降语法分析程序由一组过程组成，<strong>每个非终结符号对应一个过程</strong>，程序的执行从开始符号对应的过程开始，如果这个过程的过程体扫描了整个输入串，它就停止并宣布语法分析成功。</p>
+</blockquote>
+<p>下面是一个在自顶向下的语法分析器中一个非终结符号对应的典型过程：</p>
+<pre><code>void A(){
+	chooses a predict A-&gt;X1 X2 X3 ... Xk;
+	for (int i = 1; i &lt;= k; i++){
+		if (Xi is non-terminal)
+			Xi();
+		else if (Xi == the input char a)
+			input the next char to a
+		else
+			err();
+	}
+}
+</code></pre>
+<p>这种根据非终结符号决定应用哪个产生式的方法，就是通过上面这种方式来实现，不过会多回溯的过程。</p>
+<p>那我们最大的问题在于递归下降的算法能不能hold住左递归的语法。书上有这样一种说法：</p>
+<blockquote>
+<p>一个左递归的文法会使得它的语法分析起进入一个无限循环。即使带回溯的语法分析器也是如此。也就是说，当我们试图展开一个非终结符号A的时候，我们可能会没有读入任何输入符号就再次试图展开A。</p>
+</blockquote>
+<p>举个例子来看看吧～</p>
+<pre><code>A -&gt; Aa | b
+</code></pre>
+<p>这样一个简单的语法，看上去是可以用递归下降来做的，但是其实是不可以的。因为在读入第一个字符b的时候，是不能确定要调用哪个产生式的。我试着写了下，可能代码的样子是这样的：</p>
+<pre><code>void A(string &amp;str, int &amp;ptr)
+{
+	if (str[ptr] == 'b')
+	{
+		ptr++;
+		if (ptr == str.size())
+			cout &lt;&lt; &quot;successs!\n&quot;;
+		else
+		{
+			ptr--;
+		}
+	}
+	
+	A(str, ptr);
+	if (str[ptr] == 'a')
+		ptr++;
+}
+</code></pre>
+<p>代码看上去是有一个死循环的，所以跑的时候会爆Segmentation fault。死循环的原因就是A的一个产生式的第一个符号就是它自己，所以程序就在判断A-&gt;b的产生式失败后，执行A-&gt;Aa产生式然后不停递归，就死循环了。感觉这种一个非终结符号对应一个过程的方法是没办法处理左递归的。不知道天神所说的可以处理是用另外的方法还是怎么样。。。</p>
+<h2 id="ll1语法分析">LL(1)语法分析</h2>
+<p>LL(1)其实也是递归下降的方法吧，只是不再需要回溯，而且可以用更加高效的预测分析表格法来实现。这种方法既然是一种递归下降的方法，那也是解决不了左递归的问题的。</p>
+<h1 id="结">结</h1>
+<p>所以LL(1)，和带回溯的递归下降都是不能解决左递归的问题的。如果能有方法解决，请务必联系我～</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/vendor/background-check.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/post-header-animations.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

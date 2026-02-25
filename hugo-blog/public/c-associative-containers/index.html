@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>C&#43;&#43; ASSOCIATIVE CONTAINERS | 高策</title>
+<meta name="description" content="C&#43;&#43; STL">
+<meta name="keywords" content="c&#43;&#43;">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="C&#43;&#43; Associative Containers">
+<meta name="twitter:description" content="C&#43;&#43; STL">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#43;&#43; Associative Containers">
+<meta property="og:description" content="C&#43;&#43; STL">
+<meta property="og:url" content="https://gaocegege.com/Blog/c-associative-containers/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>C&#43;&#43; Associative Containers</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="c-associative-containers">C++ Associative Containers</h1>
+<p>这个应该如何翻译呢，应该是关系型容器吧。这一类容器的特点是，首先是关系，然后是有序的。这类容器都与集合，二元关系等等有关系，所以叫做这个名字吧Orz。</p>
+<p>Associative Containers共有四种，分别是Set，Map，Multiset，Multimap。</p>
+<h2 id="set">Set</h2>
+<p>Set，集合。最大的特点是集合内的元素不允许重复，同时不可修改。与其在数学上的定义类似。因为要保证有序，所以内部是使用平衡二叉树实现（红黑树）。</p>
+<h2 id="map">Map</h2>
+<p>Map，中文应该是什么，大概是映射吧。是一个存放二元关系<code>&lt;key, value&gt;</code>的容器。同一个key对应同一个value，不允许key的重复。Set可以存放一元关系，而Map只能存放二元关系对。因为要保证有序，所以内部是使用平衡二叉树实现（红黑树）。</p>
+<h2 id="multiset">Multiset</h2>
+<p>之前提到Set不允许重复，那Multiset就是允许重复的Set。</p>
+<h2 id="multimap">Multimap</h2>
+<p>同样，Map不允许同一个key对应多个value，那Multimap就可以这样。</p>
+<h2 id="区别">区别</h2>
+<p>如果是存放二元关系，Set与Map是有一些类似的地方的。下面的例子就是利用Set存放<code>pair&lt;int, int&gt;</code>，Map也是存放<code>int, int</code>的键值对。</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	// test case
+	pair&lt;int, int&gt; p1(1, 1); 
+	pair&lt;int, int&gt; p2(1, 2);
+	pair&lt;int, int&gt; p3(1, 1);
+
+	// set
+	set&lt; pair&lt;int, int&gt; &gt; s; 
+	s.insert(p1); 
+	s.insert(p2); 
+	s.insert(p3);
+
+	// map
+	map&lt;int, int&gt; m; 
+	m.insert(p1); 
+	m.insert(p2);
+	m.insert(p3); 
+
+	// multiset
+	multiset&lt; pair&lt;int, int&gt; &gt; ms;
+	ms.insert(p1); 
+	ms.insert(p2);
+	ms.insert(p3);
+
+	// multimap
+	multimap&lt;int, int&gt; mm;
+	mm.insert(p1);
+	mm.insert(p2);
+	mm.insert(p3);
+
+	// print
+	cout &lt;&lt; &quot;Set size = &quot; &lt;&lt; s.size() &lt;&lt; endl; 
+	cout &lt;&lt; &quot;Map size = &quot; &lt;&lt; m.size() &lt;&lt; endl;
+	cout &lt;&lt; &quot;MuitiSet size = &quot; &lt;&lt; ms.size() &lt;&lt; endl; 
+	cout &lt;&lt; &quot;MultiMap size = &quot; &lt;&lt; mm.size() &lt;&lt; endl;
+}
+</code></pre>
+<p>上面代码的输出是这样的~</p>
+<pre>
+Set size = 2
+Map size = 1
+MuitiSet size = 3
+MultiMap size = 3
+</pre>
+<p>首先看Set与Map的区别。Set在构建模板类的时候参数是<code>pair&lt;int, int&gt;</code>，而Map是<code>int, int</code>，其实这里就可以看出两个容器的区别了。Set是把关系当做一个整体来存放，Map是将Key当做主体，Value只是一个属性，来存放。看输出也会知道，<code>&lt;1, 1&gt;</code>与<code>&lt;1, 2&gt;</code>对于Set而言是两个不同的数据，而对于Map而言，他们的Key都是1，是相同的，所以在insert<code>&lt;1, 2&gt;</code>的时候，因为已经存在Key为1的数据，所以insert并不成功。但是也不会报错，只是没有起到作用。</p>
+<p>其次，Set与Multiset的区别，就在于，连续insert两次<code>&lt;1, 1&gt;</code>，Set不会存放两个相同的数据，而MultiSet允许这样。</p>
+<p>然后Map与Multimap的区别，首先，Multimap允许同一个Key对应不同Value，另外，同样发现，相同Key同时相同Value也允许重复。在二元关系上，似乎Multimap与MultiSet的表现是一致的。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

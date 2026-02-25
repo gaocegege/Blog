@@ -1,0 +1,3602 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>开源项目 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="SJTU, SE">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="开源项目">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源项目">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/opensource/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+<script type="text/javascript" src="https://gaocegege.com/Blog/js/vendor/amcharts/amcharts.js"></script>
+<script type="text/javascript" src="https://gaocegege.com/Blog/js/vendor/amcharts/pie.js"></script>
+<script type="text/javascript" src="https://gaocegege.com/Blog/js/vendor/amcharts/serial.js"></script>
+<script type="text/javascript" src="https://gaocegege.com/Blog/js/vendor/amcharts/themes/dark.js"></script>
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>开源项目</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p align="center">
+	<a href="http://gaocegege.com/Blog"><img src="https://img.shields.io/badge/blog-100k%20pageviews-ffffff.svg?style=social" alt="Blog"></a>
+	<a href="https://github.com/gaocegege/"><img src="https://img.shields.io/github/followers/gaocegege.svg?style=social&label=Follow" alt="GitHub"></a>
+	<a href="http://gaocegege.com/resume/"><img src="https://img.shields.io/badge/resume-english-blue.svg" alt="Resume"></a>
+	<a href="http://gaocegege.com/resume/cn/"><img src="https://img.shields.io/badge/%E7%AE%80%E5%8E%86-%E4%B8%AD%E6%96%87-blue.svg" alt="Resume in Chinese"></a>
+	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/univ-SJTU-020081.svg" alt="SJTU"></a>
+	<a href="http://en.sjtu.edu.cn/"><img src="https://img.shields.io/badge/degree-master-0100b3.svg" alt="Master"></a>
+</p>
+<h1 id="table-of-contents">Table of Contents</h1>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a>
+<ul>
+<li><a href="#2023-%E5%B9%B4">2023 年</a></li>
+<li><a href="#2022-%E5%B9%B4">2022 年</a></li>
+<li><a href="#2021-%E5%B9%B4">2021 年</a></li>
+<li><a href="#2020-%E5%B9%B4">2020 年</a></li>
+<li><a href="#2019-%E5%B9%B4">2019 年</a></li>
+<li><a href="#2018-%E5%B9%B4">2018 年</a></li>
+<li><a href="#2017-%E5%B9%B4">2017 年</a></li>
+<li><a href="#2016-%E5%B9%B4">2016 年</a></li>
+<li><a href="#2015-%E5%B9%B4">2015 年</a></li>
+<li><a href="#2014-%E5%B9%B4">2014 年</a></li>
+</ul>
+</li>
+</ul>
+<!-- ./cmd/comatome/comatome -op -oi -rp -from 2016-01 -to 2016-12 -->
+<h2 id="2023-年">2023 年</h2>
+<p>Opened 218 pull requests in 25 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>68</td>
+          <td><a href="https://github.com/tensorchord/openmodelz/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/openmodelz</a></td>
+      </tr>
+      <tr>
+          <td>39</td>
+          <td><a href="https://github.com/tensorchord/modelz-llm/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-llm</a></td>
+      </tr>
+      <tr>
+          <td>31</td>
+          <td><a href="https://github.com/tensorchord/modelz-docs/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-docs</a></td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td><a href="https://github.com/tensorchord/Awesome-LLMOps/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/Awesome-LLMOps</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/tensorchord/openmodelz-docs/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/openmodelz-docs</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/tensorchord/modelz-visual-chatgpt/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-visual-chatgpt</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/tensorchord/envd/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/tensorchord/llmspec/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/llmspec</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/tensorchord/pgvecto.rs/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/pgvecto.rs</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/tensorchord/mosec-tts-vits/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/mosec-tts-vits</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/mosecorg/mosec/pulls?q=is%3Apr+author%3Agaocegege+">mosecorg/mosec</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/metering-go/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/metering-go</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/envd-server/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-server</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/langchain/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/langchain</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/amberflo/metering-go/pulls?q=is%3Apr+author%3Agaocegege+">amberflo/metering-go</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/kube-fledged/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/kube-fledged</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/senthilrch/kube-fledged/pulls?q=is%3Apr+author%3Agaocegege+">senthilrch/kube-fledged</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/inference-benchmark/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/inference-benchmark</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/mosec/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/mosec</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-template-mosec/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-template-mosec</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-baize/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-baize</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/project-baize/baize-chatbot/pulls?q=is%3Apr+author%3Agaocegege+">project-baize/baize-chatbot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-py/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/modelz-py</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 268 pull requests in 37 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>78</td>
+          <td><a href="https://github.com/tensorchord/envd/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>30</td>
+          <td><a href="https://github.com/tensorchord/Awesome-LLMOps/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/Awesome-LLMOps</a></td>
+      </tr>
+      <tr>
+          <td>30</td>
+          <td><a href="https://github.com/tensorchord/openmodelz/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/openmodelz</a></td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/tensorchord/envd-server/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-server</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/tensorchord/llmspec/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/llmspec</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/tensorchord/modelz-llm/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-llm</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/tensorchord/modelz-py/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-py</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/tensorchord/modelz-docs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-docs</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/tensorchord/pgvecto.rs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/pgvecto.rs</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/tensorchord/envd-lsp/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-lsp</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/tensorchord/modelz-template-mosec/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-template-mosec</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/tensorchord/vscode-envd/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/vscode-envd</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/tensorchord/openmodelz-docs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/openmodelz-docs</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/mosecorg/mosec/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">mosecorg/mosec</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SJTU-SE/awesome-se</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se-notes/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SJTU-SE/awesome-se-notes</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/mosec-tts-vits/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/mosec-tts-vits</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/envd-nightly/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-nightly</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/modelz-imagebind/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-imagebind</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/kube-fledged/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/kube-fledged</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/openmodelz-charts/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/openmodelz-charts</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/join-us/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/join-us</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-whisper/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-whisper</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cncf/foundation/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">cncf/foundation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-gpt-neo/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-gpt-neo</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/dy-weekly-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/dy-weekly-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/awesome-resume-for-chinese/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/awesome-resume-for-chinese</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-template-gradio/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-template-gradio</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/inference-benchmark/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/inference-benchmark</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-gradio-whisper/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-gradio-whisper</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-visual-chatgpt/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/modelz-visual-chatgpt</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 130 issues in 25 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>32</td>
+          <td><a href="https://github.com/tensorchord/openmodelz/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/openmodelz</a></td>
+      </tr>
+      <tr>
+          <td>22</td>
+          <td><a href="https://github.com/tensorchord/modelz-llm/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/modelz-llm</a></td>
+      </tr>
+      <tr>
+          <td>16</td>
+          <td><a href="https://github.com/tensorchord/pgvecto.rs/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/pgvecto.rs</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/tensorchord/envd/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/tensorchord/llmspec/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/llmspec</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/mosecorg/mosec/issues?q=is%3Aissue+author%3Agaocegege+">mosecorg/mosec</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/tensorchord/modelz-py/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/modelz-py</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/litanlitudan/skyagi/issues?q=is%3Aissue+author%3Agaocegege+">litanlitudan/skyagi</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/vllm-project/vllm/issues?q=is%3Aissue+author%3Agaocegege+">vllm-project/vllm</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/amberflo/metering-go/issues?q=is%3Aissue+author%3Agaocegege+">amberflo/metering-go</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/modelz-docs/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/modelz-docs</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/skypilot-org/skypilot/issues?q=is%3Aissue+author%3Agaocegege+">skypilot-org/skypilot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/Awesome-LLMOps/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/Awesome-LLMOps</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/modelz-template-mosec/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/modelz-template-mosec</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/orbstack/orbstack/issues?q=is%3Aissue+author%3Agaocegege+">orbstack/orbstack</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dragonflyoss/nydus/issues?q=is%3Aissue+author%3Agaocegege+">dragonflyoss/nydus</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/rancher/k3os/issues?q=is%3Aissue+author%3Agaocegege+">rancher/k3os</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/k3s-io/k3s/issues?q=is%3Aissue+author%3Agaocegege+">k3s-io/k3s</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/camenduru/stable-diffusion-webui-docker/issues?q=is%3Aissue+author%3Agaocegege+">camenduru/stable-diffusion-webui-docker</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/senthilrch/kube-fledged/issues?q=is%3Aissue+author%3Agaocegege+">senthilrch/kube-fledged</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/envd-nightly/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-nightly</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/domeccleston/sharegpt/issues?q=is%3Aissue+author%3Agaocegege+">domeccleston/sharegpt</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2022-年">2022 年</h2>
+<p>Opened 408 pull requests in 33 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>233</td>
+          <td><a href="https://github.com/tensorchord/envd/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>68</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>33</td>
+          <td><a href="https://github.com/tensorchord/envd-server/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-server</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/tensorchord/libcontainerssh/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/libcontainerssh</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/tensorchord/vscode-envd/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/vscode-envd</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/pulls?q=is%3Apr+author%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/tensorchord/Awesome-LLMOps/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/Awesome-LLMOps</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/tensorchord/envd-lsp/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-lsp</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/skai-x/enterprise_gateway/pulls?q=is%3Apr+author%3Agaocegege+">skai-x/enterprise_gateway</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gaocegege/envd/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/envd</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/tensorchord/envd-quick-start/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/envd-quick-start</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/skai-x/ml-demo/pulls?q=is%3Apr+author%3Agaocegege+">skai-x/ml-demo</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/moby/buildkit/pulls?q=is%3Apr+author%3Agaocegege+">moby/buildkit</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/EthicalML/awesome-production-machine-learning/pulls?q=is%3Apr+author%3Agaocegege+">EthicalML/awesome-production-machine-learning</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/igorbarinov/awesome-data-engineering/pulls?q=is%3Apr+author%3Agaocegege+">igorbarinov/awesome-data-engineering</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kelvins/awesome-mlops/pulls?q=is%3Apr+author%3Agaocegege+">kelvins/awesome-mlops</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/antfu/handle/pulls?q=is%3Apr+author%3Agaocegege+">antfu/handle</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cow-on-board/engula-operator/pulls?q=is%3Apr+author%3Agaocegege+">cow-on-board/engula-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/okteto/samples/pulls?q=is%3Apr+author%3Agaocegege+">okteto/samples</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/krzjoa/awesome-python-data-science/pulls?q=is%3Apr+author%3Agaocegege+">krzjoa/awesome-python-data-science</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ContainerSSH/containerssh.github.io/pulls?q=is%3Apr+author%3Agaocegege+">ContainerSSH/containerssh.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/WarrenWen666/AI-Software-Startups/pulls?q=is%3Apr+author%3Agaocegege+">WarrenWen666/AI-Software-Startups</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/collabnix/dockertools/pulls?q=is%3Apr+author%3Agaocegege+">collabnix/dockertools</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/buildkit/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/buildkit</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/fuzzylabs/awesome-open-mlops/pulls?q=is%3Apr+author%3Agaocegege+">fuzzylabs/awesome-open-mlops</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/buildkit/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/buildkit</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/academic/awesome-datascience/pulls?q=is%3Apr+author%3Agaocegege+">academic/awesome-datascience</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ContainerSSH/libcontainerssh/pulls?q=is%3Apr+author%3Agaocegege+">ContainerSSH/libcontainerssh</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/tensorchord.github.io/pulls?q=is%3Apr+author%3Agaocegege+">tensorchord/tensorchord.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/agamm/awesome-developer-first/pulls?q=is%3Apr+author%3Agaocegege+">agamm/awesome-developer-first</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 453 pull requests in 29 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>266</td>
+          <td><a href="https://github.com/tensorchord/envd/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>50</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>31</td>
+          <td><a href="https://github.com/tensorchord/envd-server/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-server</a></td>
+      </tr>
+      <tr>
+          <td>27</td>
+          <td><a href="https://github.com/kubeflow/training-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/training-operator</a></td>
+      </tr>
+      <tr>
+          <td>16</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/tensorchord/envdlib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envdlib</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/tensorchord/Awesome-LLMOps/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/Awesome-LLMOps</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/tensorchord/envd-lsp/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/envd-lsp</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/skai-x/enterprise_gateway/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">skai-x/enterprise_gateway</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/tensorchord/tensorchord-internals/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/tensorchord-internals</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SJTU-SE/awesome-se</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/skai-x/ml-demo/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">skai-x/ml-demo</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/awesome-resume-for-chinese/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/awesome-resume-for-chinese</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se-notes/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SJTU-SE/awesome-se-notes</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/Horust/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/Horust</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/newsletter/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/newsletter</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/risingwavelabs/risingwave/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">risingwavelabs/risingwave</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/libcontainerssh/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/libcontainerssh</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/homebrew-tap/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/homebrew-tap</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/Homebrew/homebrew-core/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">Homebrew/homebrew-core</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/vscode-envd/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tensorchord/vscode-envd</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/internal-acls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/internal-acls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/kube-ladder/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/kube-ladder</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 344 issues in 22 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>271</td>
+          <td><a href="https://github.com/tensorchord/envd/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd</a></td>
+      </tr>
+      <tr>
+          <td>25</td>
+          <td><a href="https://github.com/tensorchord/envd-server/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-server</a></td>
+      </tr>
+      <tr>
+          <td>19</td>
+          <td><a href="https://github.com/tensorchord/envd-docs/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-docs</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/frostming/frostming/issues?q=is%3Aissue+author%3Agaocegege+">frostming/frostming</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/ContainerSSH/libcontainerssh/issues?q=is%3Aissue+author%3Agaocegege+">ContainerSSH/libcontainerssh</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/envd-lsp/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-lsp</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tensorchord/envd-quick-start/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/envd-quick-start</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/moby/buildkit/issues?q=is%3Aissue+author%3Agaocegege+">moby/buildkit</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/issues?q=is%3Aissue+author%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/docker/buildx/issues?q=is%3Aissue+author%3Agaocegege+">docker/buildx</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ContainerSSH/kubernetes/issues?q=is%3Aissue+author%3Agaocegege+">ContainerSSH/kubernetes</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorchord/vscode-envd/issues?q=is%3Aissue+author%3Agaocegege+">tensorchord/vscode-envd</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/shogo82148/actions-goveralls/issues?q=is%3Aissue+author%3Agaocegege+">shogo82148/actions-goveralls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/training-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/training-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/issues?q=is%3Aissue+author%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/star-whale/starwhale/issues?q=is%3Aissue+author%3Agaocegege+">star-whale/starwhale</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/entropy2333/entropy2333.github.io/issues?q=is%3Aissue+author%3Agaocegege+">entropy2333/entropy2333.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mosecorg/mosec/issues?q=is%3Aissue+author%3Agaocegege+">mosecorg/mosec</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/okteto/samples/issues?q=is%3Aissue+author%3Agaocegege+">okteto/samples</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/WilliamX1/machine-learning/issues?q=is%3Aissue+author%3Agaocegege+">WilliamX1/machine-learning</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2021-年">2021 年</h2>
+<p>Opened 102 pull requests in 24 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>24</td>
+          <td><a href="https://github.com/kubeflow/training-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/training-operator</a></td>
+      </tr>
+      <tr>
+          <td>23</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/pulls?q=is%3Apr+author%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/cow-on-board/engula-operator/pulls?q=is%3Apr+author%3Agaocegege+">cow-on-board/engula-operator</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/taichi-dev/taichi/pulls?q=is%3Apr+author%3Agaocegege+">taichi-dev/taichi</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/jina-ai/jina/pulls?q=is%3Apr+author%3Agaocegege+">jina-ai/jina</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/pulls?q=is%3Apr+author%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/cloudab/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/cloudab</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/skai-x/elastic-training/pulls?q=is%3Apr+author%3Agaocegege+">skai-x/elastic-training</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/volcano-sh/volcano/pulls?q=is%3Apr+author%3Agaocegege+">volcano-sh/volcano</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/pytorch/pytorch/pulls?q=is%3Apr+author%3Agaocegege+">pytorch/pytorch</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/gaocegege/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/gaocegege</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/muety/wakapi/pulls?q=is%3Apr+author%3Agaocegege+">muety/wakapi</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pytorch/elastic/pulls?q=is%3Apr+author%3Agaocegege+">pytorch/elastic</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/pipelines/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/pipelines</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kube-rs/version-rs/pulls?q=is%3Apr+author%3Agaocegege+">kube-rs/version-rs</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorflow/rust/pulls?q=is%3Apr+author%3Agaocegege+">tensorflow/rust</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/jupyter-server/enterprise_gateway/pulls?q=is%3Apr+author%3Agaocegege+">jupyter-server/enterprise_gateway</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/maintainer-org/maintainer/pulls?q=is%3Apr+author%3Agaocegege+">maintainer-org/maintainer</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/wakapi/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/wakapi</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 262 pull requests in 30 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>79</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>59</td>
+          <td><a href="https://github.com/kubeflow/training-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/training-operator</a></td>
+      </tr>
+      <tr>
+          <td>33</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/manifests/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/manifests</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/xgboost-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/xgboost-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/fate-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/fate-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/tikv/tikv/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">tikv/tikv</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/testing/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/testing</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/internal-acls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/internal-acls</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/blog/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/blog</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/maintainer-org/maintainer/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">maintainer-org/maintainer</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/pipelines/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/pipelines</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se-notes/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SJTU-SE/awesome-se-notes</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/taichi-dev/taichi/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">taichi-dev/taichi</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/enhancements/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubernetes/enhancements</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/skai-x/elastic-training/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">skai-x/elastic-training</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/jina-ai/jina/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">jina-ai/jina</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/processing-r/Processing.R/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/PaddleFlow/paddle-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">PaddleFlow/paddle-operator</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 133 issues in 33 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>40</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>19</td>
+          <td><a href="https://github.com/kubeflow/training-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/training-operator</a></td>
+      </tr>
+      <tr>
+          <td>16</td>
+          <td><a href="https://github.com/skai-x/elastic-jupyter-operator/issues?q=is%3Aissue+author%3Agaocegege+">skai-x/elastic-jupyter-operator</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/pytorch/pytorch/issues?q=is%3Aissue+author%3Agaocegege+">pytorch/pytorch</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/taichi-dev/taichi/issues?q=is%3Aissue+author%3Agaocegege+">taichi-dev/taichi</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/dyweb/cloudab/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/cloudab</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/jina-ai/jina/issues?q=is%3Aissue+author%3Agaocegege+">jina-ai/jina</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/common/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/deb-sig/double-entry-generator/issues?q=is%3Aissue+author%3Agaocegege+">deb-sig/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/muety/wakapi/issues?q=is%3Aissue+author%3Agaocegege+">muety/wakapi</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/apiextensions-apiserver/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes/apiextensions-apiserver</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes-sigs/kind/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/kind</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kleveross/ormb/issues?q=is%3Aissue+author%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes-sigs/node-feature-discovery/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/node-feature-discovery</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/elastic/crd-ref-docs/issues?q=is%3Aissue+author%3Agaocegege+">elastic/crd-ref-docs</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/arena/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/arena</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/volcano-sh/volcano/issues?q=is%3Aissue+author%3Agaocegege+">volcano-sh/volcano</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pytorch/elastic/issues?q=is%3Aissue+author%3Agaocegege+">pytorch/elastic</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/engula/engula/issues?q=is%3Aissue+author%3Agaocegege+">engula/engula</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/PaddlePaddle/PaddleGAN/issues?q=is%3Aissue+author%3Agaocegege+">PaddlePaddle/PaddleGAN</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SJTU-SE-2018/Awesome-offer/issues?q=is%3Aissue+author%3Agaocegege+">SJTU-SE-2018/Awesome-offer</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/eclipse-che/che-operator/issues?q=is%3Aissue+author%3Agaocegege+">eclipse-che/che-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cow-on-board/engula-operator/issues?q=is%3Aissue+author%3Agaocegege+">cow-on-board/engula-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/katib/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mlflow/mlflow/issues?q=is%3Aissue+author%3Agaocegege+">mlflow/mlflow</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/siglt/tosknight-storage/issues?q=is%3Aissue+author%3Agaocegege+">siglt/tosknight-storage</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/DeepRec-AI/HybridBackend/issues?q=is%3Aissue+author%3Agaocegege+">DeepRec-AI/HybridBackend</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/koderover/zadig/issues?q=is%3Aissue+author%3Agaocegege+">koderover/zadig</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/eclipse/che/issues?q=is%3Aissue+author%3Agaocegege+">eclipse/che</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/jupyter-server/enterprise_gateway/issues?q=is%3Aissue+author%3Agaocegege+">jupyter-server/enterprise_gateway</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2020-年">2020 年</h2>
+<p>Opened 103 pull requests in 25 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>40</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>13</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>12</td>
+          <td><a href="https://github.com/kleveross/klever-model-registry/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/klever-model-registry</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Agaocegege+">ray-project/ray</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/hyy0322/community/pulls?q=is%3Apr+author%3Agaocegege+">hyy0322/community</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/fate-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/fate-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/klever/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/klever</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/seldon-core/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/seldon-core</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kleveross/goveralls/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/goveralls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/katib-examples/evaluation/pulls?q=is%3Apr+author%3Agaocegege+">katib-examples/evaluation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/internal-acls/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/internal-acls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kleveross/community/pulls?q=is%3Apr+author%3Agaocegege+">kleveross/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/pulls?q=is%3Apr+author%3Agaocegege+">GoogleCloudPlatform/spark-on-k8s-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/goharbor/harbor/pulls?q=is%3Apr+author%3Agaocegege+">goharbor/harbor</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SeldonIO/seldon-core/pulls?q=is%3Apr+author%3Agaocegege+">SeldonIO/seldon-core</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/caffe2-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/caffe2-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/harbor/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/harbor</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/mlsys-ladder/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/mlsys-ladder</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/kfserving/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/kfserving</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SeldonIO/trtis-k8s-scheduler/pulls?q=is%3Apr+author%3Agaocegege+">SeldonIO/trtis-k8s-scheduler</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 378 pull requests in 34 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>119</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>87</td>
+          <td><a href="https://github.com/kleveross/klever-model-registry/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/klever-model-registry</a></td>
+      </tr>
+      <tr>
+          <td>26</td>
+          <td><a href="https://github.com/kleveross/ormb/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>26</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>18</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/kubeflow/fate-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/fate-operator</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kleveross/ftlib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ftlib</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/caicloud/kube-ladder/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/kube-ladder</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kleveross/neuropod/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/neuropod</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/manifests/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/manifests</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/caicloud/nirvana/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/seldon-core/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/seldon-core</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/couler-proj/couler/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">couler-proj/couler</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/community-infra/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/community-infra</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/internal-acls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/internal-acls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/goharbor/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">goharbor/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/katib-examples/evaluation/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">katib-examples/evaluation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kleveross/MLServer/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/MLServer</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SeldonIO/seldon-core/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">SeldonIO/seldon-core</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hyy0322/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">hyy0322/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/crd-validation/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/crd-validation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/bytedance/byteps/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">bytedance/byteps</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/spark-on-k8s-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/spark-on-k8s-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">ray-project/ray</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mattn/goveralls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">mattn/goveralls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/horovod/horovod/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">horovod/horovod</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/goharbor/harbor/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">goharbor/harbor</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 153 issues in 27 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>51</td>
+          <td><a href="https://github.com/kleveross/ormb/issues?q=is%3Aissue+author%3Agaocegege+">kleveross/ormb</a></td>
+      </tr>
+      <tr>
+          <td>35</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>21</td>
+          <td><a href="https://github.com/kleveross/klever-model-registry/issues?q=is%3Aissue+author%3Agaocegege+">kleveross/klever-model-registry</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/kubeflow/katib/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/fate-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/fate-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/community/issues?q=is%3Aissue+author%3Agaocegege+">kleveross/community</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/SeldonIO/seldon-core/issues?q=is%3Aissue+author%3Agaocegege+">SeldonIO/seldon-core</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kleveross/klever/issues?q=is%3Aissue+author%3Agaocegege+">kleveross/klever</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/deislabs/oras/issues?q=is%3Aissue+author%3Agaocegege+">deislabs/oras</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/bytedance/byteps/issues?q=is%3Aissue+author%3Agaocegege+">bytedance/byteps</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/issues?q=is%3Aissue+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/containers/skopeo/issues?q=is%3Aissue+author%3Agaocegege+">containers/skopeo</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/golang-template-project/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/golang-template-project</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ray-project/ray/issues?q=is%3Aissue+author%3Agaocegege+">ray-project/ray</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/goharbor/harbor/issues?q=is%3Aissue+author%3Agaocegege+">goharbor/harbor</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/nirvana/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/heluocs/heluocs.github.io/issues?q=is%3Aissue+author%3Agaocegege+">heluocs/heluocs.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/community/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/VertaAI/modeldb/issues?q=is%3Aissue+author%3Agaocegege+">VertaAI/modeldb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/chaos-mesh/chaos-mesh/issues?q=is%3Aissue+author%3Agaocegege+">chaos-mesh/chaos-mesh</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/awesome-resume-for-chinese/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/awesome-resume-for-chinese</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mattn/goveralls/issues?q=is%3Aissue+author%3Agaocegege+">mattn/goveralls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pytorch/elastic/issues?q=is%3Aissue+author%3Agaocegege+">pytorch/elastic</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2019-年">2019 年</h2>
+<p>Opened 168 pull requests in 38 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>90</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/caicloud/katib/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/katib</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/caicloud/ciao/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/Xuruowei/blog/pulls?q=is%3Apr+author%3Agaocegege+">Xuruowei/blog</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/manifests/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/manifests</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/blog/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/caicloud/mlsys-ladder/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/mlsys-ladder</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/HuaizhengZhang/Awesome-System-for-Machine-Learning/pulls?q=is%3Apr+author%3Agaocegege+">HuaizhengZhang/Awesome-System-for-Machine-Learning</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/nannou-org/guide/pulls?q=is%3Apr+author%3Agaocegege+">nannou-org/guide</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/ray-project/ray-operator/pulls?q=is%3Apr+author%3Agaocegege+">ray-project/ray-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/volcano-sh/volcano/pulls?q=is%3Apr+author%3Agaocegege+">volcano-sh/volcano</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/weekly/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/weekly</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/kfserving/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/kfserving</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/double-entry-generator/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/ray/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/ray</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cncf/gitdm/pulls?q=is%3Apr+author%3Agaocegege+">cncf/gitdm</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/learning-unit-testing-for-k8s-operator/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/learning-unit-testing-for-k8s-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/chubaofs/docs-zh/pulls?q=is%3Apr+author%3Agaocegege+">chubaofs/docs-zh</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/cifar10-estimator/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/cifar10-estimator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/apache/incubator-tvm/pulls?q=is%3Apr+author%3Agaocegege+">apache/incubator-tvm</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Agaocegege+">ray-project/ray</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/minecraft-cn/wave-function-collapse-in-minecraft/pulls?q=is%3Apr+author%3Agaocegege+">minecraft-cn/wave-function-collapse-in-minecraft</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/microsoft/nni/pulls?q=is%3Apr+author%3Agaocegege+">microsoft/nni</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tobegit3hub/advisor/pulls?q=is%3Apr+author%3Agaocegege+">tobegit3hub/advisor</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/nirvana/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/ray-operator-deprecated/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/ray-operator-deprecated</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/sundial/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/sundial</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/operator-framework/operator-sdk/pulls?q=is%3Apr+author%3Agaocegege+">operator-framework/operator-sdk</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/k8s-example-operator/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/k8s-example-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/test-infra/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/test-infra</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/openframeworks/openFrameworks/pulls?q=is%3Apr+author%3Agaocegege+">openframeworks/openFrameworks</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 362 pull requests in 33 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>150</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>63</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>34</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>17</td>
+          <td><a href="https://github.com/kubeflow/common/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/common</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/caicloud/kube-ladder/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/kube-ladder</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/kleveross/ftlib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kleveross/ftlib</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/kfserving/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kfserving</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/microsoft/nni/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">microsoft/nni</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/caicloud/ciao/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">ray-project/ray</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/internal-acls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/internal-acls</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/volcano-sh/volcano/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">volcano-sh/volcano</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/weekly/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/weekly</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sql-machine-learning/sqlflow/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sql-machine-learning/sqlflow</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/manifests/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/manifests</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/talkgo/night/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">talkgo/night</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/sundial/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/sundial</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/dy-weekly-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/dy-weekly-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/xgboost-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/xgboost-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/mlsys-ladder/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/mlsys-ladder</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/katib</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/examples/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/examples</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ray-project/ray-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">ray-project/ray-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/maintainer/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gaocegege/maintainer</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 182 issues in 36 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>70</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>49</td>
+          <td><a href="https://github.com/kubeflow/katib/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/caicloud/ciao/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/caicloud/learning-unit-testing-for-k8s-operator/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/learning-unit-testing-for-k8s-operator</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/microsoft/nni/issues?q=is%3Aissue+author%3Agaocegege+">microsoft/nni</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/ray-project/ray-operator/issues?q=is%3Aissue+author%3Agaocegege+">ray-project/ray-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/caicloud/mlsys-ladder/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/mlsys-ladder</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/kfserving/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/kfserving</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/triton-inference-server/server/issues?q=is%3Aissue+author%3Agaocegege+">triton-inference-server/server</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes-sigs/controller-runtime/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/controller-runtime</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes-sigs/kubebuilder/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/kubebuilder</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/caicloud/cyclone/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mlnetes/test-repo/issues?q=is%3Aissue+author%3Agaocegege+">mlnetes/test-repo</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/community/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/PipelineAI/pipeline/issues?q=is%3Aissue+author%3Agaocegege+">PipelineAI/pipeline</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/awesome-resume-for-chinese/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/awesome-resume-for-chinese</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/lionelee/lionelee.github.io/issues?q=is%3Aissue+author%3Agaocegege+">lionelee/lionelee.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes-sigs/metrics-server/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/metrics-server</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/sample-controller/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes/sample-controller</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/NVIDIA/nvidia-docker/issues?q=is%3Aissue+author%3Agaocegege+">NVIDIA/nvidia-docker</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/vinx13/tvm-cuda-int8-benchmark/issues?q=is%3Aissue+author%3Agaocegege+">vinx13/tvm-cuda-int8-benchmark</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/philschatz/project-bot/issues?q=is%3Aissue+author%3Agaocegege+">philschatz/project-bot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/liamcli/randomNAS_release/issues?q=is%3Aissue+author%3Agaocegege+">liamcli/randomNAS_release</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/VertaAI/modeldb/issues?q=is%3Aissue+author%3Agaocegege+">VertaAI/modeldb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/double-entry-generator/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/double-entry-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/crd-validation/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/crd-validation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cncf/devstats/issues?q=is%3Aissue+author%3Agaocegege+">cncf/devstats</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/DS3Lab/easeml/issues?q=is%3Aissue+author%3Agaocegege+">DS3Lab/easeml</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/code4craft/code4craft.github.com/issues?q=is%3Aissue+author%3Agaocegege+">code4craft/code4craft.github.com</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/elasticdeeplearning/edl/issues?q=is%3Aissue+author%3Agaocegege+">elasticdeeplearning/edl</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hongzimao/decima-sim/issues?q=is%3Aissue+author%3Agaocegege+">hongzimao/decima-sim</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues?q=is%3Aissue+author%3Agaocegege+">GoogleCloudPlatform/spark-on-k8s-operator</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2018-年">2018 年</h2>
+<p>Opened 275 pull requests in 37 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>102</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>31</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>22</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>20</td>
+          <td><a href="https://github.com/dyweb/weekly/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/weekly</a></td>
+      </tr>
+      <tr>
+          <td>18</td>
+          <td><a href="https://github.com/caicloud/ciao/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/dyweb/sundial/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/sundial</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/dyweb/blog/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/dyweb/dy-bot/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/dy-bot</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubernetes-sigs/kube-batch/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes-sigs/kube-batch</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/kubebench/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/kubebench</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/sjtug/lug/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/lug</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/cncf/devstats/pulls?q=is%3Apr+author%3Agaocegege+">cncf/devstats</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/SJTUThesis-Markdown/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/SJTUThesis-Markdown</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/caicloud/nirvana/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/processing-r/Processing.R/pulls?q=is%3Apr+author%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes/kubernetes/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/kubernetes</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/pouchcontainer/pouchrobot/pulls?q=is%3Apr+author%3Agaocegege+">pouchcontainer/pouchrobot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/jupyter/kernel_gateway/pulls?q=is%3Apr+author%3Agaocegege+">jupyter/kernel_gateway</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/maintainer/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/maintainer</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/test-infra/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/test-infra</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se/pulls?q=is%3Apr+author%3Agaocegege+">SJTU-SE/awesome-se</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/projects/pulls?q=is%3Apr+author%3Agaocegege+">coala/projects</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/kubetidb/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/kubetidb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cncf/toc/pulls?q=is%3Apr+author%3Agaocegege+">cncf/toc</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/website/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/website</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ValveSoftware/steam-runtime/pulls?q=is%3Apr+author%3Agaocegege+">ValveSoftware/steam-runtime</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/dy-weekly-generator/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/dy-weekly-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tuna/blogroll/pulls?q=is%3Apr+author%3Agaocegege+">tuna/blogroll</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/alibaba/pouch/pulls?q=is%3Apr+author%3Agaocegege+">alibaba/pouch</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/influxdata/influxdb/pulls?q=is%3Apr+author%3Agaocegege+">influxdata/influxdb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/marketing-materials/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/marketing-materials</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 243 pull requests in 31 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>95</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>22</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>20</td>
+          <td><a href="https://github.com/kubeflow/community/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>19</td>
+          <td><a href="https://github.com/kubeflow/katib/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/coala/coala-vs-code/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala-vs-code</a></td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/coala/coala-ls/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala-ls</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/kubeflow/testing/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/testing</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/kubebench/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kubebench</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/kubeflow/website/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubernetes/frakti/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubernetes/frakti</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/sikaozhe1997/Xin-Yue/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sikaozhe1997/Xin-Yue</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/mpi-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/mpi-operator</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/ksdme/ksdme.github.io/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">ksdme/ksdme.github.io</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/cEPs/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/cEPs</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes-sigs/kube-batch/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubernetes-sigs/kube-batch</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/projects/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/projects</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/dy-weekly-generator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/dy-weekly-generator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/devops/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/devops</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/examples/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/examples</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/artwork/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/artwork</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/gommon/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/gommon</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/chainer-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/chainer-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/go.ice/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/go.ice</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/ciao/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/coala/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 397 issues in 60 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>75</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>74</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>36</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>34</td>
+          <td><a href="https://github.com/caicloud/ciao/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/ciao</a></td>
+      </tr>
+      <tr>
+          <td>29</td>
+          <td><a href="https://github.com/dyweb/weekly/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/weekly</a></td>
+      </tr>
+      <tr>
+          <td>29</td>
+          <td><a href="https://github.com/kubeflow/katib/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/katib</a></td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/gaocegege/Blog/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/community/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/community</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/issues?q=is%3Aissue+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/dyweb/dy-weekly-generator/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/dy-weekly-generator</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/devcomm-shanghai/community/issues?q=is%3Aissue+author%3Agaocegege+">devcomm-shanghai/community</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/sjtug/lug/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/lug</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/caicloud/nirvana/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/sikaozhe1997/Xin-Yue/issues?q=is%3Aissue+author%3Agaocegege+">sikaozhe1997/Xin-Yue</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/kubeflow/website/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/website</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/sjtug/thesis-bot/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/thesis-bot</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/scala-github-relationship/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/scala-github-relationship</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow-incubator/tfjob-java-client/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow-incubator/tfjob-java-client</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/siglt/papers/issues?q=is%3Aissue+author%3Agaocegege+">siglt/papers</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/sundial/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/sundial</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/coala-vs-code/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala-vs-code</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes-sigs/kube-batch/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes-sigs/kube-batch</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/examples/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/examples</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/pytorch-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/pytorch-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/alibaba/clusterdata/issues?q=is%3Aissue+author%3Agaocegege+">alibaba/clusterdata</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/GoogleContainerTools/kaniko/issues?q=is%3Aissue+author%3Agaocegege+">GoogleContainerTools/kaniko</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/SJTUThesis-Markdown/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/SJTUThesis-Markdown</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pingcap/tidb-operator/issues?q=is%3Aissue+author%3Agaocegege+">pingcap/tidb-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/awesome-resume-for-chinese/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/awesome-resume-for-chinese</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/community/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/example-seldon/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/example-seldon</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/processing-r/Processing.R/issues?q=is%3Aissue+author%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pouchcontainer/pouchrobot/issues?q=is%3Aissue+author%3Agaocegege+">pouchcontainer/pouchrobot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/yihui/tinytex/issues?q=is%3Aissue+author%3Agaocegege+">yihui/tinytex</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/tensorflow/ecosystem/issues?q=is%3Aissue+author%3Agaocegege+">tensorflow/ecosystem</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/TennyZhuang/blog/issues?q=is%3Aissue+author%3Agaocegege+">TennyZhuang/blog</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/marketing-materials/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/marketing-materials</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/devcomm-shanghai/sharing/issues?q=is%3Aissue+author%3Agaocegege+">devcomm-shanghai/sharing</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/colorful-contribution/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/colorful-contribution</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/caffe2-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/caffe2-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gocn/knowledge/issues?q=is%3Aissue+author%3Agaocegege+">gocn/knowledge</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/cyclone/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/vegasbrianc/K8s-demo/issues?q=is%3Aissue+author%3Agaocegege+">vegasbrianc/K8s-demo</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/alibaba/pouch/issues?q=is%3Aissue+author%3Agaocegege+">alibaba/pouch</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/Ovilia/lipstick/issues?q=is%3Aissue+author%3Agaocegege+">Ovilia/lipstick</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/mxnet-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/mxnet-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/dy-bot/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/dy-bot</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/kubeflow-benchmarks/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/kubeflow-benchmarks</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/paypal/gorealis/issues?q=is%3Aissue+author%3Agaocegege+">paypal/gorealis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/cncf/devstats/issues?q=is%3Aissue+author%3Agaocegege+">cncf/devstats</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/argoproj/argo/issues?q=is%3Aissue+author%3Agaocegege+">argoproj/argo</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/weekly/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/weekly</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ustctug/awesome-latex-thesis/issues?q=is%3Aissue+author%3Agaocegege+">ustctug/awesome-latex-thesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/rstudio/bookdown/issues?q=is%3Aissue+author%3Agaocegege+">rstudio/bookdown</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/arena/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/arena</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/coala-ls/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala-ls</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/dyweb.github.io/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/dyweb.github.io</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2017-年">2017 年</h2>
+<p>Opened 258 pull requests in 40 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>124</td>
+          <td><a href="https://github.com/processing-r/Processing.R/pulls?q=is%3Apr+author%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>12</td>
+          <td><a href="https://github.com/siglt/tosknight/pulls?q=is%3Apr+author%3Agaocegege+">siglt/tosknight</a></td>
+      </tr>
+      <tr>
+          <td>12</td>
+          <td><a href="https://github.com/prism-river/killy/pulls?q=is%3Apr+author%3Agaocegege+">prism-river/killy</a></td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td><a href="https://github.com/dyweb/blog/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/gaocegege/maintainer/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/maintainer</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/gaocegege/treadmill/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/treadmill</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/coala/coala-vs-code/pulls?q=is%3Apr+author%3Agaocegege+">coala/coala-vs-code</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/dyweb/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/pingcap/tidb/pulls?q=is%3Apr+author%3Agaocegege+">pingcap/tidb</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/processing-r/Processing.R-docs-tools/pulls?q=is%3Apr+author%3Agaocegege+">processing-r/Processing.R-docs-tools</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/Morgan-Stanley/treadmill/pulls?q=is%3Apr+author%3Agaocegege+">Morgan-Stanley/treadmill</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/processing-r/processing-r.github.io/pulls?q=is%3Apr+author%3Agaocegege+">processing-r/processing-r.github.io</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/coala/coala-bears/pulls?q=is%3Apr+author%3Agaocegege+">coala/coala-bears</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gaocegege/tidb/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/tidb</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/coala/pulls?q=is%3Apr+author%3Agaocegege+">coala/coala</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/cosname/cosx.org/pulls?q=is%3Apr+author%3Agaocegege+">cosname/cosx.org</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/OmniSharp/atom-languageclient/pulls?q=is%3Apr+author%3Agaocegege+">OmniSharp/atom-languageclient</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/projects/pulls?q=is%3Apr+author%3Agaocegege+">coala/projects</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubernetes/kubernetes/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/kubernetes</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/hyperhq/runv/pulls?q=is%3Apr+author%3Agaocegege+">hyperhq/runv</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/cyclone/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/emeryberger/CSrankings/pulls?q=is%3Apr+author%3Agaocegege+">emeryberger/CSrankings</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/alexkaessner/macOS-UI-Kit/pulls?q=is%3Apr+author%3Agaocegege+">alexkaessner/macOS-UI-Kit</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/mos/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/alibaba/pouch/pulls?q=is%3Apr+author%3Agaocegege+">alibaba/pouch</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/siglt/tosknight-ui/pulls?q=is%3Apr+author%3Agaocegege+">siglt/tosknight-ui</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/allencloud/docker-changelog-chinese/pulls?q=is%3Apr+author%3Agaocegege+">allencloud/docker-changelog-chinese</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/pouch/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/pouch</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/community/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/community</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/Blog/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/laohyx/electsys/pulls?q=is%3Apr+author%3Agaocegege+">laohyx/electsys</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/docker-coala-base/pulls?q=is%3Apr+author%3Agaocegege+">coala/docker-coala-base</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/macOS-UI-Kit/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/macOS-UI-Kit</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/AntBranch/awesome-github/pulls?q=is%3Apr+author%3Agaocegege+">AntBranch/awesome-github</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/course/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/course</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 32 pull requests in 16 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/coala/coala/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/processing-r/Processing.R/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/coala/coala-vs-code/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala-vs-code</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/coala-bears/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/coala-bears</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/docker-coala-base/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/docker-coala-base</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubeflow/kubeflow/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">kubeflow/kubeflow</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/website-old/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/website-old</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/projects/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">coala/projects</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/mlkube/mlkube/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">mlkube/mlkube</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/prism-river/killy/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">prism-river/killy</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/treadmill/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">gaocegege/treadmill</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 224 issues in 42 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>81</td>
+          <td><a href="https://github.com/processing-r/Processing.R/issues?q=is%3Aissue+author%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>41</td>
+          <td><a href="https://github.com/dyweb/papers-notebook/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/papers-notebook</a></td>
+      </tr>
+      <tr>
+          <td>19</td>
+          <td><a href="https://github.com/gaocegege/maintainer/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/maintainer</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/coala/coala-vs-code/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala-vs-code</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/siglt/tosknight/issues?q=is%3Aissue+author%3Agaocegege+">siglt/tosknight</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/dyweb/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se/issues?q=is%3Aissue+author%3Agaocegege+">SJTU-SE/awesome-se</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/gaocegege/Blog/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/Blog</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/coala/coala-bears/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala-bears</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/alibaba/clusterdata/issues?q=is%3Aissue+author%3Agaocegege+">alibaba/clusterdata</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/processing/processing-docs/issues?q=is%3Aissue+author%3Agaocegege+">processing/processing-docs</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/alibaba/pouch/issues?q=is%3Aissue+author%3Agaocegege+">alibaba/pouch</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/prism-river/killy/issues?q=is%3Aissue+author%3Agaocegege+">prism-river/killy</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gsoc-cn/gsoc-cn/issues?q=is%3Aissue+author%3Agaocegege+">gsoc-cn/gsoc-cn</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/blog/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/coala/coala/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/bedatadriven/renjin/issues?q=is%3Aissue+author%3Agaocegege+">bedatadriven/renjin</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/infrastructure-in-golang/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/infrastructure-in-golang</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/kubeflow/tf-operator/issues?q=is%3Aissue+author%3Agaocegege+">kubeflow/tf-operator</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/prism-river/killy-plugin/issues?q=is%3Aissue+author%3Agaocegege+">prism-river/killy-plugin</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/coala-jenkins/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/coala-jenkins</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/Morgan-Stanley/treadmill/issues?q=is%3Aissue+author%3Agaocegege+">Morgan-Stanley/treadmill</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/Azure/AzurePublicDataset/issues?q=is%3Aissue+author%3Agaocegege+">Azure/AzurePublicDataset</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/codacy/codacy-coverage-reporter/issues?q=is%3Aissue+author%3Agaocegege+">codacy/codacy-coverage-reporter</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/car-driving-notice/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/car-driving-notice</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/coala-langserver/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/coala-langserver</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/kubernetes/issues?q=is%3Aissue+author%3Agaocegege+">kubernetes/kubernetes</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/cyclone/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sise-json/wemysise/issues?q=is%3Aissue+author%3Agaocegege+">sise-json/wemysise</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/chyyuu/simple_os_book/issues?q=is%3Aissue+author%3Agaocegege+">chyyuu/simple_os_book</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ice1000/CompilerWorks/issues?q=is%3Aissue+author%3Agaocegege+">ice1000/CompilerWorks</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/google/styleguide/issues?q=is%3Aissue+author%3Agaocegege+">google/styleguide</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/pingcap/tidb/issues?q=is%3Aissue+author%3Agaocegege+">pingcap/tidb</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/scrala/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/scrala</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/resume-2018/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/resume-2018</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/coala/coala-atom/issues?q=is%3Aissue+author%3Agaocegege+">coala/coala-atom</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/caicloud/nirvana/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/nirvana</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/cv/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/cv</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/travel-research/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/travel-research</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/InkProject/ink/issues?q=is%3Aissue+author%3Agaocegege+">InkProject/ink</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2016-年">2016 年</h2>
+<p>Opened 74 pull requests in 30 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>26</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td><a href="https://github.com/dyweb/Ayi/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/Ayi</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gaocegege/csp-final-paper-2016/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/csp-final-paper-2016</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/geeeeeeeeek/electronic-wechat/pulls?q=is%3Apr+author%3Agaocegege+">geeeeeeeeek/electronic-wechat</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/blog/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/pulls?q=is%3Apr+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/SJTU-SE/awesome-se/pulls?q=is%3Apr+author%3Agaocegege+">SJTU-SE/awesome-se</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/hstcaroline/fwwbFront/pulls?q=is%3Apr+author%3Agaocegege+">hstcaroline/fwwbFront</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/gaocegege/cyclone/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/web-stuff/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/web-stuff</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hyperhq/runv/pulls?q=is%3Apr+author%3Agaocegege+">hyperhq/runv</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/bigbully/Dapper-translation/pulls?q=is%3Apr+author%3Agaocegege+">bigbully/Dapper-translation</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/laohyx/electsys/pulls?q=is%3Apr+author%3Agaocegege+">laohyx/electsys</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/avelino/awesome-go/pulls?q=is%3Apr+author%3Agaocegege+">avelino/awesome-go</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/awesome-docker/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/awesome-docker</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/veggiemonk/awesome-docker/pulls?q=is%3Apr+author%3Agaocegege+">veggiemonk/awesome-docker</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/opencontainers/runc/pulls?q=is%3Apr+author%3Agaocegege+">opencontainers/runc</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/aploium/zmirror/pulls?q=is%3Apr+author%3Agaocegege+">aploium/zmirror</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/drone/drone/pulls?q=is%3Apr+author%3Agaocegege+">drone/drone</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/processing/processing/pulls?q=is%3Apr+author%3Agaocegege+">processing/processing</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hyper0x/awesome-go-China/pulls?q=is%3Apr+author%3Agaocegege+">hyper0x/awesome-go-China</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/daocloud-docs/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/daocloud-docs</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/moby/moby/pulls?q=is%3Apr+author%3Agaocegege+">moby/moby</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/adrai/flowchart.js/pulls?q=is%3Apr+author%3Agaocegege+">adrai/flowchart.js</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dozer47528/dozer47528.github.io/pulls?q=is%3Apr+author%3Agaocegege+">dozer47528/dozer47528.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/weekly/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/weekly</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kubernetes/kubernetes/pulls?q=is%3Apr+author%3Agaocegege+">kubernetes/kubernetes</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/DaoCloud/daocloud-docs/pulls?q=is%3Apr+author%3Agaocegege+">DaoCloud/daocloud-docs</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/gaocegege/hello-ci/pulls?q=is%3Apr+author%3Agaocegege+">gaocegege/hello-ci</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hackstoic/golang-open-source-projects/pulls?q=is%3Apr+author%3Agaocegege+">hackstoic/golang-open-source-projects</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 12 pull requests in 3 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>9</td>
+          <td><a href="https://github.com/caicloud/cyclone/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/blog/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">dyweb/blog</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/xephonhq/xephon-b/pulls?q=is%3Apr+reviewed-by%3Agaocegege+">xephonhq/xephon-b</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Opened 64 issues in 22 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>17</td>
+          <td><a href="https://github.com/caicloud/cyclone/issues?q=is%3Aissue+author%3Agaocegege+">caicloud/cyclone</a></td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td><a href="https://github.com/processing-r/Processing.R/issues?q=is%3Aissue+author%3Agaocegege+">processing-r/Processing.R</a></td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td><a href="https://github.com/dyweb/mos/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/mos</a></td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td><a href="https://github.com/dyweb/scrala/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/scrala</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/gaocegege/csp-final-paper-2015/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/csp-final-paper-2015</a></td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td><a href="https://github.com/gaocegege/csp-final-paper-2016/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/csp-final-paper-2016</a></td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/gaocegege/flower-power/issues?q=is%3Aissue+author%3Agaocegege+">gaocegege/flower-power</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/jinyx728/Simple-Database/issues?q=is%3Aissue+author%3Agaocegege+">jinyx728/Simple-Database</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/laohyx/electsys/issues?q=is%3Aissue+author%3Agaocegege+">laohyx/electsys</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/inishchith/em-keyboard/issues?q=is%3Aissue+author%3Agaocegege+">inishchith/em-keyboard</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/aploium/zmirror/issues?q=is%3Aissue+author%3Agaocegege+">aploium/zmirror</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/geeeeeeeeek/electronic-wechat/issues?q=is%3Aissue+author%3Agaocegege+">geeeeeeeeek/electronic-wechat</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/nsf/gocode/issues?q=is%3Aissue+author%3Agaocegege+">nsf/gocode</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/0x5e/wechat-deleted-friends/issues?q=is%3Aissue+author%3Agaocegege+">0x5e/wechat-deleted-friends</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dyweb/Ayi/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/Ayi</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/at15/7in7/issues?q=is%3Aissue+author%3Agaocegege+">at15/7in7</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/programthink/zhao/issues?q=is%3Aissue+author%3Agaocegege+">programthink/zhao</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/at15/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">at15/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/spf13/cobra/issues?q=is%3Aissue+author%3Agaocegege+">spf13/cobra</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hackfdu/hackfdu.github.io/issues?q=is%3Aissue+author%3Agaocegege+">hackfdu/hackfdu.github.io</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/drone/drone/issues?q=is%3Aissue+author%3Agaocegege+">drone/drone</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2015-年">2015 年</h2>
+<p>Opened 5 pull requests in 3 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/dyweb/web-stuff/pulls?q=is%3Apr+author%3Agaocegege+">dyweb/web-stuff</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/helm/helm/pulls?q=is%3Apr+author%3Agaocegege+">helm/helm</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/leancloud/docs/pulls?q=is%3Apr+author%3Agaocegege+">leancloud/docs</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 0 pull requests in 0 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<p>Opened 13 issues in 10 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>3</td>
+          <td><a href="https://github.com/dyweb/scrala/issues?q=is%3Aissue+author%3Agaocegege+">dyweb/scrala</a></td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td><a href="https://github.com/InkProject/ink/issues?q=is%3Aissue+author%3Agaocegege+">InkProject/ink</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hzlzh/Best-App/issues?q=is%3Aissue+author%3Agaocegege+">hzlzh/Best-App</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/fool2fish/dragon-book-exercise-answers/issues?q=is%3Aissue+author%3Agaocegege+">fool2fish/dragon-book-exercise-answers</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/codacy/sbt-codacy-coverage/issues?q=is%3Aissue+author%3Agaocegege+">codacy/sbt-codacy-coverage</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dubuqingfeng/Docker-Images/issues?q=is%3Aissue+author%3Agaocegege+">dubuqingfeng/Docker-Images</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hczhcz/duang/issues?q=is%3Aissue+author%3Agaocegege+">hczhcz/duang</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/ymirpl/networkx-thesis/issues?q=is%3Aissue+author%3Agaocegege+">ymirpl/networkx-thesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/colder/insane/issues?q=is%3Aissue+author%3Agaocegege+">colder/insane</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/codacy/codacy-coverage-reporter/issues?q=is%3Aissue+author%3Agaocegege+">codacy/codacy-coverage-reporter</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2014-年">2014 年</h2>
+<p>Opened 2 pull requests in 2 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hczhcz/myparser/pulls?q=is%3Apr+author%3Agaocegege+">hczhcz/myparser</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/muan/emoji/pulls?q=is%3Apr+author%3Agaocegege+">muan/emoji</a></td>
+      </tr>
+  </tbody>
+</table>
+<p>Reviewed 0 pull requests in 0 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<p>Opened 6 issues in 6 repositories</p>
+<table>
+  <thead>
+      <tr>
+          <th>Count</th>
+          <th>Repository</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/hmfaysal/Notepad/issues?q=is%3Aissue+author%3Agaocegege+">hmfaysal/Notepad</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/dtysky/Gal2Renpy/issues?q=is%3Aissue+author%3Agaocegege+">dtysky/Gal2Renpy</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/sjtug/SJTUThesis/issues?q=is%3Aissue+author%3Agaocegege+">sjtug/SJTUThesis</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/0ssifrage/SJTUScoreFetcher/issues?q=is%3Aissue+author%3Agaocegege+">0ssifrage/SJTUScoreFetcher</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/kirkas/Ascensor.js/issues?q=is%3Aissue+author%3Agaocegege+">kirkas/Ascensor.js</a></td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td><a href="https://github.com/victorporof/Sublime-HTMLPrettify/issues?q=is%3Aissue+author%3Agaocegege+">victorporof/Sublime-HTMLPrettify</a></td>
+      </tr>
+  </tbody>
+</table>
+<div class="cf"></div>
+<section class="summer-disqus row">
+    <div class="small-12 columns">
+        <h1 class="summer-comments-header">评论</h1>
+        <div id="disqus_thread"></div>
+        {% include disqus_comments.html %}
+    </div>
+</section>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

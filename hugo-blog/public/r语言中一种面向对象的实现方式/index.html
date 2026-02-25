@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>R语言中一种面向对象的实现方式～？ | 高策</title>
+<meta name="description" content="R语言实现面向对象">
+<meta name="keywords" content="R">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="R语言中一种面向对象的实现方式～？">
+<meta name="twitter:description" content="R语言实现面向对象">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R语言中一种面向对象的实现方式～？">
+<meta property="og:description" content="R语言实现面向对象">
+<meta property="og:url" content="https://gaocegege.com/Blog/r%E8%AF%AD%E8%A8%80%E4%B8%AD%E4%B8%80%E7%A7%8D%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>R语言中一种面向对象的实现方式～？</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近在学习R语言，然后有一些想法。</p>
+<h1 id="r语言与面向对象">R语言与面向对象</h1>
+<p>R语言是一门开源的数据统计语言吧，感觉上跟MatLab是一样的存在。学习它的初衷也是取代MatLab，因为在Mac OS10.10中还不知道怎么安装MatLab，而Octave等等也表现不是很让人满意，R语言在Mac上的IDE听说出奇的好用，于是决定学学它，倒是有不少收获。</p>
+<p>而至于面向对象，就不多说了。因为初学R语言，不知道R有没有提供面向对象的实现方法，但是在看Coursera上JHU的R Programming的课程感觉有一种比较简单的实现面向对象的方式。</p>
+<h2 id="实现方式">实现方式</h2>
+<p>现在对于R的了解，仅仅停留在函数上，因此想到的这种实现方式也是用函数来实现。其实想法很简单，看代码就可以一目了然～</p>
+<pre><code>MyClass &lt;- function(var){
+	private.var &lt;- var
+	addOne &lt;- function(){
+		private.var &lt;&lt;- private.var + 1
+	}
+	printVar &lt;- function(){
+		private.var
+	}
+	list(printVar = printVar, addOne = addOne)
+}
+</code></pre>
+<p>以上代码把对一个变量var的自增和打印封装成了一个类MyClass，类有两个函数，一个是addOne()，一个是printVar()，其中比较有趣的地方在于其返回值上，我是把两个函数作为参数，添加到一个list中，然后返回这个list。</p>
+<p>其实相当于调用MyClass函数时，得到的参数是一个函数列表，有了这样一个列表，就可以访问MyClass中所有的方法了。当然如果有私有方法，可以不放入list中。</p>
+<p>下面是一个用例～</p>
+<pre><code>&gt; myc &lt;- MyClass(1)
+&gt; myc$printVar()
+[1] 1
+&gt; myc$addOne()
+&gt; myc$printVar()
+[1] 2
+</code></pre>
+<p>不过这样做肯定也是有局限性的，比如如何继承，如何多态。这样只能实现最简单的面向对象的思想吧。。。</p>
+<p>想法来自<a href="https://www.coursera.org/course/rprog">rprog in coursera</a>的课程作业二。</p>
+<h2 id="继承与多态">继承与多态</h2>
+<p>在参考了下面评论中h的发言后，想到了实现继承与多态的方式。</p>
+<pre><code>Shape &lt;- function(){
+    isShape &lt;- function(){
+        &quot;No Shape&quot;
+    }
+    getArea &lt;- function(){
+        &quot;No Shape&quot;
+    }
+    list(getArea = getArea, isShape = isShape)
+}
+
+Triangle &lt;- function(a, b, c){
+    superClass &lt;- Shape()
+    private.a &lt;- a
+    private.b &lt;- b
+    private.c &lt;- c
+    superClass$isShape &lt;- function(){
+        if (a + b &gt; c &amp; a + c &gt; b &amp; b + c &gt; a)
+            &quot;Yes, it is a triangle.&quot;
+        else
+            &quot;No, sorry.&quot;
+    }
+    
+    superClass$getArea &lt;- function(){
+        p &lt;- (private.a + private.b + private.c) / 2
+        area &lt;- sqrt(p * (p - a) * (p - b) * (p - c))
+        area
+    }
+    
+    getA &lt;- function() {private.a}
+    superClass$getA &lt;- getA
+    superClass
+}
+</code></pre>
+<p>嗯就是这样，修改函数列表中的内容可以实现多态，添加新的函数进列表可以实现继承的思想，机智。下面是一个用例～</p>
+<pre><code>&gt; shape &lt;- Shape()
+&gt; shape$isShape()
+[1] &quot;No Shape&quot;
+&gt; tri &lt;- Triangle(3,4,5)
+&gt; tri$isShape()
+[1] &quot;Yes, it is a triangle.&quot;
+&gt; tri$getArea()
+[1] 6
+&gt; tri$getA()
+[1] 3
+</code></pre>
+<p>PS：看上去highlight.js不太支持R语言啊～</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

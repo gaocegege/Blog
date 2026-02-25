@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>C&#43;&#43;奇奇怪怪的题目之父类子类函数重载隐藏 | 高策</title>
+<meta name="description" content="C&#43;&#43;题目">
+<meta name="keywords" content="cpp">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="C&#43;&#43;奇奇怪怪的题目之父类子类函数重载隐藏">
+<meta name="twitter:description" content="C&#43;&#43;题目">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#43;&#43;奇奇怪怪的题目之父类子类函数重载隐藏">
+<meta property="og:description" content="C&#43;&#43;题目">
+<meta property="og:url" content="https://gaocegege.com/Blog/c-%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E7%9A%84%E9%A2%98%E7%9B%AE%E4%B9%8B%E7%88%B6%E7%B1%BB%E5%AD%90%E7%B1%BB%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E9%9A%90%E8%97%8F/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>C&#43;&#43;奇奇怪怪的题目之父类子类函数重载隐藏</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>这是在面试张江的某个公司的时候被问到的问题，当时并不知道，后来在看别人博客的时候发现的。</p>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+class A
+{
+public:
+	void foo(){cout &lt;&lt; &quot;FOOA&quot; &lt;&lt; endl;}
+};
+
+class B:public A
+{
+public:
+	void foo(int x){cout &lt;&lt; &quot;FOOB&quot; &lt;&lt; endl;}
+};
+
+int main(int argc, char const *argv[])
+{
+	B b;
+	b.foo();
+	return 0;
+}
+</code></pre>
+<p>上面的代码，B继承A，A中有一个参数为空的foo函数，B中有一个参数为int的foo函数，然后让B来调用A中的foo，会报错：</p>
+<pre>
+./test.cpp:20:4: error: too few arguments to function call, expected 1, have 0; did you mean 'A::foo'?
+        b.foo();
+        ~~^~~
+          A::foo
+./test.cpp:8:7: note: 'A::foo' declared here
+        void foo(){cout << "FOOA" << endl;}
+             ^
+1 error generated.
+</pre>
+<p>也就是说B中foo函数的定义隐藏掉了A中foo的定义，尽管两者函数签名不同，但是还是不能这样来调用A中foo。当然，如果写成以下这样，是可以正常调用的：</p>
+<pre><code>int main(int argc, char const *argv[])
+{
+	B b;
+	b.A::foo();
+	return 0;
+}
+</code></pre>
+<p>C++之所以这么设计，可能是有一定的考量的，比如说我们定义一个A中foo参数为<code>void *</code>，然后在继承它的类B中有一个函数foo参数为<code>int</code>，这种情况下在调用B中的foo，参数为<code>NULL</code>的时候，会发生什么呢，到底<code>NULL</code>被解释为0还是一个指针。这个例子是在<a href="http://stackoverflow.com/questions/1628768/why-does-an-overridden-function-in-the-derived-class-hide-other-overloads-of-the">StackOverflow的一个问题</a>中看到的，当然现在可以通过将NULL替代成nullptr来实现，但是早期是没有办法的。</p>
+<p>可能就是出于这样的考量，c++选择了这种设计。不过其实我觉得这个说法是不对的，因为下面的代码同样会有这样的问题：</p>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+void foo(void *p)
+{
+	cout &lt;&lt; &quot;AAA\n&quot;;
+}
+
+void foo(int p)
+{
+	cout &lt;&lt; &quot;BBB\n&quot;;
+}
+
+int main(int argc, char const *argv[])
+{
+	foo(NULL);
+	return 0;
+}
+</code></pre>
+<p>这样编译器会报错是</p>
+<pre>
+./test.cpp:17:2: error: call to 'foo' is ambiguous
+        foo(NULL);
+        ^~~
+./test.cpp:5:6: note: candidate function
+void foo(void *p)
+     ^
+./test.cpp:10:6: note: candidate function
+void foo(int p)
+     ^
+1 error generated.
+</pre>
+<p>证明如果是如例子中所讲，这样应该也是不允许的，但是却是报错有二义性，那么上面那种子类与父类重载隐藏的问题应该也可以通过这种报二义性来处理，这样可以使得在绝大多数情况下子类与父类之间可以实现函数的重载。</p>
+<h2 id="结论">结论</h2>
+<p>所以结论就是，不知道c++是出于什么目的，总之就是这样的设定，在子类与父类的作用域中出现的同名不同参的函数，父类中此类函数会被隐藏。</p>
+<p>同时，父类中与子类同名的变量也会像这样处理，不会报错。比如</p>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+class A
+{
+public:
+	A(){cout &lt;&lt; &quot;Construct A\n&quot;;}
+	~A(){cout &lt;&lt; &quot;Destruct A\n&quot;;}
+	int a;
+};
+
+class B
+{
+public:
+	B(){cout &lt;&lt; &quot;Construct B\n&quot;;}
+	~B(){cout &lt;&lt; &quot;Destruct B\n&quot;;}
+	int c;
+};
+
+class C: public A, public B
+{
+public:
+	C(){cout &lt;&lt; &quot;Construct C\n&quot;;}
+	~C(){cout &lt;&lt; &quot;Destruct C\n&quot;;}
+	int c;
+	
+};
+
+int main(int argc, char const *argv[])
+{
+	C c;
+	c.B::c = 1;
+	c.c = 2;
+	cout &lt;&lt; sizeof(c) &lt;&lt; endl;
+	cout &lt;&lt; c.B::c &lt;&lt; endl;
+	return 0;
+}
+</code></pre>
+<p>注意就好。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

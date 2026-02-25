@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>微服务：从不入门到入门 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="读书">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="微服务：从不入门到入门">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务：从不入门到入门">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8E%E4%B8%8D%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E9%97%A8/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>微服务：从不入门到入门</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p><a href="http://samnewman.io/books/building_microservices/">《微服务设计(Building Microservices)》</a>是 <a href="http://samnewman.io/">Sam Newman</a> 所著的一本动物书。这本书介绍了作者在 ThoughtWorks 的工作过程中一些对于微服务的认识和实践，还不错，就读了读。微服务大家肯定都不陌生了，在 2015 年的时候，我曾经在实验室的一个移动应用项目中尝试过微服务的架构，但是并不是太成功。那时并没有太多书籍和最佳实践可以参考。在读了这本书后，发现确实很多问题是所有第一次试水微服务架构的开发者都会遇到的。</p>
+<h2 id="由来">由来</h2>
+<p>先说微服务的由来，微服务概念是 Peter Rodgers 博士在 2006 年提出的，而真正火起来，是在 2014 年左右。国内在 2015 年左右，就可以在各种业界的开发者会议上听到微服务的名字。</p>
+<p>任何技术或者应用模式，乃至架构方式大行其道的背后，一定是现在的一些基础设施或大环境的变化日积月累造成的。Docker 之所以能够在 2013 年左右火起来，是因为 Linux Containers 等等内核 feature 的出现。微服务的火爆，在我看来，最大的原因就是 Docker 的出现。</p>
+<p>Docker 的轻量容器，使得微服务有了很好的载体，两者简直是一个是阆苑仙葩，一个是美玉无瑕。除此之外，RESTful 的 API 构造方式和网速的提高也使得微服务默认以 HTTP 请求来进行交互，而不是效率更高但难以管理的 RPC。而应用逻辑的日益复杂，使得各个公司和开源组织有动力为服务实现需要的底层基础设施，比如服务发现和 API 网关。各种因素综合起来，导致了现在微服务概念的火爆。</p>
+<h2 id="实践">实践</h2>
+<h3 id="服务交互">服务交互</h3>
+<p>服务之间的交互是微服务实现中非常关键的一环。交互的方式有同步与异步，以及混合三种。同步交互的代表是 RPC 和 RESTful API，是基于请求/相应的模式。而异步的代表是基于事务的模式。如果是同步的方式，编程相对而言会简单一些，代码的可读性也会高很多，很多逻辑是天然适合同步机制的。但是与此同时，整个系统的请求响应时间会延长，因为有些时间花费在了等待同步返回上。而且同步的方式要求有一个服务要管理请求的生命周期，要驱动和指导所有的服务来完成请求，就像乐队的指挥一样。这样会使得服务网络中的有些节点成为了中心节点，他们的可用性对整个系统影响特别大，也就是书中所谓的上帝节点。</p>
+<p>而异步的交互方式，会降低系统的请求响应时间，但是也会引入额外的编程和管理上的成本。异步会使得业务逻辑变得分散，异常处理也会是一场灾难。因此在进行微服务的选型时，建议是如果同步的方式可以满足要求，那同步优先。如果需要更好的请求响应时间，再考虑使用异步的方式。</p>
+<p>在一般现实的系统中，往往都是同步与异步混合存在的态势，真正需要长时间处理的任务，往往通过异步的方式，而相对简单的任务，同步是更好的选择。</p>
+<h3 id="数据库">数据库</h3>
+<p>数据库在微服务的落地过程中，是大魔王级别的存在。如何能够根据服务重新组织数据库，是非常困难的。这本书从很多方面讨论了这个问题。</p>
+<p>在我第一次进行微服务的尝试时，采取了通过数据库来进行服务之间的集成。也就是所有的服务都访问同一个数据库，所有的服务拥有对所有表的访问权限。但是这样的方式就破坏了服务的高内聚低耦合。这是非常不可取的，它使得你的微服务本质上只是不同的服务进程，做不同的事情而已，没有实现低耦合高内聚，在管理上反而更加麻烦。不过这样的做法有一个好处，就是从 monolithic 应用迁移过来的时候数据库可能不需要多大的改动就可以直接使用。</p>
+<p>尽管如此，所有服务使用同一个数据库的方式并不是最好的选择。比较好的方式是每个服务只访问自己的数据库，因此在从 monolithic 应用迁移到微服务的过程中，难免会涉及到对数据库的重构。在这个过程中比较好的实践是，先进行数据库的分割，再进行服务的分割。因为数据库的分割是风险更大的，先完成风险大的任务会降低在微服务化过程中潜在的风险。</p>
+<p>在数据库分割的过程中，需要注意的问题主要有两点，一点是分割的边界，一点是一致性。分割的边界是指应该以什么尺度来分割数据库，这是跟服务的分割息息相关的，往往是按照服务的维度来进行。需要注意的是，在分割的过程中，往往会使得很多数据库的外键没办法继续使用，这也是一种取舍。</p>
+<p>除此之外，一致性问题也是微服务中一个非常常见的问题，这是在分布式系统领域一个亘古不变的话题。如果一个事务，需要涉及到多个数据库实例中表的操作，那如何能够保证这个事务的事务性（ACID），是一个值得考虑的问题。数据库只能保证在单个数据库中事务的事务性，但如果是跨数据库的操作，问题就会复杂很多。一般来说业界比较常用的方法是使用两阶段或者三阶段提交来解决这个问题。也就是有一个中心节点，来协调不同数据库的工作，如果所有的操作都完成了，事务成功，否则会进行重试，或者 abort，来保证 all or nothing。</p>
+<p>但是两阶段或者三阶段提交会为系统引入很大的复杂度，而且一致性的错误变得更加难以定位。这时候可以考虑能不能牺牲严格的一致性，用一些简单的方式来实现数据的最终一致性，比如把失败的请求放入一个队列，后台进行处理等等方式。</p>
+<h3 id="持续集成与部署">持续集成与部署</h3>
+<p>这个部分应该是 ThoughtWorks 擅长的领域，但是我本身对其并不是太感兴趣。因为我觉得相比于迁移，这部分是非常简单的工作。在 2016 年的时候我也协助 <a href="https://caicloud.io/">caicloud</a> 实现了其 CI 工具 <a href="https://github.com/caicloud/cyclone">Cyclone</a>。这一类的工具需要考虑的其实并不多，因此觉得并没有很大的花样可以玩，因此略过不谈。</p>
+<h3 id="测试">测试</h3>
+<p>微服务场景下的测试，跟寻常的测试并无二致。常规的单元测试和端到端测试是不可少的。但因为引入了服务的抽象，因此服务级别的测试也是必不可少的。服务级别的测试需要 mock 其他的服务，因此有额外的复杂度。</p>
+<h3 id="监控">监控</h3>
+<p>之前写过一篇博客：<a href="http://gaocegege.com/Blog/%E9%98%85%E8%AF%BB/sre-0">Google SRE 阅读笔记(1)-监控</a>，是在读了 Google SRE 之后写的读后感。而在这本书中，从不同的角度写了对监控的看法。这本书主要讲了微服务场景下的一些监控挑战。</p>
+<p>首先，手动监控肯定是不行的。随着规模的上升，手动监控查看服务运行状态的方式无疑是自寻死路。所以必然要引入工具来监控。书中比较有意思的一点是，建议暴露出服务内部的一些监控数据。举个例子，如果是订单服务，可以暴露每分钟处理的订单量，这样有利于定位问题。</p>
+<h3 id="安全">安全</h3>
+<p>安全问题，首当其冲的是身份验证和授权问题。为了实现单点登录，粗粒度的身份验证可以放在 API 网关来实现，但并不建议细粒度的授权也放在其中，尽管这也是可以实现的。</p>
+<p>在服务之间调用的安全保证上，可以选择使用同一个 API 网关来鉴权。除此之外，HTTPS，SMAL OPENID，客户端证书（TLS），HMAC on HTTP（JWT）等等都是可以选择，要看对安全的要求以及实施的难易程度而定。</p>
+<h2 id="结">结</h2>
+<p>差不多书中核心的部分就是这些，后面还有很多内容，但是作为低级玩家，这些已经足够了。如果你想从零入门，那可能需要先看看 Eric Evans 的《领域驱动模型设计》，再看这本书，会有更好的感觉。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

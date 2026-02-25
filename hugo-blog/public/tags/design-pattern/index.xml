@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design Pattern on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/design-pattern/</link>
+    <description>Recent content in Design Pattern on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sun, 19 Apr 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/design-pattern/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>适配器模式</title>
+      <link>https://gaocegege.com/Blog/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Sun, 19 Apr 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;p&gt;适配器模式，是一个提高接口复用的模式，他的作用是，把一个原本存在的接口包装成另一番摸样，使得原本因为接口问题不能使用的类可以使用了。在我看来是开闭原则的一种体现吧。&lt;/p&gt;&#xA;&lt;p&gt;适配器有两种，一种是类适配器，一种是对象适配器。类适配器，就是利用类的继承，去实现适配的作用。对象适配器，是利用组合，就是在适配器类中有被适配的类的实例，通过这个实例来实现适配的作用。这个看看UML图就可以比较详细地了解了。&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/design-pattern/adapter.jpg&#34; alt=&#34;适配器模式&#34; height=&#34;500&#34; width=&#34;500&#34;&gt;&#xA;&#x9;&lt;figcaption&gt;适配器模式&lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;两者的差别就是一个是通过继承，一个是通过组合，利用实例的方式去进行。本身对于两个方法的应用场景，是比较疑惑的。对象适配器的好处，似乎是在于可以使得一个适配器能够适配很多的待适配类。因为Java是不允许多重继承的，因此要是想通过一个适配器来适配多于一个的待适配类的时候，使用对象适配器似乎是更加合适的选择。不过对象适配器因为是使用一个对象，所以当适配器类被多次实例化，那他们引用的对象是同一个还是不同的对象之类的，会产生一些细节问题。所以对象适配器在实现起来会比较复杂一点。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Factory与Abstract Factory模式</title>
+      <link>https://gaocegege.com/Blog/factory%E4%B8%8Eabstract-factory%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 15 Apr 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/factory%E4%B8%8Eabstract-factory%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;p&gt;最近发现&lt;a href=&#34;http://www.amazon.cn/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8F%B2%E8%92%82%E8%8A%AC%E2%80%A2%E7%BA%A6%E7%BF%B0%E2%80%A2%E6%A2%85%E7%89%B9%E6%96%AF%E5%85%8B/dp/B0093O0V4E/ref=sr_1_6?ie=UTF8&amp;amp;qid=1429104781&amp;amp;sr=8-6&amp;amp;keywords=java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F&#34;&gt;Java设计模式&lt;/a&gt;这本书，很是不适合一般人看。里面基本全是UML类图，没有多少代码。而且基本一页一道习题，三百多页的书，真实内容其实很少，还看不懂。幸亏是图书馆借的，要是75块买来真是亏死。废话说完了。。。&lt;/p&gt;&#xA;&lt;h1 id=&#34;factory-method&#34;&gt;Factory Method&lt;/h1&gt;&#xA;&lt;p&gt;工厂模式，这个词听到过好多次了，今天才真正去学习它。感觉没什么很令人震撼的思想，可能越是有用的东西就越是朴素吧。工厂模式在我看来，就是说内化实例化的逻辑，对外表现统一。也就是在类在有继承等等的时候，可以通过工厂方法，得到正确的实例。我觉得&lt;a href=&#34;http://www.tutorialspoint.com/design_pattern/factory_pattern.htm&#34;&gt;tutorialspoint&lt;/a&gt;讲的比较简单清楚，主要是例子简单。其实就是说，根据参数或者内在的状态，是可以决定在工厂方法被调用的时候是应该返回什么类型的实例的。那这时候将这一段逻辑放在工厂方法里面，这样在外面看起来，只要调用这个方法，它就会返回不同类型的实例。&lt;/p&gt;&#xA;&lt;h1 id=&#34;abstract-factory-method&#34;&gt;Abstract Factory Method&lt;/h1&gt;&#xA;&lt;p&gt;抽象工厂模式，感觉像是工厂的工厂，我确实不太明白它与工厂模式的区别，我觉得都是一个东西啊，都是根据逻辑来动态返回正确类型的实例。还是觉得&lt;a href=&#34;http://www.tutorialspoint.com/design_pattern/abstract_factory_pattern.htm&#34;&gt;tutorialspoint&lt;/a&gt;讲的不错，大致就是把工厂类也抽象出来，成为一个继承的结构，那这个继承的结构中，根节点，也就是父类，就是抽象工厂。感觉上只是抽象层级高了一些，没有本质的变化啊，不知道想的对不对。&lt;/p&gt;&#xA;&lt;h1 id=&#34;warning&#34;&gt;Warning&lt;/h1&gt;&#xA;&lt;p&gt;课上听到一句，工厂可能是系统的瓶颈所在，主要是因为你是不知道工厂的实现是怎样的，如果工厂内部逻辑很复杂，在调用工厂方法产生实例的时候就会消耗很多资源，似乎确实是这样。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Builder模式</title>
+      <link>https://gaocegege.com/Blog/builder%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/builder%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;p&gt;只是初学，有问题可以讨论~&lt;/p&gt;&#xA;&lt;h2 id=&#34;builder模式&#34;&gt;Builder模式&lt;/h2&gt;&#xA;&lt;p&gt;假设现在我们需要构造一个对象，这个对象有好多的成员变量。就比如说是这个对象是用来保存产品的营养参考信息，需要保存产品的含糖量，脂肪含量，等等。那在这么多的成员变量里，有些成员变量是必须被初始化的，有些成员变量是不一定需要给定的。比如说产品的食用剂量是需要给定的，其他所有的数据都是可以不给定的。那这个时候，如果用构造函数应该如何去做呢，应该申明一个构造函数，它有一个必须的参数，其他还有很多个可选参数。&lt;/p&gt;&#xA;&lt;p&gt;这样使用构造函数会有一些不方便，因为在Java里面，函数参数只允许按位传递，不支持按名称传递，所谓按名称传递，就是说比如函数声明为&lt;code&gt;def fun(arg1, arg2, arg3)&lt;/code&gt;，在Python等支持按名称传递的语言里就可以这样写：&lt;code&gt;fun(1, arg2=2, arg3=3)&lt;/code&gt;。可以根据函数定义时候的参数的名字来绑定传入的参数。所以在构造上面提到的这种需要参数比较多，而且存在必选可可选参数之分的情况的时候，构造函数是比较难以Hold住这样的情况的。&lt;/p&gt;&#xA;&lt;p&gt;而Builder模式可以解决这样的问题。&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;// Builder Pattern&#xA;public class NutritionFacts {&#xA;&#x9;private final int servingSize;&#xA;&#x9;private final int servings;&#xA;&#x9;private final int calories;&#xA;&#x9;private final int fat;&#xA;&#x9;private final int sodium;&#xA;&#x9;private final int carbohydrate;&#xA;&#x9;public static class Builder {&#xA;&#x9;&#x9;// Required parameters&#xA;&#x9;&#x9;private final int servingSize;&#xA;&#x9;&#x9;private final int servings;&#xA;&#x9;&#x9;// Optional parameters - initialized to default values&#xA;&#x9;&#x9;private int calories = 0;&#xA;&#x9;&#x9;private int fat = 0;&#xA;&#x9;&#x9;private int carbohydrate = 0;&#xA;&#x9;&#x9;private int sodium = 0;&#xA;&#x9;&#x9;public Builder(int servingSize, int servings) {&#xA;&#x9;&#x9;&#x9;this.servingSize = servingSize;&#xA;&#x9;&#x9;&#x9;this.servings = servings;&#xA;&#x9;&#x9;}&#xA;&#x9;&#x9;public Builder calories(int val)&#xA;&#x9;&#x9;&#x9;{ calories = val; return this; }&#xA;&#x9;&#x9;public Builder fat(int val)&#xA;&#x9;&#x9;&#x9;{ fat = val; return this; }&#xA;&#x9;&#x9;public Builder carbohydrate(int val)&#xA;&#x9;&#x9;&#x9;{ carbohydrate = val; return this; }&#xA;&#x9;&#x9;public Builder sodium(int val)&#xA;&#x9;&#x9;&#x9;{ sodium = val; return this; }&#xA;&#x9;&#x9;public NutritionFacts build() {&#xA;&#x9;&#x9;&#x9;return new NutritionFacts(this);&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;&#x9;private NutritionFacts(Builder builder) {&#xA;&#x9;&#x9;servingSize = builder.servingSize;&#xA;&#x9;&#x9;servings = builder.servings;&#xA;&#x9;&#x9;calories = builder.calories;&#xA;&#x9;&#x9;fat = builder.fat;&#xA;&#x9;&#x9;sodium = builder.sodium;&#xA;&#x9;&#x9;carbohydrate = builder.carbohydrate;&#xA;&#x9;}&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在构造的时候可以这样来做：&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

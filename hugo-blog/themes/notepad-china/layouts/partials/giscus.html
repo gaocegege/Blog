@@ -1,0 +1,22 @@
+{{ if and .Params.comments (eq .Site.Params.comments_sys "giscus") }}
+<section class="summer-disqus row">
+    <div class="small-12 columns">
+        <h1 class="summer-comments-header">评论</h1>
+        <div id="disqus_thread"></div>
+        <script src="https://giscus.app/client.js"
+                data-repo="{{ .Site.Params.giscus.repo }}"
+                data-repo-id="{{ .Site.Params.giscus.repoId }}"
+                data-category="{{ .Site.Params.giscus.category }}"
+                data-category-id="{{ .Site.Params.giscus.categoryId }}"
+                data-mapping="{{ .Site.Params.giscus.mapping }}"
+                data-reactions-enabled="{{ .Site.Params.giscus.reactionsEnabled }}"
+                data-emit-metadata="{{ .Site.Params.giscus.emitMetadata }}"
+                data-theme="{{ .Site.Params.giscus.theme }}"
+                data-lang="{{ .Site.Params.giscus.lang }}"
+                crossorigin="anonymous"
+                async>
+        </script>
+        <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+</section>
+{{ end }}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>C&#43;&#43;奇奇怪怪的题目之析构函数虚函数化 | 高策</title>
+<meta name="description" content="C&#43;&#43;题目">
+<meta name="keywords" content="cpp">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="C&#43;&#43;奇奇怪怪的题目之析构函数虚函数化">
+<meta name="twitter:description" content="C&#43;&#43;题目">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#43;&#43;奇奇怪怪的题目之析构函数虚函数化">
+<meta property="og:description" content="C&#43;&#43;题目">
+<meta property="og:url" content="https://gaocegege.com/Blog/c-%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E7%9A%84%E9%A2%98%E7%9B%AE%E4%B9%8B%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%99%9A%E5%87%BD%E6%95%B0%E5%8C%96/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>C&#43;&#43;奇奇怪怪的题目之析构函数虚函数化</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>现在觉得算法题目不是最难的了，起码还可以用最朴素的想法写一个，考特性才是真的惨。</p>
+<h2 id="构造函数不应该是虚函数">构造函数不应该是虚函数</h2>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class A
+{
+public:
+	virtual A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+	~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+};
+
+class B: public A
+{
+public:
+	virtual B(){cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+	~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+};
+
+int main(int argc, char const *argv[])
+{
+	B b;
+	return 0;
+}
+</code></pre>
+<p>这样的代码在clang下会报错，因为把构造函数定义为了虚函数。这样做是不允许的，因为在类被构造的时候，是会先调用父类的构造函数，最后才会调用子类的构造函数，如果申明为虚函数，那么会出现歧义。</p>
+<h2 id="析构函数应该定义为虚函数">析构函数应该定义为虚函数</h2>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class A
+{
+public:
+	A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+	~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+};
+
+class C
+{
+public:
+	C(){cout &lt;&lt; &quot;Construct C&quot; &lt;&lt; endl;}
+	~C(){cout &lt;&lt; &quot;Destruct C&quot; &lt;&lt; endl;}
+	
+};
+
+class B: public A
+{
+public:
+	B(){cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+	~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+	C c;
+};
+
+int main(int argc, char const *argv[])
+{
+	A *a = new B();
+	delete a; // ~A() or ~B()?
+	return 0;
+}
+</code></pre>
+<p>上面这段代码的输出为</p>
+<pre>
+	Construct A
+	Construct C
+	Construct B
+	Destruct A
+</pre>
+<p>构造顺序在之前的文章中提到过了，那么析构的时候为什么只会析构A呢？这是因为现在是用一个指向B类型的变量的A类型的指针来调用析构函数，所以，在析构函数不是虚函数的时候，析构函数是编译时静态绑定的，所以A指针调用的析构函数一定是A定义的析构函数。</p>
+<p>而将A和B的析构函数定义为虚函数之后，输出变成了这样：</p>
+<pre>
+	Construct A
+	Construct C
+	Construct B
+	Destruct B
+	Destruct C
+	Destruct A
+</pre>
+<p>这就是虚函数动态绑定析构函数起了作用，这里涉及到虚函数的一个特性，<strong>如果使用指向对象的引用或者是指针来调用虚方法，程序将使用对象类型定义的方法，而不使用引用或指针类型定义的方法</strong>，这样基类的指针或者引用就可以指向派生类而调用派生类的虚函数。这也就是为什么析构函数应该声明为虚函数的原因所在。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

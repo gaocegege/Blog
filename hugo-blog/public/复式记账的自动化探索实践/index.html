@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>复式记账的自动化探索实践 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="复式记账的自动化探索实践">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复式记账的自动化探索实践">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%A4%8D%E5%BC%8F%E8%AE%B0%E8%B4%A6%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%8E%A2%E7%B4%A2%E5%AE%9E%E8%B7%B5/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>复式记账的自动化探索实践</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>BYVoid 前辈曾在<a href="https://www.byvoid.com/zhs/blog/beancount-bookkeeping-1">文章中</a> 介绍了复式记账的一系列知识，我也是在那时接触了这一方面的内容。在尝试了两个月的手动记账后，虽然确实体会到了复式记账带来的在财务能力上的清晰感，但也因为记账本身的过程过于无聊单调，所以后来就放弃了。</p>
+<p>然而随着下半年各种消费浪潮的侵袭，发现不记账实在难以控制自己在消费上的大手大脚。于是开始把目光投向了自动化复式记账的领域。在我开始寻找这方面的轮子的时候，GitHub 上有一个实现地比较完善的工具：<a href="https://github.com/dilfish/atb">atb</a>。这是一个支持把支付宝账单自动转换为 <a href="https://github.com/beancount/beancount">beancount</a> 的工具，别看它 star 不多，但功能还挺完善的。但是，在读了它的代码后，发现它存在一个巨大的问题。</p>
+<p>那就是扩展性不是很好。作者本身的需求似乎就是针对支付宝的，所以如果要让它支持微信，或者银行账单等，实现起来改动非常大。对于这样一个小众领域，而且是低频使用的工具，如果要想在开源领域有所建树，一定要尽可能覆盖更多的场景，保持扩展性的架构。这一方面可供参考的佼佼者是 <a href="https://github.com/DIYgod/RSSHub">RSSHub</a>，本身 RSS 已经是一个逐渐式微的信息聚合协议，但是 RSSHub 极高的扩展性，使得它实现了自己的愿景：万物皆可 RSS。</p>
+<p>额，扯远了。因为实现的扩展性问题，我决定参考借鉴 atb 的实现，实现一个扩展性较好的，自动化复式记账的轮子。这就是 <a href="https://github.com/gaocegege/double-entry-generator">double-entry-generator</a> 的由来。目前，<a href="https://github.com/gaocegege/double-entry-generator">double-entry-generator</a> 支持把支付宝和微信两种格式的账单转换为 <a href="https://github.com/beancount/beancount">beancount</a>。</p>
+<p>从使用的角度，使用者只需要下载好账单，并且配置好对应的转换规则，就可以利用命令行工具 <a href="https://github.com/gaocegege/double-entry-generator">double-entry-generator</a> 进行转换了。这里用微信账单举个例子：</p>
+<pre tabindex="0"><code>微信支付账单明细,,,,,,,,
+微信昵称：[你就是 gaocegege 么],,,,,,,,
+起始时间：[2019-08-01 00:00:00] 终止时间：[2019-09-30 23:59:59],,,,,,,,
+导出类型：[全部],,,,,,,,
+导出时间：[2019-10-09 16:05:22],,,,,,,,
+,,,,,,,,
+共43笔记录,,,,,,,,
+收入：1笔 0.35元,,,,,,,,
+支出：1笔 28.16元,,,,,,,,
+中性交易：0笔 0.00元,,,,,,,,
+注：,,,,,,,,
+1. 充值/提现/理财通购买/零钱通存取/信用卡还款等交易，将计入中性交易,,,,,,,,
+2. 本明细仅展示当前账单中的交易，不包括已删除的记录,,,,,,,,
+3. 本明细仅供个人对账使用,,,,,,,,
+,,,,,,,,
+----------------------微信支付账单明细列表--------------------,,,,,,,,
+交易时间,交易类型,交易对方,商品,收/支,金额(元),支付方式,当前状态,交易单号,商户单号,备注
+2019-09-26 12:45:27,商户消费,特朗普过桥米线,&#34;总共消费:28.16&#34;,支出,¥28.16,中国银行,支付成功,3985734	,129847129	,&#34;/&#34;
+2019-09-24 10:10:11,微信红包,同性好友,&#34;/&#34;,收入,¥0.35,/,已存入零钱,3985734	,129847129	,&#34;/&#34;
+</code></pre><p>微信导出的账单如上所示。在这个例子中，一共有两个记录，一个是消费，一个是红包收入。针对这样的记录，用户需要提供一份配置：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">defaultMinusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Liabilities:CreditCard:Test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">defaultPlusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Expenses:Test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">defaultCurrency</span><span class="p">:</span><span class="w"> </span><span class="l">CNY</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l">测试账单</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">wechat</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">peer</span><span class="p">:</span><span class="w"> </span><span class="l">米线</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l">中国银行</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">plusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Expenses:Food</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">minusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Assets:BOC</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">收入</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">plusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Assets:Wechat</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">minusAccount</span><span class="p">:</span><span class="w"> </span><span class="l">Income:Earnings</span><span class="w">
+</span></span></span></code></pre></div><p>这份配置中，我们定义了很多规则。首先是收款方中带有“米线”的，同时付款方式为中国银行的记录。在生成时把匹配到的记录的支出账户指定为 Assets:BOC，而收入账户指定为 Expenses:Food。意为用 BOC 支付了一次食物消费。第二个规则也类似，它识别出所有类型为收入的记录，并且把他们的支出账户指定为 Income:Earnings，收入账户指定为 Assets:Wechat。所有收入类型的记录，都增加微信钱包的余额，同时减少 Income:Earnings。</p>
+<p>除此之外，配置中还定义了默认的收入与支出账户。在这个例子中，默认的支出账户是 Liabilities:CreditCard:Test 而默认的收入账户是 Expenses:Test。</p>
+<p>最后，运行命令 <code>double-entry-generator translate --config &lt;config.yaml&gt; &lt;wechat.csv&gt;</code>，一个 beancount 文件就会被生成：</p>
+<pre tabindex="0"><code>option &#34;title&#34; &#34;测试账单&#34;
+option &#34;operating_currency&#34; &#34;CNY&#34;
+
+1970-01-01 open Assets:BOC
+1970-01-01 open Expenses:Food
+1970-01-01 open Income:Earnings
+1970-01-01 open Assets:Wechat
+1970-01-01 open Expenses:Test
+1970-01-01 open Liabilities:CreditCard:Test
+
+2019-09-26 * &#34;特朗普过桥米线&#34; &#34;总共消费:28.16&#34;
+	Expenses:Food 28.16 CNY
+	Assets:BOC -28.16 CNY
+
+2019-09-24 * &#34;同性好友&#34; &#34;/&#34;
+	Assets:Wechat 0.35 CNY
+	Income:Earnings -0.35 CNY
+</code></pre><p>最后可以利用 fava 等工具进行可视化。</p>
+<p><a href="https://github.com/gaocegege/double-entry-generator">double-entry-generator</a> 为了实现对多种账单格式和多种复式记账语言的支持，引入了一个中间表示（A.K.A IR）。说是 IR，但其实现在还是非常简陋和粗糙，不过作用还是非常明显的。来自多种不同提供方的账单，会先被转换为中间表示，再由不同的编译器后端将其编译（严格意义上来说，应该是解释）为不同的记账语言的具体实现（如 beancount 等）。</p>
+<p>因此如果想扩展支持新的账单格式，如中国银行信用卡账单等，可以新增 provider（账单提供方的抽象）的实现，而不需要修改其他部分的逻辑。如果想扩展支持新的记账语言，可以新增 compiler 的实现，同样不需要修改其他逻辑。</p>
+<p>所以，这次造轮子告诉我们，果然，计算机领域的任何问题，都可以通过新加一层抽象来解决（</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

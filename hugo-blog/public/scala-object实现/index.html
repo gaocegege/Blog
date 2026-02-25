@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>SCALA OBJECT实现 | 高策</title>
+<meta name="description" content="Scala学习记录">
+<meta name="keywords" content="scala">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Scala Object实现">
+<meta name="twitter:description" content="Scala学习记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala Object实现">
+<meta property="og:description" content="Scala学习记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/scala-object%E5%AE%9E%E7%8E%B0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Scala Object实现</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近在学习scala，为了写大作业。首先推荐一个学习网站&ndash;<a href="http://scala-exercises.47deg.com/index.html">http://scala-exercises.47deg.com/index.html</a>，感觉学习起来比较直观。因为scala既是面向对象的，又是函数式的，好多奇怪的地方。首先Object是什么就有点不懂了。</p>
+<h1 id="object">Object</h1>
+<p>Object是一个单例模式的实现。那既然是单例模式，必然避免不了Static之类的东西，最近在看Java虚拟机的一些内容，就试了试把scala的object编译成字节码的内容，发现了一些有去的内容。</p>
+<p>对于下面的代码，执行 scalac XXX.scala</p>
+<pre><code>object HelloWorld {
+  def main(args: Array[String]) {
+    var a: Int = 0
+  }
+}
+</code></pre>
+<p>编译之后会产生两个.class文件，一个叫做HelloWorld.class，另一个叫做HelloWorld$.class，那之后用javap -c指令反编译两个class，会发现其实它的实现是这样的：</p>
+<p>对于HelloWorld：</p>
+<pre>
+	Compiled from "XXX.scala"
+	public final class HelloWorld {
+	  public static void main(java.lang.String[]);
+	    Code:
+	       0: getstatic     #16                 // Field HelloWorld$.MODULE\$:LHelloWorld$;
+	       3: aload_0
+	       4: invokevirtual #18                 // Method HelloWorld$.main:([Ljava/lang/String;)V
+	       7: return
+	}
+</pre>
+<p>对于HelloWorld$：</p>
+<pre>
+	Compiled from "XXX.scala"
+	public final class HelloWorld$ {
+	  public static final HelloWorld\$ MODULE\$;
+	  public static {};
+	    Code:
+	       0: new           #2                  // class HelloWorld$
+	       3: invokespecial #12                 // Method "\<init\>":()V
+	       6: return
+	  public void main(java.lang.String[]);
+	    Code:
+	       0: iconst_0
+	       1: istore_2
+	       2: return
+	}
+</pre>
+<p>它用来实现单例的方法是会多一个类叫做&lt;Object name&gt;$（&lt;Object name&gt;代指Object的名字，这里就是HelloWorld，下同），这个类中会有一个static final的HelloWorld$类型的变量MODULE$，然后在static{}中会构造这个变量，在scala的object里写的所有函数，成员等等都会在这个单例的类中体现出来，而原本的&lt;Object name&gt;只是得到&lt;Object name&gt;$的静态成员MODULE$，然后基于这个成员进行访问调用。</p>
+<h2 id="trick">Trick</h2>
+<p>那既然Object会多构造一个&lt;Object name&gt;$的类，那么如果我们在声明名为&lt;Object name&gt;的同时，也把&lt;Object name&gt;$声明为一个Object，那么会发生什么呢~</p>
+<p>也就是代码写成这样：</p>
+<pre><code>
+	object HelloWorld {
+	  def main(args: Array[String]) {
+	    var a: Int = 0
+	  }
+	}
+	object HelloWorld$ {
+		def main(args: Array[String]) {
+	    var a: Int = 0
+	  }
+	}
+</code></pre>
+<p>那编译scala会产生三个class，分别是&lt;Object name&gt;.class，&lt;Object name&gt;$.class，&lt;Object name&gt;$$.class。</p>
+<p>这时候执行scala HelloWorld，那么就会报错：</p>
+<pre>
+	java.lang.NoSuchFieldError: MODULE$
+</pre>
+<p>这样的错误，真是看到都不知道是哪里的问题，当然前提是会有人写这么坑的代码0.0</p>
+<p>PS:感觉写Scala，报错基本都是报Java的错误，好坑啊。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

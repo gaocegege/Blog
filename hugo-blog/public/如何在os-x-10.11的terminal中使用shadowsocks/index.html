@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>如何在OS X 10.11的TERMINAL中使用SHADOWSOCKS | 高策</title>
+<meta name="description" content="我要黑一发Green VPN">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="如何在OS X 10.11的Terminal中使用shadowsocks">
+<meta name="twitter:description" content="我要黑一发Green VPN">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在OS X 10.11的Terminal中使用shadowsocks">
+<meta property="og:description" content="我要黑一发Green VPN">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%A6%82%E4%BD%95%E5%9C%A8os-x-10.11%E7%9A%84terminal%E4%B8%AD%E4%BD%BF%E7%94%A8shadowsocks/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>如何在OS X 10.11的Terminal中使用shadowsocks</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>今天在读CSP要求读的论文，<a href="http://appanalysis.org/tdroid10.pdf">TaintDroid</a>。大概是一个在安卓设备上做Taint分析的工具，似乎挺有名的，看了demo感觉好有趣，就打算做来看看。但是马上就遇到了问题。</p>
+<p>根据<a href="http://appanalysis.org/download_4.1.html">其网站</a>上的做法，是需要用一个repo工具来下载在google上的repo，然后repo工具在OS X下的安装是使用brew来完成的。这似乎一切看起来都非常简单。但在install的过程中发现，repo工具本身也是在googlesource.com上的，因此要翻墙才能访问到。而不知是什么奇妙的原因，shadowsocks不能代理terminal中的访问。那么问题来了，到底如何在terminal中使用shadowsocks来翻墙呢。</p>
+<p>主角是<a href="https://github.com/rofl0r/proxychains-ng">proxychains</a>，看介绍proxychains大概是一个hook程序，会把所有的请求都转发给socks或者http的代理。有了这个工具，只需要简单的配置就可以实现在terminal中使用shadowsocks代理的美好愿望了。</p>
+<h2 id="在os-x-1011之前的系统里">在OS X 10.11之前的系统里</h2>
+<p>这里有一篇<a href="https://github.com/shadowsocks/shadowsocks/wiki/Using-Shadowsocks-with-Command-Line-Tools">shadowsocks的官方文档</a>，就是用来教大家如何在terminal中使用shadowsocks的，这里还有一个<a href="http://segmentfault.com/a/1190000002589135">中译版</a>，简单易懂，再次证明了shadowsocks大法好。</p>
+<h2 id="os-x-1011的坑">OS X 10.11的坑</h2>
+<p>但是，单单做到文档里说的这些，在OS X 10.11里面是不会work的。关于原因，这里的<a href="https://github.com/rofl0r/proxychains-ng/issues/78">一个issue</a>可以比较好地说明问题。大概就是说OS X的新版本引入了一个新机制，SIP。全名叫做System Integrity Protection，<a href="https://developer.apple.com/library/prerelease/mac/releasenotes/MacOSX/WhatsNewInOSX/Articles/MacOSX10_11.html">苹果官方的解释</a>是</p>
+<blockquote>
+<p>A new security policy that applies to every running process, including privileged code and code that runs out of the sandbox. The policy extends additional protections to components on disk and at run-time, only allowing system binaries to be modified by the system installer and software updates. Code injection and runtime attachments to system binaries are no longer permitted.</p>
+</blockquote>
+<p>知乎上的<a href="http://www.zhihu.com/question/31116473">这个问题</a>里面有对SIP入门的介绍。大概就是说就算是Root权限也不能对一些二进制进行修改，这些二进制是在/System，/bin，/sbin，/usr (except /usr/local)中的。这就影响了proxychains的作用范围，不在上述目录中的二进制可以使用proxychains，而在其中的就不行了，悲剧的是ping，wget等等命令似乎都在这些目录中。那怎么解决这个问题呢。</p>
+<p>最笨的方法，把所有命令都放在~/bin里，把~/bin放在路径里，这种方法就不说了，那还有更加简单粗暴的方法就是关闭SIP。关闭SIP的步骤可以参考下<a href="http://osxdaily.com/2015/10/05/disable-rootless-system-integrity-protection-mac-os-x/">这里</a>，大概分为三步：</p>
+<ol>
+<li>重启Command + R进入recovery mode</li>
+<li>左上角通用工具选择终端</li>
+<li>csrutil disable; reboot回车</li>
+</ol>
+<p>然后在重启后的终端里输入<code>csrutil status</code>，会看到：</p>
+<pre><code>System Integrity Protection status: enabled (Custom Configuration).
+
+Configuration:
+	Apple Internal: disabled
+	Kext Signing: disabled
+	Filesystem Protections: disabled
+	Debugging Restrictions: disabled
+	DTrace Restrictions: disabled
+	NVRAM Protections: disabled
+
+This is an unsupported configuration, likely to break in the future and leave your machine in an unknown state.
+</code></pre>
+<p>然后proxychains就可以正常工作了，至于说的<code>leave your machine in an unknown state.</code>，只能寄希望于Time Machine了。</p>
+<h1 id="结">结</h1>
+<p>故事的最后，黑一下Green VPN。本来没打算就这样用shadowsocks的，想直接买个VPN，简单方便。正好之前同学推荐了Green VPN，就买了一个月想先试试。但是试了一个小时没成功，就去找客服问问是不是设置之类的做错了。但是那客服哥们先问了我是玩游戏还是浏览网页，我说是想代理整个系统的访问，然后具体说了说其实就是想用终端下载点东西，问他怎么在OS X系统里面设置。但是那哥们二话不说直接说做不到就消失了。接下来我连着问了好多次，结果一个回复没有，我特么以后再买这种服务就是XX。。。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>JNDI与WEB SERVICE | 高策</title>
+<meta name="description" content="Java学习记录">
+<meta name="keywords" content="java">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="JNDI与Web Service">
+<meta name="twitter:description" content="Java学习记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JNDI与Web Service">
+<meta property="og:description" content="Java学习记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/jndi%E4%B8%8Eweb-service/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>JNDI与Web Service</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>果然是课非蹭不能上也，大三下上了一周的课程了，反而觉得是蹭的课程最有实用性。</p>
+<h1 id="jndi">JNDI</h1>
+<h2 id="概述">概述</h2>
+<p>JNDI是啥，其实我并不知道。不过上了这一节课，大概知道了JNDI的一种用法，就是如何在服务器与客户端之间用JNDI传递对象。JNDI的组织形式大概是这样的：</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/jndi/jndi.png" alt="Example" height="500" width="500">
+	<figcaption>服务器与客户端通过JNDI交互的方式</figcaption>
+</figure>
+<p>按照陈老师所说的，服务器与客户端要想通过JNDI来交互，首先，服务器这边需要先向RMI Registry进行注册，代码来表述这个过程就是</p>
+<pre><code>ObjectA objectA = new ObjectA();
+Context namingContext = new InitialContext();
+namingContext.bind(&quot;rmi:objectA&quot;, objectA);
+</code></pre>
+<p>将一个对象跟一个字符串进行绑定，这样客户端如果想得到服务器段的这个对象，就可以向RMI Registry进行LookUp的操作，如果可以找到这个字符串，就意味着可以请求到字符串对应的对象。</p>
+<p>找到这个对象之后，还存在一些问题，也就是图中Stub和Receiver起作用的地方，就是数据应该如何从服务器端传递到客户端。这里又涉及两种传输的方式，按值传递和按引用传递。</p>
+<h2 id="stub--receiver">Stub &amp; Receiver</h2>
+<p>先说说Stub和Receiver的作用吧，这两个东西感觉就是帮助我们写好了客户端与服务器端传输的细节，使得我们不需要自己设计实现。Stub是RMI Registry返回的，客户端可以当做没有他的存在。而实际上他的存在是<strong>负责把客户端的请求包装好，发送给Receiver，然后还有就是接收来自Receiver的Marshall过的数据，并把它Unmarshall以后返回。<strong>而Receiver是在服务器这边的，他</strong>负责接收客户端的请求，然后把返回数据Marshall后发给客户端的Stub。</strong></p>
+<p>值得注意的是，这两者之间的通信是传输二进制的，之前提到有两种，按值传递和按引用传递，这里是我上课的时候有点疑惑的地方。按值传递，要求客户端声明类implements Serializable，这个接口似乎是序列化的意思，他可以保证对象可以以序列化的方式传递，因此如果实现了这个接口，那么服务器的对象就会以值的方式传递给客户端。</p>
+<p>如果想要按照引用传递，就要实现Remote接口，那么对象就会以远程引用的方式进行传递，按照老师的说法是得到一个类似引用的东西，会保证客户端对于对象的修改会使得服务器上的对象也得到修改，但是我有点不明白是如何做到的。</p>
+<h2 id="应用场景">应用场景</h2>
+<p>JNDI可以实现进程之间的通信，因此如果客户端和服务器端是同一台机器上的两个进程，他们的通信可以用JNDI来做，其次就是距离不太远的通信，太远的话会有问题。另外还有问题就是JNDI实现比较复杂，当然我并没有写过，并不知道比较复杂是有多复杂。</p>
+<h1 id="web-service">Web Service</h1>
+<p>相比于JNDI，Web Service写起来要简单很多，看样例代码就可以发现这一点。感觉上Web Service跟JNDI结构是差不多的，都是客户端服务器这种结构。不同之处在于Web Service是用HTTP协议来很传递文本数据的，而不是像JNDI那样传递二进制。既然要传递文本协议，那肯定需要将对象按照一定规则转化为文本然后传递。Web Service就是转化为XML传递。而且，文本相比于二进制的好处是文本可以实现跨平台，文本数据是任何语言都可以读入的，所以只要文本数据按照一定的规则，服务器客户端都知道这个规则并且遵守，那么理论上服务器客户端不用统一平台，语言等等。另外HTTP可以支持更加远的数据传输。</p>
+<p>课上Web Service讲的不多，听的也不多，就只能记住这些了。</p>
+<h1 id="总结">总结</h1>
+<p>JNDI适合进程间，或者短距离的通信，效率比Web Service高，但是实现起来比较困难。Web Service实现简单，服务器客户端可以使用不同语言来实现，而且基于HTTP协议，基本不会受到物理距离的限制。</p>
+<p>如有任何问题，敬请指正~</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

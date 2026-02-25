@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>C&#43;&#43;奇奇怪怪的题目之构造析构顺序 | 高策</title>
+<meta name="description" content="C&#43;&#43;题目">
+<meta name="keywords" content="cpp">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="C&#43;&#43;奇奇怪怪的题目之构造析构顺序">
+<meta name="twitter:description" content="C&#43;&#43;题目">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#43;&#43;奇奇怪怪的题目之构造析构顺序">
+<meta property="og:description" content="C&#43;&#43;题目">
+<meta property="og:url" content="https://gaocegege.com/Blog/c-%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E7%9A%84%E9%A2%98%E7%9B%AE%E4%B9%8B%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E9%A1%BA%E5%BA%8F/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>C&#43;&#43;奇奇怪怪的题目之构造析构顺序</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>周六参加了XX的笔试，挺崩的，很多继承，多重继承等等方面的问题，记录下。</p>
+<h1 id="析构函数与构造函数的顺序">析构函数与构造函数的顺序</h1>
+<h2 id="继承">继承</h2>
+<p>先看看下面的代码</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class A
+{
+public:
+	A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+	~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+};
+
+class C
+{
+public:
+	C(){cout &lt;&lt; &quot;Construct C&quot; &lt;&lt; endl;}
+	~C(){cout &lt;&lt; &quot;Destruct C&quot; &lt;&lt; endl;}
+	
+};
+
+class B: public A, public C
+{
+public:
+	B(){cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+	~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+};
+
+int main(int argc, char const *argv[])
+{
+	B b;
+	return 0;
+}
+</code></pre>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/cpp/abc1.png" alt="类图" height="500" width="500">
+	<figcaption>类图</figcaption>
+</figure>
+<p>这里有三个类，其中A，C类是B的父类，然后在Main函数中声明一个B类型的变量，然后程序的输出是这样的：</p>
+<pre>
+	Construct A
+	Construct C
+	Construct B
+	Destruct B
+	Destruct C
+	Destruct A
+</pre>
+<p>这里涉及到构造以及析构的顺序，首先看看构造。**构造函数执行的顺序是，先构造父类，再构造子类，其中父类的构造顺序是从左到右。**然后析构函数执行的顺序是跟构造函数正好相反的，先执行自身的析构函数，然后再依次从右到左执行父类的析构函数。</p>
+<p>上面说的是不涉及列表初始化，以及虚拟继承这些的。那接下来看看加上列表初始化会怎么样。</p>
+<h2 id="列表初始化成员变量">列表初始化成员变量</h2>
+<p>现在ABC之间不再是继承关系，而是<strong>组合关系</strong>。B类中有A和C两个类型的变量。</p>
+<pre><code>	#include &lt;iostream&gt;
+	#include &lt;cmath&gt;
+	using namespace std;
+
+	class A
+	{
+	public:
+		A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+		~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+	};
+
+	class C
+	{
+	public:
+		C(){cout &lt;&lt; &quot;Construct C&quot; &lt;&lt; endl;}
+		~C(){cout &lt;&lt; &quot;Destruct C&quot; &lt;&lt; endl;}
+		
+	};
+
+	class B
+	{
+	public:
+		// Notice
+		B(): a(A()), c(C()) {cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+		~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+		C c;
+		A a;
+	};
+
+	int main(int argc, char const *argv[])
+	{
+		B b;
+		return 0;
+	}
+</code></pre>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/cpp/abc2.png" alt="类图" height="500" width="500">
+	<figcaption>类图</figcaption>
+</figure>
+<p>输出是这样的~</p>
+<pre>
+	Construct C
+	Construct A
+	Construct B
+	Destruct B
+	Destruct A
+	Destruct C
+</pre>
+<p>可以看出，列表初始化是先于构造函数的调用的，而且列表初始化是与初始化顺序无关，只与数据成员定义的顺序有关。在上面的例子中C类型的变量定义在A类型的变量前面，因此会先构造C，之后构造A。</p>
+<h2 id="继承与列表初始化">继承与列表初始化</h2>
+<p>下面的例子中B类继承了A和C，然后又拥有一个A和C类型的成员变量，虽然不符合设计模式，但是就将就看了。</p>
+<pre><code>#include &lt;iostream&gt;
+	#include &lt;cmath&gt;
+	using namespace std;
+
+	class A
+	{
+	public:
+		A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+		~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+	};
+
+	class C
+	{
+	public:
+		C(){cout &lt;&lt; &quot;Construct C&quot; &lt;&lt; endl;}
+		~C(){cout &lt;&lt; &quot;Destruct C&quot; &lt;&lt; endl;}
+		
+	};
+
+	class B: public A, public C
+	{
+	public:
+		//Notice: List initialize
+		B(): a(A()), c(C()) {cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+		~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+		C c;
+		A a;
+	};
+
+	int main(int argc, char const *argv[])
+	{
+		B b;
+		return 0;
+	}
+</code></pre>
+<p>在这样的例子中输出是这样的~</p>
+<pre>
+	Construct A
+	Construct C
+	Construct C
+	Construct A
+	Construct B
+	Destruct B
+	Destruct A
+	Destruct C
+	Destruct C
+	Destruct A
+</pre>
+<p>也就是说，类在构造的时候会先从左到右调用父类的构造函数，然后根据类中数据成员的定义依次构造**/*注意：是与列表初始化顺序无关*/**，然后才会调用自身的构造函数，而析构函数则正好相反。</p>
+<h2 id="虚拟继承继承与列表初始化">虚拟继承，继承，与列表初始化</h2>
+<p>虚拟继承是什么，暂时还不知道。但是可以看看虚拟继承的构造析构顺序是如何的。</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+class A
+{
+public:
+	A(){cout &lt;&lt; &quot;Construct A&quot; &lt;&lt; endl;}
+	~A(){cout &lt;&lt; &quot;Destruct A&quot; &lt;&lt; endl;}
+};
+
+class C
+{
+public:
+	C(){cout &lt;&lt; &quot;Construct C&quot; &lt;&lt; endl;}
+	~C(){cout &lt;&lt; &quot;Destruct C&quot; &lt;&lt; endl;}
+	
+};
+
+//Notice: C is a virtual public
+class B: public A, public virtual C
+{
+public:
+	B(): a(A()), c(C()) {cout &lt;&lt; &quot;Construct B&quot; &lt;&lt; endl;}
+	~B(){cout &lt;&lt; &quot;Destruct B&quot; &lt;&lt; endl;}
+	C c;
+	A a;
+};
+
+int main(int argc, char const *argv[])
+{
+	B b;
+	return 0;
+}
+</code></pre>
+<p>继承跟虚拟继承初始化的顺序是不一样的，在这个例子中，输出顺序是这样的：</p>
+<pre>
+	Construct C
+	Construct A
+	Construct C
+	Construct A
+	Construct B
+	Destruct B
+	Destruct A
+	Destruct C
+	Destruct A
+	Destruct C
+</pre>
+<p>跟之前相比，父类的构造顺序发生了改变，C的构造函数先被执行，然后是AC的构造函数。所以最后可以得到结论：<strong>先执行虚拟继承的父类的构造函数，然后从左到右执行普通继承的父类的构造函数，然后按照定义的顺序执行数据成员的初始化，最后是自身的构造函数的调用。</strong></p>
+<h1 id="结论">结论</h1>
+<p>在类被构造的时候，<strong>先执行虚拟继承的父类的构造函数，然后从左到右执行普通继承的父类的构造函数，然后按照定义的顺序执行数据成员的初始化，最后是自身的构造函数的调用。析构函数与之完全相反，互成镜像。</strong></p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

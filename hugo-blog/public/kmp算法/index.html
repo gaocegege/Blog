@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>KMP算法 | 高策</title>
+<meta name="description" content="算法学习记录">
+<meta name="keywords" content="Algorithm">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="KMP算法">
+<meta name="twitter:description" content="算法学习记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP算法">
+<meta property="og:description" content="算法学习记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/kmp%E7%AE%97%E6%B3%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>KMP算法</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="问题描述">问题描述</h1>
+<p>KMP算法，是用来解决字符串匹配问题的。字符串匹配问题，就是给定一个pattern串，一个text串，找出pattern串是否出现在text中，出现在什么位置等等。KMP算法可以在O(len(text))的时间复杂度做完。</p>
+<h1 id="思想与实现">思想与实现</h1>
+<p>要介绍KMP算法，首先要介绍的最简单的字符串匹配的做法。最简单的做法就是依次对于text中的子串与pattern串进行比对，这样做的时间复杂度为O(len(text) * len(pattern))，思想很简单。KMP算法跟最朴素的算法之间的区别在于，KMP算法只需要扫描一遍text串，不会出现朴素算法中回溯的情况。</p>
+<h2 id="有限自动机的理解方式">有限自动机的理解方式</h2>
+<p>最容易理解的实现是借用了有限状态机的思想，pattern串构成了一个有限状态自动机，共有len(pattern) + 1个状态。状态的转移是KMP算法可以达到O(len(text))的时间复杂度的关键。</p>
+<pre><code>public KMP(char[] pattern, int R) {
+    this.R = R;
+    this.pattern = new char[pattern.length];
+    for (int j = 0; j &lt; pattern.length; j++)
+        this.pattern[j] = pattern[j];
+
+    // build DFA from pattern
+    int M = pattern.length;
+    dfa = new int[R][M]; 
+    dfa[pattern[0]][0] = 1; 
+    for (int X = 0, j = 1; j &lt; M; j++) {
+        for (int c = 0; c &lt; R; c++) 
+            dfa[c][j] = dfa[c][X];     // Copy mismatch cases. 
+        dfa[pattern[j]][j] = j+1;      // Set match case. 
+        X = dfa[pattern[j]][X];        // Update restart state. 
+    } 
+} 
+
+public int search(String txt) {
+
+    // simulate operation of DFA on text
+    int M = pat.length();
+    int N = txt.length();
+    int i, j;
+    for (i = 0, j = 0; i &lt; N &amp;&amp; j &lt; M; i++) {
+        j = dfa[txt.charAt(i)][j];
+    }
+    if (j == M) return i - M;    // found
+    return N;                    // not found
+}
+</code></pre>
+<p>在碰到不能全部匹配pattern串的时候，状态机不是简单地回到开始状态重新匹配，而是进行向之前状态的转移，这些转移可以保证text的读入不需要回溯，所以可以看到在search函数中只有一个len(text)次的循环就可以完成判断。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/kmp/kmp.png" alt="example" height="500" width="500">
+	<figcaption>构建有限自动机示例(pattern="ababac")</figcaption>
+</figure>
+<h2 id="前缀后缀的理解方式">前缀后缀的理解方式</h2>
+<p>这种方式我觉得理解起来比有限状态机困难一点，不过本质是一样的，都是源自pattern串的跳跃。这种方法需要维护一个数组，数组存储pattern串的前缀等于后缀的的长度。这个数组的size就是pattern的size，可以将它命名为next数组，因为它的作用在于使得pattern匹配不成功时跳到合适的位置。举例说明~</p>
+<pre>
+index		0	1	2	3	4
+Pattern		A	B	A	B	C
+next		0	0	1	2	0
+</pre>
+<p>如果text串匹配到了&quot;ABAB&quot;，但是后面不是&quot;C&quot;，那么有了next函数，我们的pattern会继续尝试匹配2，也就是看是不是&quot;A&quot;，这样可以有效防止回溯。我觉得这种方式挺难理解的，反正我是想了好久才有点理解。</p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="http://algs4.cs.princeton.edu/53substring/KMP.java.html">Algorithms 4th edition</a></li>
+<li><a href="https://www.coursera.org/course/algs4partII">Algorithms, Part II in Coursera</a></li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

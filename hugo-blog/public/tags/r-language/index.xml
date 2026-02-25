@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R Language on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/r-language/</link>
+    <description>Recent content in R Language on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sun, 10 Sep 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/r-language/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安利时间：Processing &#43; R = ?</title>
+      <link>https://gaocegege.com/Blog/%E5%AE%89%E5%88%A9%E6%97%B6%E9%97%B4processing--r/</link>
+      <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E5%AE%89%E5%88%A9%E6%97%B6%E9%97%B4processing--r/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/gaocegege/Processing.R&#34;&gt;Processing.R&lt;/a&gt; 是我在 &lt;a href=&#34;http://jeremydouglass.com/&#34;&gt;Jeremy Douglass&lt;/a&gt; 指导下，为 &lt;a href=&#34;https://processing.org/&#34;&gt;Processing&lt;/a&gt; 实现的一个 R 语言模式，这是一个 &lt;a href=&#34;https://summerofcode.withgoogle.com/projects/&#34;&gt;Google Summer of Code 2017&lt;/a&gt; 项目。这篇文章会讲一讲它的应用，以及实现。&lt;/p&gt;&#xA;&lt;p&gt;至于这篇文章的受众，我也不是很清楚 ┑(￣Д ￣)┍ 爱看就看看吧 =。=&lt;/p&gt;&#xA;&lt;h2 id=&#34;processing-是什么&#34;&gt;Processing 是什么&lt;/h2&gt;&#xA;&lt;p&gt;这里有一篇文章：&lt;a href=&#34;https://zhuanlan.zhihu.com/p/25432507&#34;&gt;Processing是干嘛的？艺术家学编程能做什么？&lt;/a&gt;，我个人觉得介绍的很到位。我这里就再稍微说一下，我对 Processing 的看法。&lt;/p&gt;&#xA;&lt;p&gt;Processing 从功能上而言，是一个做 creative coding 的编程语言，Processing 的 IDE 也直接被称作 Processing Development Environment（缩写 PDE）。&lt;/p&gt;&#xA;&lt;p&gt;从一个软件工程师的角度来讲，Processing 跟传统的编程语言最大的不同在于，一个完整的 Processing 程序（在 Processing 的语境中，完整的程序被称作 Sketch），一定会有一个图形化的输出。这个输出可以是 2D 图形，3D 图形，也可以是动画，等等。Processing 本身是用 Java 实现了一个编译器，其本身的语法也是跟 Java 几乎一致，因此可以把它当做 Java 的一个 DSL（对语言学不是很懂啦）。Processing 为了使得用户能够更好地进行图形化编程，实现了很多简练的函数，使得寥寥数行就可以实现一个非常简单的图形化应用。&lt;/p&gt;&#xA;&lt;p&gt;从一个艺术家的角度来讲，因为我不是一个艺术家，我也不知道怎么讲，所以就随便讲讲。绝大多数艺术家，在我看来，在写代码的能力上可能稍微有所欠缺（希望没有冒犯到你）。因此，Processing 对于他们而言，最吸引人的点应该是在于其简单易用。&lt;/p&gt;&#xA;&lt;h3 id=&#34;一个简单的例子&#34;&gt;一个简单的例子&lt;/h3&gt;&#xA;&lt;p&gt;这里以一个非常简单的例子介绍 Processing 可以做的事情。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;void setup() {&#xA;  size(640, 360);&#xA;  background(102);&#xA;}&#xA;&#xA;void draw() {&#xA;  // Call the variableEllipse() method and send it the&#xA;  // parameters for the current mouse position&#xA;  // and the previous mouse position&#xA;  variableEllipse(mouseX, mouseY, pmouseX, pmouseY);&#xA;}&#xA;&#xA;&#xA;// The simple method variableEllipse() was created specifically &#xA;// for this program. It calculates the speed of the mouse&#xA;// and draws a small ellipse if the mouse is moving slowly&#xA;// and draws a large ellipse if the mouse is moving quickly &#xA;&#xA;void variableEllipse(int x, int y, int px, int py) {&#xA;  float speed = abs(x-px) + abs(y-py);&#xA;  stroke(speed);&#xA;  ellipse(x, y, speed, speed);&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;先讲效果，这段代码会根据鼠标的位置和鼠标移动的速度在画布上不停的画圆。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

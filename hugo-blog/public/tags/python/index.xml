@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/python/</link>
+    <description>Recent content in Python on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Wed, 27 May 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>datagod：一个用来伪造数据的python library</title>
+      <link>https://gaocegege.com/Blog/datagod%E4%B8%80%E4%B8%AA%E7%94%A8%E6%9D%A5%E4%BC%AA%E9%80%A0%E6%95%B0%E6%8D%AE%E7%9A%84python-library/</link>
+      <pubDate>Wed, 27 May 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/datagod%E4%B8%80%E4%B8%AA%E7%94%A8%E6%9D%A5%E4%BC%AA%E9%80%A0%E6%95%B0%E6%8D%AE%E7%9A%84python-library/</guid>
+      <description>&lt;h1 id=&#34;datagod&#34;&gt;datagod&lt;/h1&gt;&#xA;&lt;p&gt;datagod是一个用来『伪造』数据的python库，已经提交到了pypi上了，可以使用&lt;code&gt;pip install datagod&lt;/code&gt;来安装使用，项目的地址在&lt;a href=&#34;https://github.com/gaocegege/Data-God&#34;&gt;https://github.com/gaocegege/Data-God&lt;/a&gt;，请各位菊苣请拍~&lt;/p&gt;&#xA;&lt;h2 id=&#34;想法来源&#34;&gt;想法来源&lt;/h2&gt;&#xA;&lt;p&gt;曾经在参加数学建模比赛的时候，苦于绘图无力，曾经向队友抱怨过。队友提到，如果有现成的工具，可以直接拿来造出一些漂亮的图，那就再好不过了。当时觉得很有趣，但是一直以来都没有时间去写，最近刚刚过完几个Deadline，有时间去跳坑了。根据wakatime的记录，大概一共花了九个小时在这上面，还是挺浪费时间的Orz。总之希望能在有生之年再参加一次数学建模比赛，让它派上用场~&lt;/p&gt;&#xA;&lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;&#xA;&lt;p&gt;datagod想实现的功能是，给定一个函数，以及相应的参数，比如作用域之类的。首先，程序会根据函数的图像，在其周围产生一些点，然后根据这些点，再去拟合，这样拟合得到的数据，既有原函数的大致性质，又有一些拟合参数的属性可以得到，就可以用在MCM的论文中了^_^&lt;/p&gt;&#xA;&lt;h3 id=&#34;示例&#34;&gt;示例&lt;/h3&gt;&#xA;&lt;p&gt;比如说，给定一个函数&lt;code&gt;y = x&lt;/code&gt;，作用域为[-10, 10]，代码如下所示：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;from datagod import *&#xA;def main():&#xA;    testcase = DataGodBuilder()&#xA;    testcase.setType(GraphType.getPolynomialType())\&#xA;    .setTermList([0, 1])\&#xA;    .setLowRange(-10)\&#xA;    .setHighRange(10)\&#xA;    .build()\&#xA;    .draw()&#xA;main()&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;程序就会返回一张图：&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/datagod/example.png&#34; alt=&#34;example&#34; height=&#34;300&#34;&gt;&#xA;&#x9;&lt;figcaption&gt;示例图&lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;这张图中，名为raw data的就是根据给定的函数生成的数据，而fitting curve就是根据生成的数据拟合的曲线，同样会得到一些拟合参数：&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;Info: coff: [-0.03219724  0.99218986]&#xA;Info: residuals: [ 6.13295169]&#xA;Info: rank: 2&#xA;Info: singular_values: [ 1.  1.]&#xA;Info: rcond: 1.11022302463e-14&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;其中coff是函数的参数，&lt;code&gt;y = coff[0] * 1 + coff[1] * x&lt;/code&gt;，其他则是一些拟合的误差等等的数据。&lt;/p&gt;&#xA;&lt;p&gt;说了这么多，那该如何给定输入呢。&lt;/p&gt;&#xA;&lt;h3 id=&#34;输入格式&#34;&gt;输入格式&lt;/h3&gt;&#xA;&lt;p&gt;datagod有一个主构造器类型，所有的所有都需要&lt;code&gt;DataGodBuilder&lt;/code&gt;对象来构建。用户通过调用构造器的诸多set方法来设定参数，并在设定完所有参数后调用build函数来构建对象，构建出来的对象会有draw方法，负责绘制相应图像。&lt;/p&gt;&#xA;&lt;p&gt;目前呢，datagod一共支持两种类型的函数，一种是多项式类型的，一种是对数类型的，还在完善中。&lt;/p&gt;&#xA;&lt;h4 id=&#34;多项式类型&#34;&gt;多项式类型&lt;/h4&gt;&#xA;&lt;p&gt;对于一个多项式类型的函数而言，可以表示成：&lt;code&gt;y = p[0] * 1 + p[1] * x + p[2] * x ** 2 + ... + p[n] * x ** n&lt;/code&gt;，那如果给定了参数数组p，就可以唯一地确定这个函数，所以如果要构建多项式类型的函数，需要有以下的设定：&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

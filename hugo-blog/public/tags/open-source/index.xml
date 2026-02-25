@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Open Source on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/open-source/</link>
+    <description>Recent content in Open Source on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Mon, 28 Nov 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/open-source/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>参与的第一个开源项目 Cyclone 安利</title>
+      <link>https://gaocegege.com/Blog/%E5%8F%82%E4%B8%8E%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE-cyclone-%E5%AE%89%E5%88%A9/</link>
+      <pubDate>Mon, 28 Nov 2016 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E5%8F%82%E4%B8%8E%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE-cyclone-%E5%AE%89%E5%88%A9/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 是一个打造容器工作流的云原生持续集成与持续发布平台，是由 &lt;a href=&#34;https://github.com/caicloud&#34;&gt;caicloud&lt;/a&gt; 开源的 CI/CD  工具，它同时也是我的本科毕设在做的系统，因此我也参与了开发。2015年11月22日为它贡献了第一行代码，到现在已经一年多了。目前已经在 Github 上开源了，因为目前配套的 UI 还在继续开发中，所以还不是 production ready 状态的，但是这也不妨碍我先来吹一吹。下面都是我自己对 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 的看法，不代表 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 未来的发展方向。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 参考了很多其他的开源 CI/CD 工具，相互之间有相似之处，但是也有不同的地方。按照我的理解，&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 的目标是做私有云中的持续集成的，因此主要面向的竞品是 Jenkins。Jenkins 也是目前互联网公司里用的最多的 CI/CD 解决方案。就我自己的使用情况来看，Jenkins 最大的优势在于快糙猛。一个什么都不会的小白，也可以在10分钟内根据教程搭建一个 Jenkins 服务出来。而且 Jenkins 非常耐操，而且功能比较齐全，是典型的开源项目具备的特点。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 在我看来，想做到的是跟 Jenkins 不同的道路。首先他们的抽象就不太一样，&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 是一个深度跟容器整合的 CI/CD 工具。每次构建，&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 都会产生一个镜像，这个镜像会被推送到用户自定义的镜像仓库中。这是 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 默认的行为，这也是目前 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 与 Jenkins 最大的不同。&lt;/p&gt;&#xA;&lt;p&gt;其次，Jenkins 在不涉及对其进行开发时，是非常好用的。但是如果要为 Jenkins 贡献代码，或者修改它，那是非常复杂的。而 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 的抽象是非常简单的，而且 LOC 很小，可以算是一个 Hackable 的开源工具。一般来说，开源的产品是不可能完全满足需要的，总会有一些 ad-hoc 等等，那 &lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 在我看来是一个非常容易定制的工具。&lt;/p&gt;&#xA;&lt;p&gt;目前来看，&lt;a href=&#34;https://github.com/caicloud/cyclone&#34;&gt;Cyclone&lt;/a&gt; 的发展方向是朝着 Kubernetes Native 在走，下季度希望做的就是无痛支持 Kubernetes。这是跟 &lt;a href=&#34;https://github.com/caicloud&#34;&gt;caicloud&lt;/a&gt; 的 infra 有关系的。本身是一家基于 Kubernetes 的创业公司，所以做的 CI/CD 工具肯定也是要原生支持的。&lt;/p&gt;&#xA;&lt;p&gt;而至于 Cloud Native，不知道什么时候可以支持 rkt，甚至是 runc 等等。目前用到的 docker 的 feature 中，最麻烦的是 network，这个短时间内可能不会实现。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

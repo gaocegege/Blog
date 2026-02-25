@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>KUBECON CHINA 2019 RECAP | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="Kubernetes">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="KubeCon China 2019 Recap">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KubeCon China 2019 Recap">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/kubecon-china-2019-recap/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>KubeCon China 2019 Recap</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>KubeCon China 2019 于北京时间 2019 年 6 月 24 号到 26 号在中国上海举办。Linus 也来到了上海，在会议上进行了一次座谈会，上次 <a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/linuxcon">LinuxCon</a> 的时候也是类似的形式，似乎 Linus 对座谈会的形式更加喜爱。</p>
+<p>KubeCon China 2019 有很多干货满满的分享，这里针对其中的一些个人比较感兴趣的 Talk 做一些梳理。</p>
+<h3 id="使用-kubeflow-进行超参数调优---richard-liugooglejohnu-george-cisco"><a href="https://kccncosschn19chi.sched.com/event/NrZi/zhi-kubeflow-mao-chan-yun-hoy-richard-liudaelsgoogledaehjohnu-george-cisco?iframe=no&amp;w=100%25&amp;sidebar=yes&amp;bg=no">使用 Kubeflow 进行超参数调优 - Richard Liu，Google；Johnu George, Cisco</a></h3>
+<p>这一 Talk 是 Google 的高级工程师 Richard Liu 以及思科的技术 Lead Johnu 一起分享的。他们主要介绍了 Kubeflow 社区中的一个开源项目 <a href="https://github.com/kubeflow/katib/">katib</a>。这一项目是由 Caicloud，Cisco，Google，IBM 和 NTT Japan 的贡献者一起维护的，Kubernetes Native 的 AutoML 系统。其 Slides 可以在<a href="https://static.sched.com/hosted_files/kccncosschn19chi/9d/Hyperparameter%20Tuning%20in%20Kubeflow.pdf">此处</a>观看。</p>
+<p>这一系统是利用 Kubernetes CustomResourceDefinition 这一特性，实现了一组 CRD。通过这一组 CRD 以及 Kubeflow 社区中的其他支持性的 CRD（如 TFJob，PyTorchJob 等）配合，可以支持用户在 Kubernetes 上并行地进行超参数训练（Hyperparameter Tuning）以及模型结构搜索（Neural Architecture Search）。相比于其他的自动机器学习系统，katib 受 Google Vizier 启发，基于 Kubernetes 构建，从架构上支持大规模并行的搜索任务。目前这一系统也仍在积极地开发中，后续维护团队会加强其稳定性和扩展性，支持不同的数据库存储后端，以及更多高级的 AutoML 功能（如自动模型压缩，基于梯度下降的神经网络结构搜索算法等）。</p>
+<h3 id="knative-serving-内部介绍---dominik-tornowsapandrew-chengoogle"><a href="https://kccncosschn19chi.sched.com/event/NrZZ/knative-serving-zhu-tao-dominik-tornowdaelssapdaehandrew-chendaelsgoogle?iframe=no&amp;w=100%25&amp;sidebar=yes&amp;bg=no">Knative Serving 内部介绍 - Dominik Tornow，SAP；Andrew Chen，Google</a></h3>
+<p>这一 Talk 是由 SAP Principal Engineer Dominik Tornow，以及 Google 开源策略项目经理 Andrew Chen 贡献的。他们主要介绍了 KNative Serving 的功能和部分实现。KNative 是由谷歌开源的，支持在 Kubernetes 上运行 Serverless 工作负载的系统。而 KNative Serving 是其中用来支持部署和服务 Serverless 应用的组件。它是构建在 Istio 之上的，但是对 Istio 提供的功能进行了更高层次的抽象。这一 Talk 最大的特色是 Slides 制作精良，加入了很多动画方便听众理解。但在网站上提供只能提供 PDF，所以有些遗憾。不过两位讲师也将出席由才云科技举办的 <a href="https://www.huodongxing.com/event/5494884686811">CKA 上海站培训</a>，进行时长约 1 个小时的分享。到时也许能够有机会再次领略两位讲师深入浅出的讲解。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/kubecon/knative.png" height="500" width="700">
+</figure>
+<h3 id="kubernetes-集群的大规模分布式深度学习---yuan-tang蚂蚁金服yong-tangmobileiron"><a href="https://kccncosschn19chi.sched.com/event/Nrcc/kubernetes-zhong-shi-zha-mao-yuan-tangdaelskuang-yan-shu-daehyong-tangdaelsmobileiron?iframe=no&amp;w=100%25&amp;sidebar=yes&amp;bg=no">Kubernetes 集群的大规模分布式深度学习 - Yuan Tang，蚂蚁金服；Yong Tang，MobileIron</a></h3>
+<p>这一分享的主讲人之一是蚂蚁金服的 Yuan Tang，他是 TensorFlow，MXNet，XGBoost 三个开源项目的 Committer，同时也是 Kubeflow 社区一些开源项目的维护者。另一位主讲人是 TensorFlow SIG I/O lead Yong Tang，同时他也是 CoreDNS 和 Docker/Moby 社区的一些项目的维护者。由于某些原因，Yuan Tang 并没有到来上海，因此这一场 Talk 是 Yong Tang 一人进行的。</p>
+<p>在这场分享中，首先 Yong Tang 先生介绍了 TensorFlow，Horovod 等不同框架支持的不同的分布式训练的模式，以及他们的优劣。随后介绍了 Kubeflow 社区中的一些项目（tf-operator，pytorch-operator，mxnet-operator，mpi-operator 等），这些项目可以支持在 Kubernetes 上利用不同框架，进行不同分布式模型的分布式训练任务。最后 Yong Tang 先生认为在 Kubernetes 上运行分布式训练可以充分利用 Kubernetes 自身的资源管理能力，值得一试。</p>
+<h3 id="最大限度地降低在-kubernetes-上运行深度学习的-gpu-成本---kai-zhang-和-yang-che阿里巴巴"><a href="https://kccncosschn19chi.sched.com/event/Nree/zha-picodu-nano-kubernetes-ai-chan-zha-gpu-kai-zhang-re-yang-chedaelsqiang-tang?iframe=no&amp;w=100%25&amp;sidebar=yes&amp;bg=no">最大限度地降低在 Kubernetes 上运行深度学习的 GPU 成本 - Kai Zhang 和 Yang Che，阿里巴巴</a></h3>
+<p>这一分享主要介绍了阿里容器云服务下的开源项目 <a href="https://github.com/AliyunContainerService/gpushare-scheduler-extender">gpushare-scheduler-extender</a> 的需求和实现。两位讲者也是 Kubeflow 社区中 CLI 项目的维护者。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/kubecon/gpu.png" height="500" width="700">
+</figure>
+<p>GPU 在推理服务中的共享越来越成为一个工业界关注的焦点。目前在 Kubernetes 上的 GPU 共享有不同的解决方案，阿里云服务开源的这一实现借助了诸多 Kubernetes 提供的扩展机制，如 CRD，Device Plugin，Scheduler Extender 和 kubectl 插件等，无侵入地实现了 GPU 显存共享的特性。除此之外，才云科技也有一个类似的<a href="https://caicloud.io/blog/5cd8e472275dbb002b9cd5b6">闭源实现</a>，也可供参考。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

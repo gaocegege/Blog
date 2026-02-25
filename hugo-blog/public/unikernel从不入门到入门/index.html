@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>UNIKERNEL：从不入门到入门 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="读书">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Unikernel：从不入门到入门">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unikernel：从不入门到入门">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/unikernel%E4%BB%8E%E4%B8%8D%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E9%97%A8/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Unikernel：从不入门到入门</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p><a href="http://www.oreilly.com/webops-perf/free/unikernels.csp">Unikernels: Beyond Containers to the Next Generation of Cloud</a> 是 <a href="https://www.linkedin.com/in/rcpavlicek/">Russ Pavlicek</a> 的一本动物书（虽然是 O&rsquo;Reilly 的，但是封面不是动物，是石榴），这本书对 Unikernel 有着比较全面的介绍，而且电子书是免费的，值得一读。</p>
+<h2 id="啥是-unikernel">啥是 Unikernel？</h2>
+<p>从 2014 年以来，容器以一种不可逆转的态势席卷了全球，Unikernel 是很多人眼中的下一个容器。如果要了解什么是 Unikernel，首先需要了解什么是 kernel，kernel 是操作系统中的一个概念。应用要运行起来，是肯定要跟硬件打交道的，但是如果让应用都直接操作硬件，那一定是一场灾难。那内核就是在应用与硬件中间的一层抽象，内核提供了对底层硬件的抽象，比如把硬盘抽象成了文件，通过文件系统进行管理。传统的内核会将所有的硬件抽象都实现在其中，其中的代表就是 Linux，这样的内核被称为宏内核（Monolithic Kernel)。在宏内核中，所有的模块，诸如进程管理，内存管理，文件系统等等都是实现在内核中的。这样虽然不存在通信问题，但是任何一个模块的 bug 会使得整个内核崩溃。</p>
+<p>于是学者们提出了微内核（Micro Kernel）的概念，在内核中只保留必要的模块，比如IPC，内存管理，CPU调度等等。而其他，诸如文件系统，网络IO等等，都放在用户态来实现。这样会使得内核不那么容易崩溃，而且内核需要的内存小了。但是由于模块间的通信需要以 IPC 的方式进行，因此有一定的 overhead，效率不如很莽的宏内核。</p>
+<p>那后来又有了混合内核（Hybrid Kernel)，把一部分不常使用的内核模块，或者是原本需要的时间就很长，因此 IPC 的 overhead 看起来就不是那么夸张的功能，移出内核，而其他的就会放在内核里。</p>
+<p>再后来还有 Exokernel，但是太长了就不讲了，这部分内容在 <a href="http://gaocegege.com/Blog/csp/unikernel">CSP 课堂笔记之 UniKernel</a> 一文中有更详细的解释。</p>
+<p>直接说 Unikernel，<a href="http://unikernel.org/">Unikernel 的官方解释</a>是</p>
+<blockquote>
+<p>Unikernels are specialised, single-address-space machine images constructed by using library operating systems.</p>
+</blockquote>
+<p>翻译一下就是</p>
+<blockquote>
+<p>Unikernel 是专用的，单地址空间的，使用 library OS 构建出来的镜像</p>
+</blockquote>
+<p>其最大的卖点就是在，没有用户空间与内核空间之分，只有一个连续的地址空间。这样使得 Unikernel 中只能运行一个应用，而且对于运行的应用而言，没有硬件抽象可言，所有的逻辑，包括应用逻辑和操作硬件的逻辑，都在一个地址空间中。</p>
+<h2 id="这样有啥好">这样有啥好？</h2>
+<p>哦，原来 Unikernel 就是一个单一内存空间的内核镜像，其中只能有一个应用在运行，那这样有啥好呢，为啥值得我放弃 Linux 而用你这么一个看上去像是阉割版的内核呢？好处就在，小，快，安♂全 /w\</p>
+<p>Unikernel 镜像都很小，由 <a href="https://mirage.io/">MirageOS</a> 实现的一个 DNS server 才 184KB，实现的一个 web server 674 KB，小到恐怖的程度。</p>
+<p>然后就是快，启动很快。因为镜像都很小，所以起停都在毫秒级别，比传统的 kernel 要快多了。</p>
+<p>最后是安全，一般来讲，小的东西相对而言比较安全。Unikernel 中没有 Shell 可用，没有密码文件，没有多余的设备驱动，这使得 Unikernel 更加安全。</p>
+<h2 id="开发测试与传统有啥不同">开发测试与传统有啥不同？</h2>
+<p>Unikernel 在真正实践中，如何开发与测试是一个值得关注的问题。在开发过程中，开发者可以假定自己在传统的操作系统上进行开发，而所有内核相关的功能，暂且由开发机的操作系统提供。</p>
+<p>而在测试环境中，大部分 Unikernel 的实现会将应用代码与需要的内核模块构建成 Unikernel 后，再将其跑在一个传统的操作系统上，利用传统操作系统上的工具来测试 Unikernel。以 <a href="https://github.com/rumpkernel/rumprun">Rumprun</a> 为例，它可以通过 KVM/QEMU 来运行一个 Rumprun Unikernel VM，随后用 Host OS 上的 GDB 来对其进行调试，具体细节可见<a href="https://github.com/rumpkernel/wiki/wiki/Howto:-Debugging-Rumprun-with-gdb">此处</a>。关于调试就介绍到此，如果你想了解更多，<a href="https://news.ycombinator.com/item?id=10954132">Hacker News 上的这个 post</a> 可能会给你一些启发。</p>
+<p>在发布阶段，这是 Unikernel 最简单的事情了。Unikernel 最后的产物就是一个 kernel image，可以在 Hypervisor，Bare Metal 等等各种环境上运行。</p>
+<p>所以可以看到，其中 Unikernel 在软件过程中与传统方式最大的不同就在于调试与测试。而在发布的阶段，传统的方式可能发布的是一个应用，时髦一点那一个容器镜像，而 Unikernel 则是一个高度定制化的 kernel。</p>
+<h2 id="目前的-unikernel-项目">目前的 Unikernel 项目</h2>
+<p>介绍完 Unikernel，接下来将介绍下目前比较成气候的 Unikernel 项目，Unikernel 的实现大部分都是语言特定的。因为涉及到具体语言的运行时，所以很难有一个项目可以适配所有的技术栈。</p>
+<p><a href="https://mirage.io">MirageOS</a> 应该是名气最大的一个 Unikernel 项目，它是使用 OCaml 进行开发的，也是要求开发者懂 OCaml 才行。与其他 Unikernel 相比，它非常成熟，而且有一些<a href="https://mirage.io/wiki/papers">论文</a>，对钟爱论文的同学非常友好。</p>
+<p><a href="https://github.com/GaloisInc/HaLVM#readme">HaLVM</a> 也是一个比较早的 Unikernel 项目，它可以帮助 Haskell 程序员们把自己的 Haskell 程序构建成 Unikernel。如果你不会 Haskell，那就算了 =。=</p>
+<p><a href="http://cnp.neclab.eu/clickos">ClickOS</a> 是一个比较独特的项目，他也非常古老了，但是原本 Click 并不是以 ClickOS 的形式出现的，原本它只是一个支持定制的 router，后来就变成了 ClickOS，一个基于 Unikernel 的 router。它也有很多<a href="http://www.read.cs.ucla.edu/click/publications">论文</a>，大部分都是关于 Click 本身，而不是 Unikernel 实现的。</p>
+<p><a href="https://github.com/rumpkernel/rumprun/">Rumprun</a> 也是一个非常独特的项目，其利用了 <a href="http://rumpkernel.org/">Rump Kernel</a>，理论上 POSIX 兼容的程序，都可以用 Rumprun 来构建成 Unikernel。</p>
+<p>如果这些还不能满足你的好奇心，<a href="http://unikernel.org/projects/">Open source work on unikernels</a> 上列出了众多的 Unikernel 项目，如有需要还请自行浏览。</p>
+<h2 id="unikernel-dockerhyper-与-linuxkit">Unikernel, Docker，Hyper 与 Linuxkit</h2>
+<p>对 Unikernel 的介绍就是这些了，最后再谈谈自己对目前很火的一些概念的看法，以及它们之间的联系。</p>
+<p>Unikernel，在我看来，是另一种形式上的容器。在一个 Unikernel 中，只能运行一个应用，这与容器的哲学不谋而合。但现在容器最吸引人的特性并不是它的便捷，而是在它的分发。Docker 让我们看到了，原来应用的分发可以这么无痛。而 Unikernel 与容器相比，虽然可以做的更小更安全，而且也不需要有 Docker Daemon 这样的后台程序存在，甚至不需要 Host OS，或者 Hypervisor，但是它一是与传统的软件过程有较大的出入，二是在分发等等方面不能做到像容器那样方便。所以它目前肯定不会成为主流的应用分发方式，还需要进一步探索。</p>
+<p>为了能够让 Unikernel 尽快进入生产环境，有一项工作很值得关注。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/unikernel/docker-on-unikernel.png" alt="Docker on UniKernel" height="500" width="500">
+	<figcaption>Docker on Unikernel</figcaption>
+</figure>
+<p>在 Unikernel 里运行一个 Docker Container，想法很美好，但是同样也有很多问题。这样其实并没有利用到容器便于分发的优势，也没有完全发挥 Unikernel 的优势，我觉得这不是未来。不过作为一种折中方案值得一看，可惜从 DockerCon 15 之后就没听见什么动静了。</p>
+<p>Hyper Container 的技术特别独特，之前在 <a href="http://gaocegege.com/Blog/docker-rambles">Docker 与 Hyper</a> 一文中介绍过，这里不再多说。他们的实现很完整，有对标 runc 的 runv，有扩展 Kubernetes 中 container runtime 的 frakti，虽然我没有尝试过，但是我觉得是比 Docker in Unikernel 更加可行的方案，讲道理很有前途。</p>
+<p>Linuxkit 是 Docker 改名 Moby 后随之发布的一个项目。Linuxkit 严格来说是一个构建操作系统的工具集，可以用来构建 Unikernel，但是也可以用来构建最小化的 Linux Kernel，目前还不知道要往什么方向发展。</p>
+<p>这些概念或多或少都有相互重叠的部分，也没有谁一定胜过谁的说法，但都有一个特点：有趣。它们都有自己不同的应用场景，本来嘛，Docker 也不是银弹。</p>
+<p>PS：本文都是纸上谈兵，作者本人并无对 Unikernel 在生产环境中的使用经验（应该暂时也没有人有），大家看看就好，如有疏漏还请不吝指教:)</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

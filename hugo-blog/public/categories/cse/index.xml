@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CSE on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/cse/</link>
+    <description>Recent content in CSE on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 29 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/cse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SJTU-&gt;SE-&gt;CSE-&gt;LAB2的一些情况</title>
+      <link>https://gaocegege.com/Blog/sjtu-se-cse-lab2%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%85%E5%86%B5/</link>
+      <pubDate>Fri, 29 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/sjtu-se-cse-lab2%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%85%E5%86%B5/</guid>
+      <description>&lt;p&gt;lab2基本来说是支持文件系统的API，然后不知为何多了一个part，于是工作量就大了很多。part-d测试的是soft link，因此需要从上到下添加不少东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;开始行动&#34;&gt;开始行动&lt;/h2&gt;&#xA;&lt;p&gt;首先，在最上层，&lt;code&gt;fuse.cc&lt;/code&gt;部分，由于lab使用&lt;code&gt;fuse_lowlevel_ops&lt;/code&gt;，所以，需要实现对应的接口。在&lt;code&gt;fuse-lowlevel-ops&lt;/code&gt;结构中有完整的文档，我们需要实现的是两个：&lt;code&gt;symlink&lt;/code&gt;和&lt;code&gt;readlink&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;但是为了实现这两个函数，需要对&lt;code&gt;getattr&lt;/code&gt;等函数进行修改，使其支持&lt;code&gt;symlink&lt;/code&gt;文件类型等等。然后在&lt;code&gt;symlink&lt;/code&gt;函数中，需要调用&lt;code&gt;fuse_reply_entry&lt;/code&gt;，在&lt;code&gt;readlink&lt;/code&gt;的时候，需要调用&lt;code&gt;fuse_reply_readlink&lt;/code&gt;，具体看&lt;code&gt;fuse_lowlevel&lt;/code&gt;文件。&lt;/p&gt;&#xA;&lt;p&gt;其次，在&lt;code&gt;yfs_client&lt;/code&gt;里，可能需要加这么几个函数：对于一个文件是否是软连接的判断函数，以及读取软连接文件基本信息的函数（不必要），这些是用来支持&lt;code&gt;fuse&lt;/code&gt;的&lt;code&gt;getattr&lt;/code&gt;，&lt;code&gt;fuse&lt;/code&gt;的&lt;code&gt;getattr&lt;/code&gt;的修改是为了支持对&lt;code&gt;symlink&lt;/code&gt;里的那个&lt;code&gt;fuse_entry_param&lt;/code&gt;类型变量的&lt;code&gt;attr&lt;/code&gt;属性进行修改（越说越乱了啊，这段别看了=-=。&lt;/p&gt;&#xA;&lt;p&gt;最后，需要在&lt;code&gt;extent_protocol&lt;/code&gt;里添加新的文件类型，即软连接。&lt;/p&gt;&#xA;&lt;p&gt;需要注意的是，&lt;code&gt;symlink&lt;/code&gt;可以理解为是用来建立软连接的，只需要新建一个软连接类型的文件，然后把&lt;code&gt;link&lt;/code&gt;写到他里面就可以，跟&lt;code&gt;create&lt;/code&gt;差不多。&lt;code&gt;readlink&lt;/code&gt;可以理解为是从指定的软连接里读出连接内容，就是把软连接文件的内容读出来。直观来说就是这样。所以不需要做什么递归解析等等高级的东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;更多&#34;&gt;更多&lt;/h2&gt;&#xA;&lt;p&gt;PS：要注意&lt;code&gt;fuse&lt;/code&gt;要实现的是&lt;code&gt;fuse_lowlevel_ops&lt;/code&gt;里的函数而不是&lt;code&gt;fuse_operations&lt;/code&gt;的。&lt;/p&gt;&#xA;&lt;p&gt;PPS：在通过&lt;code&gt;part -d&lt;/code&gt;的时候，还是会有一个小小的报错，熊神在QA上给出了解决方案，可以去看看=-=。&lt;/p&gt;&#xA;&lt;p&gt;PPPS：&lt;code&gt;fuse.cc&lt;/code&gt;里的&lt;code&gt;main&lt;/code&gt;函数是需要加两行代码的。&lt;/p&gt;&#xA;&lt;p&gt;大致就是这样。其他部分天神讲的很清楚了=-=&#xA;&lt;code&gt;/*天神日志在这里*/&lt;/code&gt;-&amp;gt;&lt;a href=&#34;http://blog.renren.com/blog/435494914/921087193&#34;&gt;走你&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

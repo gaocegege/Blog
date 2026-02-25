@@ -1,0 +1,43 @@
+{{ define "bodyClass" }}post-template page{{ end }}
+{{ define "main" }}
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="{{ "/" | relURL }}">
+                <img src="{{ "/images/" | relURL }}{{ .Site.Params.logo }}" alt="Blog Logo">
+            </a>
+            {{ partial "menu.html" (dict "page" .) }}
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>分类</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div>
+            <ul class="tag-box inline">
+                {{ range .Data.Terms.ByCount }}
+                <li>
+                    <a href="#{{ .Name | urlize }}">{{ .Name }} <span>{{ .Count }}</span></a>
+                </li>
+                {{ end }}
+            </ul>
+            
+            {{ range .Data.Terms.ByCount }}
+            <h2 id="{{ .Name | urlize }}">{{ .Name }}</h2>
+            <ul class="post-list">
+                {{ range .Pages }}
+                <li>
+                    <a href="{{ .RelPermalink }}">{{ .Title }}<span class="entry-date"><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time></span></a>
+                </li>
+                {{ end }}
+            </ul>
+            {{ end }}
+        </div>
+    </article>
+    <div class="cf"></div>
+    {{ partial "footer.html" . }}
+</main>
+{{ end }}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>文件指针 on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/%E6%96%87%E4%BB%B6%E6%8C%87%E9%92%88/</link>
+    <description>Recent content in 文件指针 on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 29 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/%E6%96%87%E4%BB%B6%E6%8C%87%E9%92%88/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于fstream修改文件内容的操作</title>
+      <link>https://gaocegege.com/Blog/%E5%85%B3%E4%BA%8Efstream%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9A%84%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Fri, 29 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E5%85%B3%E4%BA%8Efstream%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E7%9A%84%E6%93%8D%E4%BD%9C/</guid>
+      <description>&lt;p&gt;最近几天在做&lt;a href=&#34;https://github.com/gaocegege/P2Project&#34;&gt;一个简易的社交系统&lt;/a&gt;&amp;rsquo;/*其实是数据结构大作业*/&amp;rsquo;，频繁地用到文件操作。其中比较捉急的是对于文件内容的改写。&lt;/p&gt;&#xA;&lt;h2 id=&#34;文件修改&#34;&gt;文件修改&lt;/h2&gt;&#xA;&lt;p&gt;我觉得修改可以分为两种，一种是定长修改，一种是长度发生变化的修改。两种修改都有一种通用的修改方法，不过这个方法非常没有效率，那就是建立一个tmp文件，把修改过后的内容放到里面，然后删掉原文件把tmp文件改成原文件的名字。这个方法显然不是很科学，而且如果文件内容很大，那么时间可能会挺长的。&lt;/p&gt;&#xA;&lt;h3 id=&#34;探索定长修改&#34;&gt;探索定长修改&lt;/h3&gt;&#xA;&lt;p&gt;抛去上面的方法不说，定长修改的方法很简单，就是同时以&lt;code&gt;ios::in&lt;/code&gt;与&lt;code&gt;ios::out&lt;/code&gt;打开文件，不过其中还是有些需要注意的。&lt;/p&gt;&#xA;&lt;p&gt;在进行文件写的时候（非二进制），文件指针很成问题。举个例子：比如文件的内容是&amp;quot;100100100&amp;quot;，写入了三个&lt;code&gt;int&lt;/code&gt;类型的变量，值为100。接下来我如果想改变第二个100，使其变成200，文件指针需要移动3位，因为前面有三个字符。这时候指针是一个字符一个字符的移动的&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;#include &amp;lt; iostream &amp;gt; &#xA;#include &amp;lt; fstream &amp;gt;&#xA;using namespace std;&#xA;&#xA;int main() {&#xA;    ofstream ofs(&amp;quot;cece.txt&amp;quot;, ios::out);&#xA;    int x = 100;&#xA;    ofs &amp;lt;&amp;lt; x &amp;lt;&amp;lt; x &amp;lt;&amp;lt; x;&#xA;    ofs.close();&#xA;    ofs.open(&amp;quot;cece.txt&amp;quot;, ios::out | ios:: in );&#xA;    x = 200;&#xA;    ofs.seekp(3);&#xA;    ofs &amp;lt;&amp;lt; x;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;而如果把文件换成二进制的写，那么情况就会有些变化，如果还是想改写第二个100的内容，那么文件指针就需要指向sizeof(int)。指针是一个byte一个byte地移动。 int存入的方式就是以int类型，将其原封写入文件，所以二进制的读写比较简单。&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt; &#xA;#include &amp;lt;fstream&amp;gt; &#xA;using namespace std;  &#xA;&#xA;int main()  &#xA;{  &#xA;    ofstream ofs(&amp;quot;cece.txt&amp;quot;, ios::out | ios::binary);  &#xA;&#x9;int x = 100;  &#xA;&#x9;ofs.write((char *)&amp;amp;x, sizeof(x));  &#xA;&#x9;ofs.write((char *)&amp;amp;x, sizeof(x));  &#xA;&#x9;ofs.write((char *)&amp;amp;x, sizeof(x));  &#xA;&#x9;ofs.close();  &#xA;&#xA;    ofs.open(&amp;quot;cece.txt&amp;quot;, ios::out | ios::in | ios::binary);  &#xA;    x = 200;  &#xA;    ofs.seekp(sizeof(int));  &#xA;    ofs.write((char *)&amp;amp;x, sizeof(x));  &#xA;   }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;经实验表明，ios::app Mode下是不能移动文件指针的，而且这个时候tellp()是0。此模式下只能在后面追加着写。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

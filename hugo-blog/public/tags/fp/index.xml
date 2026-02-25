@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fp on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/fp/</link>
+    <description>Recent content in Fp on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Tue, 30 Jun 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/fp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Racket里的特性</title>
+      <link>https://gaocegege.com/Blog/racket%E9%87%8C%E7%9A%84%E7%89%B9%E6%80%A7/</link>
+      <pubDate>Tue, 30 Jun 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/racket%E9%87%8C%E7%9A%84%E7%89%B9%E6%80%A7/</guid>
+      <description>&lt;p&gt;今天在复习程序语言基础的考试，偶有所获，记录下来~&lt;/p&gt;&#xA;&lt;h1 id=&#34;延迟求值相关&#34;&gt;延迟求值相关&lt;/h1&gt;&#xA;&lt;h2 id=&#34;thunk&#34;&gt;Thunk&lt;/h2&gt;&#xA;&lt;p&gt;首先，先看看函数式里面延迟求值的方式之一，Thunk。这里有一个函数，他的作用是用来取代原本的If判断，代码是这样的~&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;(define (my-if-bad x y z) (if x y z))&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;初步看上去，代码很不错，简单易懂，但，如果我们以这样的方式进行调用，就会出问题~&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;(define (factorial-wrong x)&#xA;&#x9;(my-if-bad (= x 0)&#xA;&#x9;&#x9;1&#xA;&#x9;&#x9;(* x (factorial-wrong (- x 1)))))&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这里会出什么问题呢~程序会陷入无尽的递归中。这是因为以Racket为代表的大部分函数式编程语言的设定造成的，对于函数的参数，会在执行函数之前先进行求值。所以，my-if-bad的第三个参数，会先进行求值。而在求值的时候，就陷入了无限的递归求值当中。&lt;/p&gt;&#xA;&lt;p&gt;那既然会有问题，该如何解决呢&lt;del&gt;方法也很简单，只需要修改下my-if-bad的定义&lt;/del&gt;&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;(define (my-if x y z) (if x (y) (z)))&#xA;&#xA;(define (factorial x)&#xA;(my-if (= x 0)&#xA;&#x9;(lambda () 1)&#xA;&#x9;(lambda () (* x (factorial (- x 1))))))&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这里利用的是以Racket为代表的大部分函数式编程语言的另一设定，直到函数被调用的时候才对函数体进行求值。所以这样将原本的参数变成一个没有参数的匿名函数后，就不会在把它们作为参数传入函数的时候就进行求值，而是在使用到它的时候才进行求值。这样程序就可以正常工作了。所以这种方法就叫做Thunk，在这里我们把参数y和z给Thunk了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;delay-and-force&#34;&gt;Delay and Force&lt;/h2&gt;&#xA;&lt;p&gt;上面的Thunk，在某些情况下，不太能满足要求。比如，Thunk是将参数写成匿名函数，如果参数需要大量计算，那Thunk会使得每次调用的时候都要求值一次，会比较浪费资源，于是有了另外一种方式，利用Delay和Force，这种方法又被叫做Call by need，因为它既做到了延迟求值，有Call by name的性质，又只需要求值一次，有Call by value的性质。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Moby on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/moby/</link>
+    <description>Recent content in Moby on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 21 Apr 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/moby/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Moby 与 Docker 的关系</title>
+      <link>https://gaocegege.com/Blog/moby-%E4%B8%8E-docker-%E7%9A%84%E5%85%B3%E7%B3%BB/</link>
+      <pubDate>Fri, 21 Apr 2017 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/moby-%E4%B8%8E-docker-%E7%9A%84%E5%85%B3%E7%B3%BB/</guid>
+      <description>&lt;p&gt;近来 Docker 被 migrate 到了 Moby 下，这篇文章主要想讲讲我对这两个东西的了解。&lt;/p&gt;&#xA;&lt;h2 id=&#34;之前的-docker&#34;&gt;之前的 Docker&lt;/h2&gt;&#xA;&lt;p&gt;之前的 Docker 就不用我来说了，大家肯定都了解，就是一个容器引擎，不过它正在变得越来越专注，容器运行时由 containerd 和 runc 来负责，Docker 更多的负责在其上的事情。&lt;/p&gt;&#xA;&lt;h2 id=&#34;之前的-moby&#34;&gt;之前的 Moby&lt;/h2&gt;&#xA;&lt;p&gt;Moby 是之前一直有在关注的项目，原本以为跟 Docker 并没有什么直接的关系，没想到它跟 Docker 关系如此接近，以至于现在 github.com/docker/docker 已经被 迁移到了 &lt;a href=&#34;https://github.com/moby/moby&#34;&gt;github.com/moby/moby&lt;/a&gt; 上。那么他们两个的联系在哪里呢，这里发表下自己的看法。&lt;/p&gt;&#xA;&lt;p&gt;之前因为 follow 了很多 Docker 的 collaborator 和 contributor，所以很早就知道 moby 这个项目。之前感觉 moby 做的事情是基于容器做一个可以构建操作系统的工具，可以看到现在 moby 周边的一些项目比如 &lt;a href=&#34;https://github.com/linuxkit/linuxkit&#34;&gt;linuxkit&lt;/a&gt; 都是围绕这个去做的。它把系统需要的一些功能拆成了不同的部分，好像一开始是为了支持 Docker for Windows and macOS 实现的。目前各种 kit 包括 &lt;a href=&#34;https://github.com/linuxkit/linuxkit&#34;&gt;linuxkit&lt;/a&gt;，&lt;a href=&#34;https://github.com/docker/infrakit&#34;&gt;infrakit&lt;/a&gt;，&lt;a href=&#34;https://github.com/moby/vpnkit&#34;&gt;vpnkit&lt;/a&gt;，&lt;a href=&#34;https://github.com/moby/datakit&#34;&gt;datakit&lt;/a&gt;，&lt;a href=&#34;https://github.com/moby/hyperkit&#34;&gt;hyperkit&lt;/a&gt;。对于之前的 moby，&lt;a href=&#34;https://github.com/gaocegege/linuxkit/blob/master/docs/architecture.md&#34;&gt;linuxkit 里的文档&lt;/a&gt; 有一个大致的解释，是说被用来 &amp;ldquo;converts the yaml specification into one or more bootable images.&amp;quot;，其中 yaml specification 是类似 &lt;a href=&#34;https://github.com/gaocegege/linuxkit/blob/master/linuxkit.yml&#34;&gt;linuxkit.yml&lt;/a&gt; 的东西。moby 的感觉给人一种 unikernel 的样子，他的输入是一个配置文件，在其中会声明需要的系统服务以及用户定义的一些服务，最后会输出一个操作系统，而且之前的 moby 支持 &lt;a href=&#34;https://github.com/gaocegege/linuxkit/tree/master/projects/miragesdk&#34;&gt;MirageOS&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

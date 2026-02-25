@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Web on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/web/</link>
+    <description>Recent content in Web on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 11 Dec 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>信息推送的实现方式</title>
+      <link>https://gaocegege.com/Blog/%E4%BF%A1%E6%81%AF%E6%8E%A8%E9%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Fri, 11 Dec 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E4%BF%A1%E6%81%AF%E6%8E%A8%E9%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F/</guid>
+      <description>&lt;p&gt;这几天在实现一个功能，描述起来很简单，就是在一个用户下了订单后，要发通知给类似卖家的存在。因为下订单功能等等，需要跟Mysql数据库等等交互，因此使用Java来实现，比较合适，但是在实现通知的时候，就会遇到一些问题。Java来写Web Socket似乎很困难的样子，各种不懂不会，究其本质还是对Web Socket底层的协议啊之类的不是很懂，不过下周二就DL了，没有太多时间来了解了。于是考虑了很多解决方案，这里一个个批判下。&lt;/p&gt;&#xA;&lt;p&gt;首先，想到用nodejs完全取代java，整个下单过程都用nodejs来写。于是听从&lt;a href=&#34;https://github.com/at15&#34;&gt;@at15&lt;/a&gt;的建议开始用&lt;a href=&#34;http://www.sailsjs.org/&#34;&gt;sails.js&lt;/a&gt;，它本身就有比较完备的Web Socket的支持。后来写着写着发现其实挺难用的，而且对于如何向指定的用户发送通知，而不是广播的方式，也不知应该如何实现，我也实在不想之后还要这么纠结的代码，就放弃了这条路。&lt;/p&gt;&#xA;&lt;p&gt;之后想到的方法是，把跟数据库的交互用Java来写，Web Socket的部分用node.js + socket.io来写，Java和node.js通过redis来交互。因为redis支持pub/sub模式，所以可以把Java那边做成发布者，node这边做成订阅者，这样每当Java那边产生了一个新的订单，就可以通过一个channel发给node，而不需要node不停问Java有没有新的单子。&lt;/p&gt;&#xA;&lt;p&gt;这种方法是肯定可以实现的，但是太累了，需要自己来管理redis的channel等等。之后又想到了一种类似的方法但是会简单一点。之前的做法，Java和node.js都需要跟redis打交道。现在可以使用&lt;a href=&#34;https://github.com/socketio/socket.io-emitter&#34;&gt;socket.io-emitter&lt;/a&gt;来做到，node.js来给Java提供一个REST API，然后Java调用node.js来用emitter来emit信息。这样的做法其实是向上层屏蔽了redis，不用关心redis的东西，比之前的方法要方便。但是可能产生的问题是，因为emitter库本身比较年轻，是不是稳定不太确定。&lt;/p&gt;&#xA;&lt;p&gt;那之后又被&lt;a href=&#34;https://github.com/at15&#34;&gt;@at15&lt;/a&gt;安利了一种新的方式，用&lt;a href=&#34;https://leancloud.cn/&#34;&gt;LeanCloud&lt;/a&gt;来做这件事。他本身封装了很多后端常用的功能，比如短信验证，信息推送等等。只要付钱，会方便很多。而且单单是推送的话，似乎是免费的。虽然没有Java的SDK，但是可以通过REST API来推送，还算是比较方便的。LeanCloud本身是想让应用不再需要写后端，所以所有SDK都是前端的，感觉也不太合理。推送这样的事情，还是要后端来做的吧&lt;del&gt;并不懂&lt;/del&gt;&lt;/p&gt;&#xA;&lt;p&gt;上面就是填坑之路&lt;del&gt;如果有更好的解决办法请多多指教&lt;/del&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>VECTORCHORD：在 POSTGRESQL 中以 1 美元的价格存储 40 万 VECTORS | 高策</title>
+<meta name="description" content="我们很高兴地宣布推出适用于 PostgreSQL 的新向量搜索扩展，它提供了一种非常经济高效的方法来管理大型向量。使用 VectorChord，您可以对 top 10 查询的 1 亿个 768 维向量实现 131 的 QPS 和 0.95 的精度。此设置每月仅需 250 美元，并且可以托管在一台机器上。">
+<meta name="keywords" content="genai">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="VectorChord：在 PostgreSQL 中以 1 美元的价格存储 40 万 Vectors">
+<meta name="twitter:description" content="我们很高兴地宣布推出适用于 PostgreSQL 的新向量搜索扩展，它提供了一种非常经济高效的方法来管理大型向量。使用 VectorChord，您可以对 top 10 查询的 1 亿个 768 维向量实现 131 的 QPS 和 0.95 的精度。此设置每月仅需 250 美元，并且可以托管在一台机器上。">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VectorChord：在 PostgreSQL 中以 1 美元的价格存储 40 万 Vectors">
+<meta property="og:description" content="我们很高兴地宣布推出适用于 PostgreSQL 的新向量搜索扩展，它提供了一种非常经济高效的方法来管理大型向量。使用 VectorChord，您可以对 top 10 查询的 1 亿个 768 维向量实现 131 的 QPS 和 0.95 的精度。此设置每月仅需 250 美元，并且可以托管在一台机器上。">
+<meta property="og:url" content="https://gaocegege.com/Blog/vectorchord%E5%9C%A8-postgresql-%E4%B8%AD%E4%BB%A5-1-%E7%BE%8E%E5%85%83%E7%9A%84%E4%BB%B7%E6%A0%BC%E5%AD%98%E5%82%A8-40-%E4%B8%87-vectors/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>VectorChord：在 PostgreSQL 中以 1 美元的价格存储 40 万 Vectors</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>2024.12.24: 本文部分评论可见 <a href="https://news.ycombinator.com/item?id=42324059">Hacker News</a></p>
+<blockquote>
+<p>Original post: <a href="https://blog.pgvecto.rs/vectorchord-store-400k-vectors-for-1-in-postgresql">VectorChord: Store 400k Vectors for $1 in PostgreSQL</a></p>
+</blockquote>
+<p>我们很高兴地宣布推出适用于 PostgreSQL 的新向量搜索扩展，它提供了一种非常经济高效的方法来管理大型向量。使用 <a href="https://github.com/tensorchord/VectorChord">VectorChord</a>，您可以对 top 10 查询的 1 亿个 768 维向量实现 131 的 QPS 和 0.95 的精度。此设置每月仅需 250 美元，并且可以托管在一台机器上。</p>
+<p>这意味着只需 1 美元即可存储 400k 个向量，从而大幅节省成本：与 Pinecone（存储优化实例）相比，向量数量多 6 倍，与 pgvector/pgvecto.rs 相比，价格相同，向量数量多 26 倍。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/1.png" alt="vectorchord" height="500" width="700">
+    <figcaption>Vectors for $1</figcaption>
+</figure>
+<p>在基于 MyScale Benchmark 数据的向量存储月度成本比较中，突出展示了 VectorChord 如何成为一种经济实惠的选择，存储 1 亿个向量的价格仅为 247 美元。相比之下，尽管 Pinecone 的存储经过了优化，但每月成本为 1,600 美元，而 Qdrant 的价格为 4,374 美元。pgvector/pgvecto.rs 的成本要高得多，为 6,580 美元。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/2.png" alt="vectorchord" height="500" width="700">
+    <figcaption>Monthly cost</figcaption>
+</figure>
+<h2 id="hnsw-的问题">HNSW 的问题</h2>
+<p>作为 PGVecto.rs 的继任者，VectorChord 从其前身中获得了宝贵的见解。虽然许多矢量数据库或扩展（包括 PGVecto.rs）在处理约 100 万个数据集时表现良好，但它们在扩展到更大的规模时往往会遇到困难，例如从 1000 万到 1 亿。传统的基于 HNSW 的矢量数据库在处理更大的数据集时面临特定挑战：</p>
+<ul>
+<li>索引构建时间长：通常需要 2 个多小时才能为 500 万条记录构建索引。</li>
+<li>高内存要求：存储 1000 万个向量的数据集可能需要多达 40GB 的内存。</li>
+</ul>
+<h2 id="vectorchord-的解决方案磁盘友好型-ivfrabitq">VectorChord 的解决方案：磁盘友好型 IVF+RabitQ</h2>
+<p>VectorChord 采用 IVF（倒排文件索引）和 RaBitQ[1] 量化来提供快速、可扩展且准确的向量搜索功能。此方法将 32 位向量压缩为紧凑的位表示，从而显著减少计算需求。大多数比较都是使用这些压缩向量进行的，而全精度计算则保留用于应用于较小子集的自适应重新排序阶段，以确保速度和召回率均得到保留。</p>
+<p>许多人认为 IVF 的召回率/速度权衡不如 HNSW，并且需要进行许多优化配置。然而，这是一个复杂的问题，我们现在将简要解释一下，稍后会发布有关该主题的详细文章。</p>
+<h3 id="ivf-vs-hnsw">IVF vs. HNSW</h3>
+<p>向量搜索算法花费的时间中很大一部分用于距离计算。为了提高速度，必须尽可能减少距离比较。原始 IVF 在这方面遇到了困难，通常需要扫描总向量的 1% 到 5%，这比 HNSW 的要求高得多。</p>
+<p>然而，RabitQ 提出了一种创新方法，可以将 32 位向量压缩为 1 位。虽然这种压缩会导致一些精度损失，但大大降低了计算要求。通过快速扫描优化，我们可以实现比传统向量距离计算快 100 倍以上的计算。</p>
+<p>您可能想知道召回率。我们可以重新排序其他向量以提高召回率，并且只有在重新排序阶段才需要进行全精度距离计算。RaBitQ 保证了严格的理论误差界限，同时提供了良好的经验准确性。这就是 IVF 比 HNSW 更快的原因。</p>
+<p>以下是 GIST 数据集的一些初始基准测试结果，该数据集包含 960 个维度的 100 万个向量。在召回率相同的情况下，VectorChord 的 QPS 可能是 pgvector 的两倍。更多详细信息将在 Benchmark 章节提供。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/3.png" alt="vectorchord" height="500" width="700">
+    <figcaption>GIST 1M</figcaption>
+</figure>
+<h3 id="external-index-build">External Index build</h3>
+<p>原始 IVF 方法通常需要扫描 1-5% 的数据集，这可能会很慢。通过使用 RaBitQ 和快速扫描优化，VectorChord 旨在通过减少需要完全比较的全精度向量数量来加快计算速度。这种方法有助于创建一个稳定且可扩展的向量搜索系统，该系统可与 PostgreSQL 存储系统很好地配合使用。因此，用户可以将物理复制和其他 PostgreSQL 功能与 VectorChord 一起使用。</p>
+<p>VectorChord 基于 IVF 构建，允许在外部（例如在 GPU 上）进行 KMeans 聚类并轻松导入数据库。我们在具有 2 个 vCPU 和 16 GB RAM 的 AWS i4i.large 实例上执行了测试以测量索引和插入时间。用于此测试的数据集是 GIST 1M。我们插入了 700,000 个向量，构建了索引，然后添加了另外 300,000 个向量。在预热系统后，我们使用单个线程执行查询。在这个过程中，我们评估了索引的构建时间和插入时间。结果如下：</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/4.png" alt="vectorchord" height="500" width="700">
+    <figcaption>GIST 1M</figcaption>
+</figure>
+<p>VectorChord 使用一台单独的机器进行 KMeans 聚类，构建索引耗时 186 秒，比 pgvector 快 16 倍。此外，插入时间也比 pgvector 快 14 倍。众所周知，索引是向量数据库中最耗资源的部分，需要大量计算，增加了对 CPU 和内存的需求。通过使用更强大的机器构建索引，然后将其导入到更小的机器进行查询，可以在单台机器上支持数十亿个向量。</p>
+<h2 id="benchmark">Benchmark</h2>
+<p>我们进行了额外的实验，使用 LAION 5M 和 100M 数据集更彻底地评估性能和成本。</p>
+<h3 id="laion-5m">LAION 5M</h3>
+<p>我们使用 LAION 5M 数据集进行了实验，结果对 Vectorchord 来说令人鼓舞。与其他平台相比，它始终实现更高的每秒查询数 (RPS)。虽然许多数据库在召回率提高时难以在速度和准确率之间保持平衡，但 Vectorchord 即使在更高的召回率水平下也能保持高效。这一特性使其成为需要快速响应和准确率的应用程序的合适选择。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/5.png" alt="vectorchord" height="500" width="700">
+    <figcaption>LAION 5M Top 10</figcaption>
+</figure>
+<p>实验采用 Myscale Benchmark，在一台 r6a.xlarge 机器上进行，该机器具有 4 个 vCPU、32GB 内存和 200GB EBS 存储。实验设置的参数包括 nlist 为 8192、共享缓冲区为 28GB、JIT 禁用、有效 I/O 并发数为 200。我们在没有预热的情况下进行了两次实验。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/6.png" alt="vectorchord" height="500" width="700">
+    <figcaption>LAION 5M Top 100</figcaption>
+</figure>
+<p>我们使用的机器是一台 r6a.xlarge，每月成本约为 165.56 美元，我们在 LAION 5M 数据集的 Top 100 中取得了相当的性能。</p>
+<h3 id="单机支持-laion-100m">单机支持 LAION 100M</h3>
+<p>此外，由于其磁盘友好的索引功能，增加单台机器的磁盘容量可以成比例地提高 VectorChord 可以容纳的最大向量数量，可能允许存储 10 亿或更多。</p>
+<p>为了评估可扩展性，我们使用 AWS i4i.xlarge 实例对 LAION 100M 数据集（768 个维度）进行了实验，这是一个经济实惠的配置，每月价格为 250 美元。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/7.png" alt="vectorchord" height="500" width="700">
+</figure>
+<p>它只有 4 个 CPU 和 32 GB 内存，其中 937 GB 的 SSD 用于存储 1 亿个向量。在此设置下，我们通过单线程查询实现了前 10 个结果的 QPS 为 16.2 @ recall 0.95，前 100 个结果的 QPS 为 4.3 @ recall 0.95。以下是令人印象深刻的结果：</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/vectorchord/8.png" alt="vectorchord" height="500" width="700">
+</figure>
+<p>在保持召回率大于0.95的前提下，我们还在这台4vCPU的机器上测试了多线程QPS，在这个场景下，随着请求线程数从1个增加到8个，向量查询的QPS可以线性提升，说明VectorChord具有很好的可扩展性。</p>
+<h2 id="总结">总结</h2>
+<p>VectorChord 是专为高效向量搜索而设计的一款新 PostgreSQL 扩展。它允许用户仅用 1 美元存储 400,000 个向量，比竞争对手便宜得多。通过利用 IVF 和 RaBitQ 量化，VectorChord 优化了搜索速度和内存使用率，使其适用于大型数据集。</p>
+<p>我们在 PGVecto.rs Cloud 为 VectorChord 提供云托管服务。我们的平台简化了部署和管理，使您能够轻松高效地扩展向量数据库解决方案。如果您对 VectorChord 有任何疑问，请随时联系我们。我们随时为您提供帮助！您可以在我们的存储库中打开问题，也可以发送电子邮件至 <a href="mailto:vectorchord-inquiry@tensorchord.ai">vectorchord-inquiry@tensorchord.ai</a>。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

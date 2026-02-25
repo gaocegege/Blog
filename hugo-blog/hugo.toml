@@ -1,0 +1,96 @@
+baseURL = 'https://gaocegege.com/Blog'
+canonifyURLs = true
+languageCode = 'zh-CN'
+title = '高策'
+theme = 'notepad-china'
+paginate = 100
+paginatePath = 'page'
+
+[params]
+  description = '江湖小虾米'
+  logo = 'gaocegege.jpg'
+  comments_sys = 'giscus'
+  disqus_shortname = 'blogofcece'
+  share = true
+  highlight = true
+  dropcap = true
+  google_analytics = 'UA-54253120-1'
+  baidu_analytics = false
+
+[params.author]
+  name = '高策'
+  avatar = 'gaocegege.jpg'
+  email = 'gaocegege@hotmail.com'
+  wechat = '270863799'
+  description = 'Done is better than perfect.'
+  renren = '325460067'
+  weibo = 'constructcece'
+  facebook = 'gaocegege'
+  github = 'gaocegege'
+
+[params.giscus]
+  repo = 'gaocegege/blog-comments'
+  repoId = 'R_kgDOGms1JQ'
+  category = 'General'
+  categoryId = 'DIC_kwDOGms1Jc4CAfIx'
+  mapping = 'title'
+  reactionsEnabled = '1'
+  emitMetadata = '0'
+  theme = 'light'
+  lang = 'zh-CN'
+
+# Navigation menu
+[[menu.main]]
+  name = '主页'
+  url = '/'
+  weight = 10
+
+[[menu.main]]
+  name = '编程'
+  url = '/featured/'
+  weight = 20
+
+[[menu.main]]
+  name = '消遣'
+  url = '/relaxed/'
+  weight = 30
+
+[[menu.main]]
+  name = '分类'
+  url = '/categories/'
+  weight = 40
+
+[[menu.main]]
+  name = '关于我'
+  url = '/about/'
+  weight = 50
+
+[[menu.main]]
+  name = '博客数据统计'
+  url = '/analytics/'
+  weight = 60
+
+[[menu.main]]
+  name = '开源项目'
+  url = '/opensource/'
+  weight = 70
+
+[[menu.main]]
+  name = 'RSS'
+  url = '/index.xml'
+  weight = 80
+
+# Permalinks
+[permalinks]
+  posts = '/:slug/'
+
+# Markup settings
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    codeFences = true
+    noClasses = false
+    style = 'monokai'
+    tabNums = false

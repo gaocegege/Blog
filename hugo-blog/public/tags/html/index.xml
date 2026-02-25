@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HTML on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/html/</link>
+    <description>Recent content in HTML on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Sat, 30 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/html/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>进来看看你是不是撸多了</title>
+      <link>https://gaocegege.com/Blog/%E8%BF%9B%E6%9D%A5%E7%9C%8B%E7%9C%8B%E4%BD%A0%E6%98%AF%E4%B8%8D%E6%98%AF%E6%92%B8%E5%A4%9A%E4%BA%86/</link>
+      <pubDate>Sat, 30 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E8%BF%9B%E6%9D%A5%E7%9C%8B%E7%9C%8B%E4%BD%A0%E6%98%AF%E4%B8%8D%E6%98%AF%E6%92%B8%E5%A4%9A%E4%BA%86/</guid>
+      <description>&lt;p&gt;=-=最近疲劳过度，看世界都是模模糊糊的&lt;/p&gt;&#xA;&lt;h1 id=&#34;效果&#34;&gt;效果&lt;/h1&gt;&#xA;&lt;p style=&#34;color:transparent; text-shadow:0 0 2.5px rgba(1,1,1,1);&#34;&gt;任何事也是按照香港的基本法，按照选举法。刚才你问我，我可以回答一句「无可奉告」。但是你们又不高兴，我怎么办？我讲的意思不是钦点他当下任。你问我支不支持，我说支持。我就明确告诉你这一点。我感觉你们新闻界还需要学习．．．．．．毕竟你们还 too young，你明白这意思吧？&#xA;我告诉你，我是身经百战了，见得多了，西方的那个国家我没去过？你们要知道，美国的华莱士比你们不知道要高到哪里去了，我跟他谈笑风生。所以说媒体还是要提高自己的知识水平，我为你们着急。．．．．你们有一个好，世界其它地方，你们跑得比西方记者还快，但是问来问去的问题，too simple，sometimes naive，懂了没有？&lt;/p&gt;&#xA;&lt;h1 id=&#34;text-shadow&#34;&gt;Text-Shadow&lt;/h1&gt;&#xA;&lt;p&gt;Text-Shadow是CSS3的一个属性，用于为文字提供阴影效果。&lt;/p&gt;&#xA;&lt;h2 id=&#34;语法&#34;&gt;语法&lt;/h2&gt;&#xA;&lt;pre&gt;&lt;code&gt;text-shadow: h-shadow v-shadow blur color;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;其中h为水平阴影的位置，v为竖直阴影的位置，blur为模糊距离，color是阴影的颜色。&lt;/p&gt;&#xA;&lt;p&gt;我们可以利用将color设置为与字体颜色一致的颜色，同时把h和v设置为0，来实现对字体的模糊效果。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>GOOGLE SUMMER OF CODE(GSOC) 2017 纪实 | 高策</title>
+<meta name="description" content="申请 GSoC 2017 的记录">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Google Summer of Code(GSoC) 2017 纪实">
+<meta name="twitter:description" content="申请 GSoC 2017 的记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google Summer of Code(GSoC) 2017 纪实">
+<meta property="og:description" content="申请 GSoC 2017 的记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/google-summer-of-codegsoc-2017-%E7%BA%AA%E5%AE%9E/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Google Summer of Code(GSoC) 2017 纪实</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>Google Summer of Code 目前已经结束了选择过程，所有的 Projects 已经出炉了，申请到了 Processing Foundation 的一个 project：<a href="https://summerofcode.withgoogle.com/projects/#5637695066865664">Processing.R</a>。这里记录一下我在申请时候发生的事情，供大家参考。</p>
+<p>我是上海交通大学研究生一年级的同学，之前关注过 GSoC 的内容，但是没有申请过。今年是我最后一次机会申请了，来年暑假要去找机会实习了，所以这次投入了不少精力去准备。关于我的其他内容可以参考 <a href="http://gaocegege.com/Blog/about/">About Me 里的介绍</a>，基本在申请的时候我的开源贡献部分和自我介绍是根据博客上的自我介绍来修改的。</p>
+<p>在 2016 年的 11 月份我就开始着手选择一个靠谱的 org 进行贡献了。那时候因为太早了，好多 org 还不确定会不会申请 2017 年的 GSoC，所以选择的风险比较大。最后敲定了一个很早就说自己要申请的 org，<a href="https://summerofcode.withgoogle.com/organizations/6598177990901760/">coala</a>。这是一个命令行的 linter 工具，输入是源代码，输出是各种 lint 错误。实现还挺复杂的，因为 11 月份我还在进行<a href="https://github.com/caicloud/cyclone">另一个项目</a>的开发工作，所以没怎么仔细看他的源码，而是比较取巧地写了一个 VS Code 的插件，使得开发者可以在 VS Code 里使用 coala 做 lint 分析。目前还是有很多 bug 的，但是下载数奇高，但是没有任何用户反馈问题。我不知道是不是 VS Code 记录下载数的时候有什么黑魔法。总之这是我为 coala 社区做的最大的贡献，除此之外基本就没有什么有意义的 PR 了。这个插件从 12 月开始开发，到 2 月才基本做出了第一版。</p>
+<p>因为 GSoC 是在 2 月底公布了所有 org 的，所以从写完插件到 2 月底我都是在做其他的事情，没有再管。后来 org 公布后，发现 coala 确实中了，不过在往年 coala 是在 Python Software Foundation 下的，今年是作为一个新的 org 申请的。这一点很关键，谷歌有一个规则是说新申请的 org 原则上只有不到 3 个 slots。而往年 coala 是可以被分到 10 多个的，slots 数量的降低使得申请难度会变大很多。</p>
+<p>那时候已经感觉有点力不从心了，在 coala 公布的 idea list 里没有找到适合我的，唯一一个比较合适的，被一个从一年前就开始贡献的印度小哥早早地把控在手中了。没有办法只好申请了一个看上去还可以的 project，是帮 coala 写一个 jenkins 插件。随后就开始写 proposal，整个的过程就是不停沟通修改，后来很早就提交了。</p>
+<p>在进入到申请的后半段的时候，我觉得这样下去估计是要永别 GSoc 了，所以开始看能不能申请其他的 org 的 idea。找了半天忽然看到了一个熟悉的面孔，Processing Foundation。</p>
+<p>其实在大四暑假的时候，也就是 2016 年，我就想申请 Processing Foundation 的 GSoC 了。但是还没来得及准备 Processing Foundation 那年被谷歌拒了，于是就索性没有申请。原本我以为被拒了之后他们不太有机会中了，没想到今年成功了。于是开始拿起自己在 16 年 9 月实现的一个 prototype，去社区里分享。Processing 跟其他的 org 不太一样，它是不指定 idea 的，而且它也不鼓励你对 Processing core 做修改。它希望学生可以扩展 Processing，而不是在 GSoC 里实现一些新的 feature。</p>
+<p>我的 prototype 就是后来中了的 project，Processing.R。因为 Processing 是 Java 写的，跑在 JVM 上的。因此如果要支持其他语言，就需要其他语言有 JVM 的运行时，就比如 Python 的 Jython。R 语言也有一个叫做 renjin 的 engine，支持在 JVM 上解释 R 语言。通过它实现了用 R 语言写 Processing 这样一个听上去比较魔幻的模式。项目在社区里比较受欢迎，是所有跟 GSoC 2017 有关的 idea 里阅读与评论次数最多的。</p>
+<p>于是感觉有戏，决定放弃 coala，全身心准备 Processing 的申请。Processing 的准备就简单很多，有了 coala 的基础，有一些基本的信息是可以复用的。再加上申请的 idea 也比较感兴趣，所以 proposal 写的还是比较得心应手。</p>
+<p>后来提交了两个 proposal，但是 GSoC 是在提交了 proposal 后有一段时间才让 org 筛选的。中间有一个时间差，所以在中间我还继续了一段时间 Processing.R 的开发。</p>
+<p>后来就是等待了，直到今天。这段流水账在很久前就写好了，就想等到出结果的时候再发布。总体来说 GSoC 是没有想象中那么难申请，而且我觉得主要不是看代码能力，而是看 proposal 和 对开源的热情，以及一些场外因素，在这里就不说了。。。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commerical use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

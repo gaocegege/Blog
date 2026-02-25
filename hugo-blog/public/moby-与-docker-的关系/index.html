@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>MOBY 与 DOCKER 的关系 | 高策</title>
+<meta name="description" content="Moby 与 Docker 的关系是什么">
+<meta name="keywords" content="Moby, Docker">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Moby 与 Docker 的关系">
+<meta name="twitter:description" content="Moby 与 Docker 的关系是什么">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Moby 与 Docker 的关系">
+<meta property="og:description" content="Moby 与 Docker 的关系是什么">
+<meta property="og:url" content="https://gaocegege.com/Blog/moby-%E4%B8%8E-docker-%E7%9A%84%E5%85%B3%E7%B3%BB/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Moby 与 Docker 的关系</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>近来 Docker 被 migrate 到了 Moby 下，这篇文章主要想讲讲我对这两个东西的了解。</p>
+<h2 id="之前的-docker">之前的 Docker</h2>
+<p>之前的 Docker 就不用我来说了，大家肯定都了解，就是一个容器引擎，不过它正在变得越来越专注，容器运行时由 containerd 和 runc 来负责，Docker 更多的负责在其上的事情。</p>
+<h2 id="之前的-moby">之前的 Moby</h2>
+<p>Moby 是之前一直有在关注的项目，原本以为跟 Docker 并没有什么直接的关系，没想到它跟 Docker 关系如此接近，以至于现在 github.com/docker/docker 已经被 迁移到了 <a href="https://github.com/moby/moby">github.com/moby/moby</a> 上。那么他们两个的联系在哪里呢，这里发表下自己的看法。</p>
+<p>之前因为 follow 了很多 Docker 的 collaborator 和 contributor，所以很早就知道 moby 这个项目。之前感觉 moby 做的事情是基于容器做一个可以构建操作系统的工具，可以看到现在 moby 周边的一些项目比如 <a href="https://github.com/linuxkit/linuxkit">linuxkit</a> 都是围绕这个去做的。它把系统需要的一些功能拆成了不同的部分，好像一开始是为了支持 Docker for Windows and macOS 实现的。目前各种 kit 包括 <a href="https://github.com/linuxkit/linuxkit">linuxkit</a>，<a href="https://github.com/docker/infrakit">infrakit</a>，<a href="https://github.com/moby/vpnkit">vpnkit</a>，<a href="https://github.com/moby/datakit">datakit</a>，<a href="https://github.com/moby/hyperkit">hyperkit</a>。对于之前的 moby，<a href="https://github.com/gaocegege/linuxkit/blob/master/docs/architecture.md">linuxkit 里的文档</a> 有一个大致的解释，是说被用来 &ldquo;converts the yaml specification into one or more bootable images.&quot;，其中 yaml specification 是类似 <a href="https://github.com/gaocegege/linuxkit/blob/master/linuxkit.yml">linuxkit.yml</a> 的东西。moby 的感觉给人一种 unikernel 的样子，他的输入是一个配置文件，在其中会声明需要的系统服务以及用户定义的一些服务，最后会输出一个操作系统，而且之前的 moby 支持 <a href="https://github.com/gaocegege/linuxkit/tree/master/projects/miragesdk">MirageOS</a>。</p>
+<h2 id="以后的-moby">以后的 Moby</h2>
+<p>现在 Docker 已经被 transfer 到 Moby 下了，根据 <a href="https://github.com/shykes">@shykes</a> 的<a href="https://github.com/moby/moby/pull/32691#issuecomment-295754570">说法</a>，Moby 最近的任务是把 Monolithic 的 Docker 给整成 Micro 的，然后放在不同的 repo 里，以后 Moby 可能就是负责把这些 components 给 assemble 起来，构建出一个现在我们理解的 Docker。Docker Inc 自从买下 Unikernel 后没看到有什么动静，不知道来这么一手是不是有关系。因为从 monolithic 到 micro 的变化，在我觉得是为了以后搞事情。</p>
+<h2 id="之后的-docker">之后的 Docker</h2>
+<p>之后的 Docker 可能只是 Moby 默认下构建出来的产物，而 Moby 则是有更大的愿景，它的目标可能在于帮助构建客制化的容器技术栈，允许自定义每一个组件。</p>
+<h2 id="其他">其他</h2>
+<p>除了 Moby 和 Docker 以外，最吸引我注意的还是 <a href="https://github.com/linuxkit/linuxkit">linuxkit</a>，我觉得这个东西提出来的思想非常的引人入胜，值得期待一下。</p>
+<p>PS：这是初稿，随时可能改动</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commerical use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

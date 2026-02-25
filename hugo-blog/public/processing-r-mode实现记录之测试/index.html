@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>PROCESSING R MODE实现记录之测试 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="Processing">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="Processing R Mode实现记录之测试">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Processing R Mode实现记录之测试">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/processing-r-mode%E5%AE%9E%E7%8E%B0%E8%AE%B0%E5%BD%95%E4%B9%8B%E6%B5%8B%E8%AF%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>Processing R Mode实现记录之测试</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近在试着支持用R语言来使用Processing的库，有了<a href="http://www.renjin.org/">renjin</a>的支持，这并不是特别困难，实现方式也是写一个Processing的Mode。但是在测试的时候遇到一些问题，app本身没有办法主动地扫描modes目录并建立目录列表。因此使用了一种比较Hack的手法，虽然有些Dirty，但是可以用。</p>
+<p>解决问题的思路是这样的，因为Processing是有一个默认Mode的设定的，因此可以通过把默认的Mode修改成自己实现的Mode的方式来测试。具体的做法相对而言还算简单。</p>
+<p>因为Processing的Mode是支持第三方的，所以是使用了反射的方法，在运行时来确定的。因此对于Processing的代码的修改就涉及的很少。整个流程是，先修改代码，将默认Mode指定为自己实现的Mode，然后编译app，因为编译好的app默认只有Java Mode，所以需要将自己实现的Mode拷贝到app的指定目录中，然后运行app即可。</p>
+<h2 id="修改代码">修改代码</h2>
+<p>在修改代码阶段，只有<a href="https://github.com/processing/processing/blob/master/app/src/processing/app/Base.java">Base.java</a>的两个函数需要修改。</p>
+<pre tabindex="0"><code>  /** True if heavy debugging error/log messages are enabled */
+  // static public boolean DEBUG = false;
+  static public boolean DEBUG = true;
+
+  void buildCoreModes() {
+    /* Mode javaMode =
+      ModeContribution.load(this, Platform.getContentFile(&#34;modes/JavaMode&#34;),
+                            getDefaultModeIdentifier()).getMode();
+    */
+
+    Mode javaMode =
+      ModeContribution.load(this, Platform.getContentFile(&#34;modes/PythonMode&#34;),
+                            getDefaultModeIdentifier()).getMode();
+
+    // PDE X calls getModeList() while it&#39;s loading, so coreModes must be set
+    coreModes = new Mode[] { javaMode };
+  }
+
+  String getDefaultModeIdentifier() {
+    // return &#34;processing.mode.java.JavaMode&#34;;
+    return &#34;jycessing.mode.PythonMode&#34;;
+  }
+</code></pre><p>buildCoreModes函数指定了去哪个目录去获取Mode，而getDefaultModeIdentifier指定了Mode的类名。因为代码是先编译，然后再在运行时获取Mode的，所以需要先把代码修改成合适的目录和类名，然后编译出app。同时为了调试方便，建议把DEBUG置为true。</p>
+<h2 id="copy-mode-to-app">Copy Mode to app</h2>
+<p>在得到新编译的app后，因为它的build.xml写死了只把默认的Mode拷贝到app的mode目录下，因此，如果需要真正地修改默认Mode，需要把自己写好的Mode目录拷贝到app的mode目录下，如果是OS X环境，就是<code>${WORKDIR}/build/macosx/work/Processing.app/Contents/Java/modes/</code>下。其中<code>${WORKDIR}</code>是processing代码所在的位置。</p>
+<p>然后就可以了，如果Mode没实现错的话，就可以将app默认的Mode置为该Mode，否则会在标准输出流里报错。</p>
+<p>之前在论坛上看到过其他更Hack的方法，比如先通过app下载好一个Mode，然后对这个Mode进行魔改。这样的方式就是比较难自动化。而通过新编译一个app，然后把默认Mode修改掉的方式，可以通过Ant的Build file来实现自动化，所以还相对要方便一些。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

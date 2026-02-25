@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>LEETCODE-2 ADD-TWO-NUMBERS记录 | 高策</title>
+<meta name="description" content="LeetCode做题记录">
+<meta name="keywords" content="Algorithm">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="LeetCode-2 Add-Two-Numbers记录">
+<meta name="twitter:description" content="LeetCode做题记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode-2 Add-Two-Numbers记录">
+<meta property="og:description" content="LeetCode做题记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/leetcode-2-add-two-numbers%E8%AE%B0%E5%BD%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>LeetCode-2 Add-Two-Numbers记录</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h1 id="add-two-numbers问题描述">Add-Two-Numbers问题描述</h1>
+<blockquote>
+<p>You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
+<p>Input: (2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)</p>
+<p>Output: 7 -&gt; 0 -&gt; 8</p>
+</blockquote>
+<h1 id="想法与实现">想法与实现</h1>
+<h2 id="失败的尝试">失败的尝试</h2>
+<p>最开始，因为看错了题目，以为是按照正常的顺序存储的，就是说我认为<strong>2-&gt;4-&gt;3</strong>代表的数字是243，其实并不是，而是342。因为错误的理解，所以最开始我的做法是<strong>先把链表转为int，然后再将得到的int转为链表</strong>。代码如下~</p>
+<pre><code>// wrong!! becauce the result overflows
+ListNode *addTwoNumbersErr(ListNode *l1, ListNode *l2) {
+    int leftVal = 0, rightVal = 0;
+
+    // calculate the value that l1 represents
+    int digit = 1;
+    while (l1 != NULL)
+    {
+    	leftVal = leftVal + l1-&gt;val * digit;
+    	digit = digit * 10;
+    	l1 = l1-&gt;next;
+    }
+
+    // calculate the value that l2 represents
+    digit = 1;
+    while (l2 != NULL)
+    {
+    	rightVal = rightVal + l2-&gt;val * digit;
+    	digit = digit * 10;
+    	l2 = l2-&gt;next;
+    }
+
+    // calculate the result
+    int result = leftVal + rightVal;
+
+    // calculate the numbers of the digits
+    int mod = 1;
+    while (result % power(mod) != result)
+    {
+    	mod++;
+    }
+
+    ListNode *answer = NULL;
+    ListNode *pointer;
+    
+    // construct the answer list
+    for (int i = 1; i &lt;= mod; i++)
+    {
+    	int mypower = power(i);
+    	int bit = result % 10;
+    	result = result / 10;
+    	ListNode *buf = new ListNode(bit);
+    	if (answer == NULL)
+    	{
+    		answer = buf;
+    		pointer = answer;
+    	}
+    	else
+    	{
+    		pointer-&gt;next = buf;
+    		pointer = buf;
+    	}
+    }
+    return answer;
+}
+
+int power(int n)
+{
+	int result = 1;
+	for (int i = 0; i &lt; n; i++)
+		result *= 10;
+	return result;
+}
+</code></pre>
+<p>一共1555个测试用例，这样的写法卡在了第350个左右，原因是，result变量溢出了。测试用例为</p>
+<blockquote>
+<p><strong>Input</strong>: {9}, {1,9,9,9,9,9,9,9,9,9}</p>
+<p><strong>Output</strong>: {8,0,4,5,6,0,0,1,4,1,0,0,0,0,0}</p>
+<p><strong>Expected</strong>:	{0,0,0,0,0,0,0,0,0,0,1}</p>
+</blockquote>
+<p>因为发现这样的写法是费力不讨好，于是决定重新写，不把l1，l2转为int然后加起来，而是逐位加法，这样最大的数字不过18，不会出现溢出的情况。</p>
+<h2 id="逐位加法">逐位加法</h2>
+<p>因为链表中前面的是低位，因此很适合直接按照手算加法的步骤去解决这个问题，逐位相加，大于10就进位，这样。代码实现如下~</p>
+<pre><code>ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+	ListNode *answer = NULL;
+	ListNode *pointer;
+	/*0: &lt;10; 1: &gt;=10*/
+	int flag = 0;
+	// deal with l1 bit and l2 bit
+	while (l1 != NULL &amp;&amp; l2 != NULL)
+	{
+		if (l1-&gt;val + l2-&gt;val + flag &lt; 10)
+		{
+			if (answer == NULL)
+			{
+				answer = new ListNode(l1-&gt;val + l2-&gt;val + flag);
+				pointer = answer;
+				flag = 0;
+			}
+			else
+			{
+				ListNode *buf = new ListNode(l1-&gt;val + l2-&gt;val + flag);
+				pointer-&gt;next = buf;
+				pointer = buf;
+				flag = 0;
+			}
+		}
+		else
+		{
+			if (answer == NULL)
+			{
+				answer = new ListNode(l1-&gt;val + l2-&gt;val + flag - 10);
+				pointer = answer;
+				flag = 1;
+			}
+			else
+			{
+				ListNode *buf = new ListNode(l1-&gt;val + l2-&gt;val + flag - 10);
+				pointer-&gt;next = buf;
+				pointer = buf;
+				flag = 1;
+			}
+		}
+		l1 = l1-&gt;next;
+		l2 = l2-&gt;next;
+	}
+
+	// now l1 is NULL or l2 is NULL
+	if (l1 != NULL)
+	{
+		while (l1 != NULL)
+		{
+			// flag is 0, so the next bits are the rest
+			if (flag == 0)
+			{
+				pointer-&gt;next = l1;
+				break;
+			}
+			// deal with the situation that flag is 1
+			else
+			{
+				if (l1-&gt;val + flag &lt; 10)
+				{
+					ListNode *buf = new ListNode(l1-&gt;val + flag);
+					pointer-&gt;next = buf;
+					pointer = buf;
+					flag = 0;
+				}
+				else
+				{
+					ListNode *buf = new ListNode(l1-&gt;val + flag - 10);
+					pointer-&gt;next = buf;
+					pointer = buf;
+					flag = 1;
+				}
+			}
+			l1 = l1-&gt;next;
+		}
+	}
+	else if (l2 != NULL)
+	{
+		while (l2 != NULL)
+		{
+			if (flag == 0)
+			{
+				pointer-&gt;next = l2;
+				break;
+			}
+			else
+			{
+				if (l2-&gt;val + flag &lt; 10)
+				{
+					ListNode *buf = new ListNode(l2-&gt;val + flag);
+					pointer-&gt;next = buf;
+					pointer = buf;
+					flag = 0;
+				}
+				else
+				{
+					ListNode *buf = new ListNode(l2-&gt;val + flag - 10);
+					pointer-&gt;next = buf;
+					pointer = buf;
+					flag = 1;
+				}
+			}
+			l2 = l2-&gt;next;
+		}
+	}
+
+	// l1 and l2 are all NULL, but if flag is 1, need a new bit
+	if (flag == 1)
+	{
+		pointer-&gt;next = new ListNode(1);
+	}
+	return answer;
+}
+</code></pre>
+<p>很多重复代码，都是按照人类计算加法的方式一步步来的。没什么技巧在里面，完全是数学知识。虽然代码很长，不过就时间复杂度而言应该是**O(MAX(l1, l2))**吧，最多只需要l1，l2中最大长度次循环就够了。</p>
+<h1 id="总结">总结</h1>
+<p>这个题目完全是数学知识，细心就好。我觉得时间复杂度最好也就是**O(MAX(l1, l2))**了吧，因为无论如何都至少需要遍历l1和l2一遍。不过上面的代码还是有很多地方可以继续做一些小小的优化的。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

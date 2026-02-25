@@ -1,0 +1,11 @@
+<div class="summer-author-info">
+    <div class="row">
+        <section class="summer-post-author small-12 columns">
+            <img src="{{ "/images/" | relURL }}{{ .Site.Params.author.avatar }}" class="summer-post-author-avatar" alt="{{ .Site.Params.author.name }}'s photo">
+            <span class="author-label">Author</span>
+            <h1>{{ .Site.Params.author.name }}</h1>
+            <p><a href="mailto:{{ .Site.Params.author.email }}" class="author-website">{{ .Site.Params.author.email }}</a></p>
+            <p class="author-label">{{ .Site.Params.author.description }}</p>
+        </section>
+    </div>
+</div>

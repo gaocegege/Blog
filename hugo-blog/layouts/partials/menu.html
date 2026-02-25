@@ -1,0 +1,16 @@
+{{ $page := .page }}
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        {{ range $page.Site.Menus.main }}
+        <li>
+            <a href="{{ .URL | relURL }}">{{ .Name }}</a>
+        </li>
+        {{ end }}
+    </ul>
+</div>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>2024 年终总结：AGENT、AI INFRA 与 CODING | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="record">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="2024 年终总结：Agent、AI Infra 与 Coding">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024 年终总结：Agent、AI Infra 与 Coding">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/2024-%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93agentai-infra-%E4%B8%8E-coding/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>2024 年终总结：Agent、AI Infra 与 Coding</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>今年是我的而立之年。我们的产品今年开始有了第一个付费客户，深深感到创业不易，身边的同事包括我都很辛苦。</p>
+<p>今年我的文章明显变少了，博客上所有的文章都是为了工作写的，但其实并不是表达欲望减少了，而是世界变化太快了，真正的空闲时间变得稀缺，我也更倾向于花更多时间在锻炼和陪伴家人上面。我的爱人经历了一些身体上的问题，身边好友的家人也有一些不幸的事情。这让我第一次真切地感受到了生活的无常。8 月份因为 TFCC 中断了三个月的锻炼，现在恢复后每周坚持 5 练。虽然能做的重量越来越大，但是体重和身形的变化并不显著。但很明显身体状态和精力都比之前好很多，现在每天 40 分钟的健身时间是我每天的 happy hour，休息日那天反而浑身难受。</p>
+<p>其他的时间里，相比写作，我更需要时间（也可能是更有兴趣）去学习 LLM 的新变化。跟去年相比我觉得这个领域更加好玩了，让我有点重新找到大一时候学习 Hello world 的那种新鲜感。</p>
+<h2 id="agent">Agent</h2>
+<p>早在两年前的 2023 年，我就在文章 <a href="https://gaocegege.com/Blog/genai/ai-hype">AI 应用层的壁垒在哪里</a>里分享过我对 Agent 的观点：</p>
+<blockquote>
+<p>从更长远的时间来看，Agent 才是 AI 更值得期待的未来。如果说高效利用数据迭代模型的能力是 AI 时代的 TCP/IP，Agent 就是互联网本身。</p>
+</blockquote>
+<p>当初的那个比喻有点抽象，不过这个观点我到现在还是认为成立的。关于到底什么是 Agent，我最近有了一个更容易理解的答案（比喻太抽象不如不比喻）。</p>
+<p>我是 <a href="https://poe.com/">poe.com</a> 重度用户，我会用 poe 来访问 GPT 和 Claude 来进行对话，多是问它一些编程问题。那么在这样的场景下，poe 就像是我的老师，它教给我怎么样去写代码来解决我的问题，但是它不能帮我直接写代码。LLM 是我的老师，但多数情况下我并不想做它的学生，我只是想做它的 executor。</p>
+<p>对于我想学习的知识，很多时候确实是 Claude 老师教我的我要认真学习。不过很多时候我的问题我不想知道答案，我只想 Claude 老师能帮我解决。比如我提问如何写一个 URL shortener，来把一个长的 URL 转换成短的 URL。这个问题我并不想知道答案，我只想知道怎么样用代码来实现这个功能。</p>
+<p>但是目前对话应用不能帮我写代码，那么我需要理解 Claude 教我的知识，然后通过自己的手来实现。这个过程我就在执行 Claude 的指令，在 VSCode 里写代码，然后在终端里运行代码，根据报错再次提问，然后再次循环。在这个过程里，我是 LLM 的智能版 executor。不仅在写代码这件事情上是这样，其他场景下也是这样。</p>
+<p>比如我想请 GPT 老师帮忙设计一个从上海到北京的旅行计划。在这些场景下我需要的是一个帮我解决问题的 executor，不仅要告诉我怎么做，更重要的是帮我做。帮我设定计划，预定机票，预定酒店，甚至帮我在旅行中解决我想不到的问题。</p>
+<p>通过与环境的交互，不断地学习和优化自己的行为，帮助我解决一个具体的问题而不是做我的军师，这就是 Agent。它把 LLM 当作大脑，把各种互联网应用当作工具，就如同我在使用 GPT 和 Claude 时的做法一样。所以 Agent 相当于是一个个硅基版的“人类”，提高了自动化水平。AI 的发展方向一直以来都是提高自动化水平，用 AI 替代人工和需要人的地方。那么 Agent 本身自然而然就是未来的方向。</p>
+<h2 id="coding">Coding</h2>
+<p>既然如此，我们来看看目前 Agent 进展最快的 coding 领域都发生了什么。GitHub Copilot 应该没人不知道吧，GitHub Copilot 最早只支持补全，这样的交互方式朴素一点来理解，与直接用 GPT 提问，然后把回复的代码复制粘贴到编辑器里没有太大区别（原理上类似，但肯定 Copilot 做了非常多工程工作）。这种方式没有办法进行多轮对话，通过迭代的方式来修改生成的结果。后来就有了单个文件内的 Ctrl + I 的 Modify（修改）功能。</p>
+<p>用户可以选定一段代码，然后按 Ctrl + I，Copilot 会通过一个对话框来询问用户想要做什么修改，如果不满意可以通过多次询问来修改代码。这一交互方式的改进，就像是 GPT 从最初 Jasper AI 的补全时代，进入了 ChatGPT 的对话时代。</p>
+<p>再后来，随着 Cursor、Windsurf 等工具的出现，多文件修改也被提出。虽然它很好用，但它仍然需要人的参与，甚至我自己觉得很多情况下，review 多文件修改内容所花费的时间比我用单文件修改一点点生成要更多一些。我需要 review 生成的代码，如果不是一次生成一个 commit 的话，如何 diff 这些变动都是一个问题。</p>
+<p>从单文件修改到多文件修改，就像是自动驾驶的 L2 到 L3，那 Agent 是 L4 级别的自动驾驶。Coding 场景下的一个例子就是 <a href="https://v0.dev/">v0.dev</a>。Agent 应该能够在我极其少量的干预下，帮助我解决复杂的需求，它来帮助我调整和 review，生成高质量的代码。</p>
+<p>但就像自动驾驶领域一样，全自动无人驾驶谁都知道是未来的方向，但是什么时候能实现还是未知数。而且一出手就从 Agent 开始的产品（Devin 等），是不是合理的路径，我也不知道。在交互方式上，把最原始的补全的智能化水平提高，我反而觉得帮助最大。现在的补全很多时候是没什么逻辑的。举例说明，比如我写一篇文章，我在前文里写了我和家人一起去了北京和上海，在后续的段落里再次提到这件事，它会给我补全再加上很多没有被提到的城市。在代码补全里也存在这样的问题，补全在保持低延迟的同时正确识别我的意图，知道我想写的是什么，更加智能地补全，那其他形态也没有存在的必要了。</p>
+<p>Agent 和 Coding 今年成为了共识，但我觉得这俩方向属于天生的政治正确。直觉判断 Agent 这样的形态肯定是未来了，Coding 也是最适合用来探索提升自动化水平的场景。但是真的离我们很近么。就像我 2023 年时候的判断，Agent 是未来的方向，一年过去了，我没看出有离它越来越近。</p>
+<p>我自己比较看好的一些方向，包括为 Agent 提供更多获取数据的方式、和为 Agent 提供合适的运行环境。前者的产品有 <a href="https://steel.dev/">steel.dev/</a> 等，还都非常初级。</p>
+<h2 id="ai-infra">AI Infra</h2>
+<p>接下来想分享一下我最最感兴趣的方向。为什么放到后面来讲，还是因为虽然喜欢但是小众。我看到的很多很好的工作我感觉都没有得到应有的关注度，比如 <a href="https://github.com/flashinfer-ai/flashinfer">FlashInfer</a>。Casade Inference 在工业界感觉价值很大，但是一看<a href="https://zhuanlan.zhihu.com/p/681514497">知乎文章</a> 80 多个赞，<a href="https://news.ycombinator.com/from?site=flashinfer.ai">Hacker News</a> 上 2 个 points。</p>
+<p>回归正文，2022 年我们刚刚创业时候认为，AI infra 的易用性非常关键。PyTorch 就是很好的佐证，早在 2018 年刚开始学习 ML 框架的时候，Google 搜索 torch.distributed 的文章，简洁易懂。搜索一下 Tensorflow 分布式，乍一看我以为是玩抽象的。最后也证明 PyTorch 后来居上。</p>
+<p>在 22 年的时候我们认为 AI infra 应该以人为本，最简单的原因是因为人贵。那时候训练和推理的规模都不大，在推理的时候因为一块卡算力太强了，甚至还有很强的 GPU 虚拟化需求。那时候算法工程师的模型能力更加稀缺，所以我们认为 AI infra 应该以算法工程师为核心，于是我们做了 <a href="https://github.com/tensorchord/envd">envd</a> 简化开发环境的构建过程。</p>
+<p>站在 2024 年的末尾来看，我认为易用性已经不再是绝大多数场景下的 AI infra 的核心问题。原因也很简单，以前以人为本，现在以机器为本。看看英伟达的股价，应该能够理解。现在不管是预训练、还是推理，都不是小团队需要考虑的事情了。大模型公司是新的创业公司，但是是 AI 领域极其专业的大团队了。以前之所以易用性重要，部分原因是 GPU 确实不好用。CUDA 加上容器虚拟化，会让镜像的分发，启动，调度等等都变得非常复杂，更不用说配上经常出问题的 IB。</p>
+<p>现在这些事情，大部分 AI 公司不需要考虑那么多。需要考虑这些的公司也都很专业，他们有专业的团队来解决这些问题。所以现在的 AI infra 更多的诉求是提高机器的利用率，这就是 FlashInfer, PagedAttention, RadixAttention（RadixAttention 跟 Attention 的关系到底在哪里🤔）, LLMCache 等等工作的重点。</p>
+<p>最近这个领域的工作，有点梦回 Hadoop 刚出来的时候。学术界动不动就有论文把 Hadoop 当作 Baseline 提高个几十几百倍的性能。系统领域有了新的场景还能产生真实的工业界价值，这是我最喜欢的地方。</p>
+<p>与系统关系越来越深的训练与推理领域，我认为易用性变得越来越不重要。但是在 Low Code 和 No Code 领域，易用性依然是最重要的。我现在对于训练和推理场景的 AI infra 从业者的刻板印象是华人/国人系统模型双修猛男程序员。为他们做 infra 就是 flashinfer 的情况，同行拍手称快，其他人看不明白。</p>
+<p>广义上的 AI infra 更加广大的用户群体是不会 AI 的普通人。怎么让我爸利用 AI 在工作中需要把一个网页内的数据做成 excel，这样的 Low Code 和 No Code 的场景，易用性依然是最重要的。2023 年我第一次看 dify 会觉得它的 UIUX 做的很好，但我不了解我什么场景下需要它。现在看我不是它的受众，但是<strong>正因为我不是它的受众它才有光明的未来</strong>。所以说 Luyu 是一个很好的产品经理，他能够看到我 2024 年才看得到的需求。</p>
+<p>今年我最感兴趣的 AI infra 产品是 <a href="https://github.com/skypilot-org/skypilot">Skypilot</a>。我一直认为 Kubernetes 对于 AI 负载来说是一个及格的产品但不是一个好用的产品。但是 build a scheduling system for AI from scratch 又有非常大的替换成本。Skypilot 相当于又在 Kubernetes 之上抽象了一层，为用户提供了更好的 UIUX。</p>
+<p>Kubernetes 凭借着它的扩展性，让它一步步成为了公有云 PaaS 服务的标准界面。只要你会用 kubectl，你就可以在任何云上部署你的服务。而 Skypilot 为 AI 场景提供了更合理的界面（Terminal UI &amp; CLI），未尝不能成为 PaaS 之上 AI PaaS 的标准界面。之前不存在这样的可能大部分原因是因为<strong>过去的 AI 实在太非标</strong>了，不同场景的模型千差万别，所以那个时候需要的是 Kubeflow、KServe。</p>
+<p>倘若未来 LLM 全都是 Decoder only 的 Transformer，它的 pattern 非常统一，那么如果针对这一 pattern 做好抽象，支持路由层面的 prefix cache aware 的 load balance 等等最佳实践，是不是有可能呢。当然任何技术都需要 tradeoff，Skypilot 带来新抽象的同时也带来了新的复杂度。但是我是很久没有看到让我感兴趣的调度领域的工作了，Kubernetes 杀死了比赛，现在随着模型的统一化，又有了新的机会。</p>
+<p>最后，祝大家新年快乐，如果你有什么想法或者问题，欢迎留言。</p>
+<h2 id="往年总结">往年总结</h2>
+<ul>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2023">2023</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2022">2022</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2021">2021</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2020">2020</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2019">2019</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2018">2018</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2017">2017</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2016">2016</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/newyear2015">2015</a></li>
+<li><a href="http://gaocegege.com/Blog/%E9%9A%8F%E7%AC%94/record">2014</a></li>
+</ul>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

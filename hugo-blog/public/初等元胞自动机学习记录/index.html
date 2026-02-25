@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>初等元胞自动机学习记录 | 高策</title>
+<meta name="description" content="MCM学习记录">
+<meta name="keywords" content="MCM">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="初等元胞自动机学习记录">
+<meta name="twitter:description" content="MCM学习记录">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初等元胞自动机学习记录">
+<meta property="og:description" content="MCM学习记录">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%88%9D%E7%AD%89%E5%85%83%E8%83%9E%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+    config: ["MMLorHTML.js"],
+    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: false
+    },
+    TeX: {
+        TagSide: "right",
+        TagIndent: ".8em",
+        MultLineWidth: "85%",
+        equationNumbers: {
+           autoNumber: "AMS",
+        },
+        unicode: {
+           fonts: "STIXGeneral,'Arial Unicode MS'" 
+        }
+    },
+    showProcessingMessages: false
+});
+</script>
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>初等元胞自动机学习记录</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近在准备数学建模比赛，元胞自动机好像是比较有用的一个模型，或者说框架。</p>
+<h1 id="初见">初见</h1>
+<p>从去年准备国赛考试就一直听说这个元胞自动机这个名词，但是一直不懂这是什么东西，据说还跟可计算理论息息相关，当时我就对它印象很差。。。这个寒假有了更多的时间来准备这个比赛，因此就专门看了看这个模型，或者说框架，有了一点浅显的了解，可以先通过下面的例子开始对这个模型的了解。</p>
+<h2 id="简单的例子戴帽子问题">简单的例子&ndash;戴帽子问题</h2>
+<p>现在假设这样一个场景，很多学生排成一排，其中带着帽子的用true表示，不带帽子的用false表示，他们戴帽子与否遵从这样一个规则：</p>
+<blockquote>
+<p>Hat rule: a student will wear the hat in the following class if one or the other—but not both—of the two classmates sitting immediately on her left and on her right has the hat in the current class (let us say that if nobody wears the hat, then a hat is out of fashion; but if both neighbors wear it, it is too popular to be trendy).</p>
+</blockquote>
+<p>意思就是当某学生旁边的两个人都不带帽子，或者都带帽子的时候，这个学生就不带帽子，若是旁边的两个人有一个戴帽子，那么他就戴帽子。然后可以用代码模拟这个过程。写了一段简单的cpp代码模拟~</p>
+<pre><code>class CA
+{
+public:
+	void addElement(bool);
+	void changeElement(int, bool);
+	void simulate();
+private:
+	vector&lt;bool&gt; v;
+};
+
+void CA::addElement(bool hat)
+{
+	v.push_back(hat);
+}
+
+void CA::changeElement(int index, bool hat)
+{
+	v[index] = hat;
+}
+
+void CA::simulate()
+{
+	int counter = 50;
+	while (counter)
+	{
+		vector&lt;bool&gt; buf(v);
+
+		if (buf[1] == 1)
+			v[0] = 1;
+		else
+			v[0] = 0;
+
+		for (int i = 1; i &lt; buf.size() - 1; i++)
+		{
+			if (buf[i - 1] ^ buf[i + 1])
+			{
+				v[i] = 1;
+			}
+			else
+			{
+				v[i] = 0;
+			}
+		}
+		if (buf[buf.size() - 2] == 1)
+			v[buf.size() - 1] = 1;
+		else
+			v[buf.size() - 1] = 0;
+
+		for (int i = 0; i &lt; v.size() - 1; i++)
+			if (v[i])
+				cout &lt;&lt; v[i] &lt;&lt; &quot; &quot;;
+			else
+				cout &lt;&lt; &quot;  &quot;;
+		if (v[v.size() - 1])
+			cout &lt;&lt; v[v.size() - 1] &lt;&lt; endl;
+		else
+			cout &lt;&lt; endl;
+		counter--;
+	}
+}
+</code></pre>
+<p>代码打印出来的图形很有意思，是一个分形结构，就像下图这样~其中每一行是每一个时间戳下所有元胞的状态，每一列是一个元胞随着时间戳的增大的状态的变换过程。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/MCM/fig3.jpg" alt="戴帽子问题图片" height="500" width="500">
+	<figcaption>戴帽子的情况</figcaption>
+</figure>
+<h1 id="基本理论">基本理论</h1>
+<h2 id="四个特性">四个特性</h2>
+<p>元胞自动机有以下四个特性。</p>
+<blockquote>
+<ol>
+<li>
+<p>Discrete n-dimensional lattice of cells: We can have one-dimensional, two-dimensional, … , n-dimensional CA. The atomic components of the lattice can be differently shaped: for example, a 2D lattice can be composed of triangles, squares, or hexagons. Usually homogeneity is assumed: all cells are qualitatively identical.</p>
+</li>
+<li>
+<p>Discrete states: At each discrete time step, each cell is in one and only one state, σ ∈ Σ, Σ being a set of states having finite cardinality |Σ| = k.</p>
+</li>
+<li>
+<p>Local interactions: Each cell&rsquo;s behavior depends only on what happens within its local neighborhood of cells (which may or may not include the cell itself). Lattices with the same basic topology may have different definitions of neighborhood, as we will see below. It is crucial, however, that “actions at a distance” not be allowed.</p>
+</li>
+<li>
+<p>Discrete dynamics: At each time step, each cell updates its current state according to a deterministic transition function φ: Σn → Σ mapping neighborhood configurations (n-tuples of states of Σ) to Σ. It is also usually, though not necessarily, assumed that (i) the update is synchronous, and (ii) φ takes as input at time step t the neighborhood states at the immediately previous time step t − 1.</p>
+</li>
+</ol>
+</blockquote>
+<p>首先，就是需要一个N维晶格的元胞，按照我的理解就是有一个N维的空间，每个空间里有一个元胞。</p>
+<p>其次，就是每个元胞在每一时刻都有一个状态，而且这个状态属于一个有限的状态集合。</p>
+<p>然后，是元胞之间交互的方式。元胞自动机有这样一个约束，就是说每个元胞的行为取决于他的邻居元胞。暂时理解来说邻居元胞并不一定纯粹是相邻的元胞。而且，<strong>自己邻居可以是自己，自己邻居可以是自己</strong>。<s>因为很重要所以说两遍</s></p>
+<p>最后，就是元胞状态的改变。随着时间戳增大，元胞状态的改变全部遵循一个函数。函数的参数是所有邻居的状态，输出是该元胞的状态。</p>
+<p>针对上面的戴帽子问题，上面的规则可以表述为~</p>
+<blockquote>
+<ol>
+<li>
+<p>1-dimensional lattice of square cells on a line.</p>
+</li>
+<li>
+<p>Σ = {1, 0} (1 = black or hat on, 0 = white or hat off), so |Σ| = 2.</p>
+</li>
+<li>
+<p>Each cell&rsquo;s neighborhood is composed by the two nearest cells. If we index the cells by the integers, so that ci is cell number i, then the neighborhood of ci is N(ci) = &lt;ci − 1, ci + 1&gt;.</p>
+</li>
+<li>
+<p>The transition rule φ is simply stated: At each time step t, a cell state is 1 if exactly one of the neighboring cells was 1 at t − 1, 0 otherwise.</p>
+</li>
+</ol>
+</blockquote>
+<p>就我感觉，元胞自动机很像是编译原理中讲的自动状态机。转换的发生与否取决于该元胞的邻居的状态，由一个函数决定。元胞的状态改变的过程可以看做从源节点走向汇节点的过程。而那个转换函数就相当于Dtran，不知道这样理解对不对，总感觉两者有些类似。</p>
+<h2 id="wolfram的初等元胞自动机">Wolfram的初等元胞自动机</h2>
+<p>Wolfram，这个人是谁我不太了解，不过有一个搜索引擎，叫做WolframAlpha，前段时间非常火，它跟元胞自动机有啥关系不知道，不过听说WolframAlpha的加载页面就是元胞自动机的样子。也不懂是什么意思。</p>
+<p>不过Wolfram的初等元胞自动机，是比较容易理解的。他是指，当元胞维数是1，状态集合的势是2的情况下的自动机。这个时候，邻居有三个，所以转换函数可能的输入有2的3次方也就是8个，而每个输入对应的输出为0或者1两个，因此总共可能的转换函数为2的8次方也就是256个。不同规则会产生不同的奇奇怪怪的元胞状态转换的图形，上面那种分形图形是其中比较好看的。</p>
+<h3 id="转换函数分类">转换函数分类</h3>
+<p>根据图形的样子，转换函数可以被分为四类。为什么我认为元胞自动机不是一个模型而是一个框架，就是因为此，每一个转换函数，都是一种完全不同于其他转换函数的规则，因此可以说他只是一个用来描述问题的框架，就像下面提到的交通流模型就是建立在第184条规则的基础上的。</p>
+<p>第一类，所有的元胞收敛于相同的状态。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/MCM/class1.png" alt="class1" height="400" width="400">
+	<figcaption>class 1</figcaption>
+</figure>
+<p>第二类，所有的元胞进入了一种稳定的状态，或者周期性出现的状态。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/MCM/class2.png" alt="class2" height="400" width="400">
+	<figcaption>class 2</figcaption>
+</figure>
+<p>第三类，混沌状态，无序状态</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/MCM/class3.png" alt="class3" height="400" width="400">
+	<figcaption>class 3</figcaption>
+</figure>
+<p>第四类，复杂的图案和结构</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/MCM/class4.png" alt="class4" height="400" width="400">
+	<figcaption>class 4</figcaption>
+</figure>
+<p>第三类，第四类有啥区别，我也不知道**_(:зゝ∠)_**，希望有人能够解答。</p>
+<h3 id="第184号规则车辆行驶规则">第184号规则&ndash;车辆行驶规则</h3>
+<p>现在我们可以将元胞中状态true理解为有车占据此位，false代表无车占据此位。转换函数如下所示~</p>
+<pre><code>111-&gt;1
+110-&gt;0
+101-&gt;1
+100-&gt;1
+011-&gt;1
+010-&gt;0
+001-&gt;0
+000-&gt;0
+</code></pre>
+<p>其中箭头左边为输入，分别是元胞左边，自己，右边的位置有无车。箭头右边为输出，是元胞下一个时间戳时候的状态。这个转换函数可以被理解为，如果当前前面有车，那就停下来等，如果前面没有车，就前进一格。好像玩大富翁的既视感=-=。</p>
+<p>这就是最简单的车辆行驶的模型，后来比较著名的NaSch模型就是对于这个元胞自动机的扩展。这里暂且不论，以后再表。</p>
+<h1 id="收尾">收尾</h1>
+<p>总体而言，初等的元胞自动机就是这样，其实也没什么难懂的地方，还留了多维，状态集合大于2的元胞自动机以及NaSch模型等等的坑没填，这些明天再看咯。</p>
+<h1 id="参考资料">参考资料</h1>
+<ul>
+<li><a href="http://plato.stanford.edu/entries/cellular-automata/#1">Stanford Encyclopedia of Philosophy</a><s>这是什么，斯坦福哲学百科全书~？</s></li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

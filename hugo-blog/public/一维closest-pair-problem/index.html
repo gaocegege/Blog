@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>一维CLOSEST PAIR PROBLEM | 高策</title>
+<meta name="description" content="Closest Pair Problem">
+<meta name="keywords" content="algorithm, cpp">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="一维Closest Pair Problem">
+<meta name="twitter:description" content="Closest Pair Problem">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一维Closest Pair Problem">
+<meta property="og:description" content="Closest Pair Problem">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E4%B8%80%E7%BB%B4closest-pair-problem/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>一维Closest Pair Problem</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>算法PPT中提到的一个问题~</p>
+<h1 id="描述">描述</h1>
+<p>The closest pair of points problem or closest pair problem is a problem of computational geometry: given n points, find a pair of points with the smallest distance between them.</p>
+<p>指定N个点，计算N个点之间的最小距离。一维情况下只有x坐标。</p>
+<h1 id="想法">想法</h1>
+<p>最简单的方法是两重循环，时间复杂度为<code>O(n^2)</code>，而采取了Divide and conquer的方法后，其递归式为T(n) = 2T(n / 2) + O(n)，时间复杂度可以由主定理计算出，为<code>O(nlogn)</code>。<code>/*总感觉不太科学啊*/</code></p>
+<p>大致思想就是，将点分为两组，分别计算左边与右边组的最短距离，而所有点的最短距离要么是右边的最短距离，要么是左边的最短距离，要么是右边的最左点与左边的最右点的距离。</p>
+<p>而左边组与右边组的最短距离可以递归求解，右边的最左点与左边的最右点的距离是combine的过程，时间复杂度为<code>O(n)</code>，体现在对最左点和最右点的寻找上。</p>
+<p>在实现时对以上的想法做了改动，先对数据进行了排序，这样combine的操作时间复杂度为<code>O(1)</code>，但是总的时间复杂度还是<code>O(nlogn)</code>，因为排序。</p>
+<h1 id="cpp实现">CPP实现</h1>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+
+#define VERYHIGH 1000000
+
+using namespace std;
+
+/*Point*/
+struct Point
+{
+	int x;
+};
+
+class ClosestPairSolver
+{
+public:
+	ClosestPairSolver(struct Point* points, int size);
+	~ClosestPairSolver();
+	void printResult();
+	
+private:
+	/*assitant func*/
+	void sortByX();
+	static int cmpByX(const void *a, const void *b);
+	double dis(int i, int j);
+	double recursiveSolve(int low, int high, int &amp;leftPoint, int &amp;rightPoint);
+
+	int size;
+	struct Point* pointsByX;
+	int minDistence;
+	int left;
+	int right;
+};
+
+ClosestPairSolver::ClosestPairSolver(struct Point* points, int size)
+	:pointsByX(points), size(size), minDistence(VERYHIGH), left(0), right(0) 
+{
+	sortByX();
+	/*slove the problem*/
+	minDistence = recursiveSolve(0, size - 1, left, right);
+}
+
+ClosestPairSolver::~ClosestPairSolver()
+{
+	delete[] pointsByX;
+}
+
+/*compare func used in qsort*/
+int ClosestPairSolver::cmpByX(const void *a, const void *b)
+{
+	struct Point* pa = (struct Point*) a;
+	struct Point* pb = (struct Point*) b;
+
+	if (pa-&gt;x &gt; pb-&gt;x)
+		return 1;
+	else
+		return -1;
+}
+
+/*sort by x order*/
+void ClosestPairSolver::sortByX()
+{
+	qsort(pointsByX, size, sizeof(struct Point), cmpByX);
+}
+
+/*clacute the distence between point[i] and point[j]*/
+double ClosestPairSolver::dis(int i, int j)
+{
+	return abs((double) pointsByX[i].x - (double) pointsByX[j].x);
+}
+
+double ClosestPairSolver::recursiveSolve(int low, int high, int &amp;leftPoint, int &amp;rightPoint)
+{
+	int minDis = 0;
+	int leftlow, lefthigh, rightlow, righthigh;
+	int median = (low + high) / 2;
+
+	/*there only have two points*/
+	if (high - low == 1)
+	{
+		leftPoint = low;
+		rightPoint = high;
+		return dis(high, low);
+	}
+	/*three points*/
+	else if (high - low == 2)
+	{
+		int disBetweenLowAndMedian = dis(median, low);
+		int disBetweenMedianAndHigh = dis(median, high);
+		if (disBetweenMedianAndHigh &lt; disBetweenLowAndMedian)
+		{
+			leftPoint = median;
+			rightPoint = high;
+			minDis = disBetweenMedianAndHigh;
+		}
+		else
+		{
+			leftPoint = low;
+			rightPoint = median;
+			minDis = disBetweenLowAndMedian;
+		}
+		return minDis;
+	}
+
+	/*divide and conquer: devide and conquer*/
+	double minDisInLeft = recursiveSolve(low, median, leftlow, rightlow);
+	double minDisInRight = recursiveSolve(median + 1, high, lefthigh, righthigh);
+
+	if (minDisInLeft &lt; minDisInRight)
+	{
+		leftPoint = leftlow;
+		rightPoint = rightlow;
+		minDis = minDisInLeft;
+	}
+	else
+	{
+		leftPoint = lefthigh;
+		rightPoint = righthigh;
+		minDis = minDisInRight;
+	}
+
+	/*divide and conquer: combine*/
+	int disTwo = dis(median, median + 1);
+	if (minDis &gt; disTwo)
+	{
+		leftPoint = median;
+		rightPoint = median + 1;
+		minDis = disTwo;
+	}
+
+	return minDis;
+}
+
+void ClosestPairSolver::printResult()
+{
+	cout &lt;&lt; &quot;The minDistence is &quot; &lt;&lt; minDistence &lt;&lt; endl;
+	cout &lt;&lt; &quot;And the points's x are &quot; &lt;&lt; pointsByX[left].x &lt;&lt; &quot; and &quot; &lt;&lt; pointsByX[right].x &lt;&lt; endl;
+}
+
+int main()
+{
+	int size = 0;
+	cout &lt;&lt; &quot;Please input the size\n&quot;;
+	cin &gt;&gt; size;
+	struct Point* points = new struct Point[size];
+	for (int i = 0; i &lt; size; i++)
+	{
+		int buf;
+		cin &gt;&gt; buf;
+		points[i].x = buf;
+	}
+	ClosestPairSolver solver(points, size);
+	solver.printResult();
+}
+</code></pre>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

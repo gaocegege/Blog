@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scala on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/scala/</link>
+    <description>Recent content in Scala on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Mon, 06 Apr 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/scala/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scala Object实现</title>
+      <link>https://gaocegege.com/Blog/scala-object%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Mon, 06 Apr 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/scala-object%E5%AE%9E%E7%8E%B0/</guid>
+      <description>&lt;p&gt;最近在学习scala，为了写大作业。首先推荐一个学习网站&amp;ndash;&lt;a href=&#34;http://scala-exercises.47deg.com/index.html&#34;&gt;http://scala-exercises.47deg.com/index.html&lt;/a&gt;，感觉学习起来比较直观。因为scala既是面向对象的，又是函数式的，好多奇怪的地方。首先Object是什么就有点不懂了。&lt;/p&gt;&#xA;&lt;h1 id=&#34;object&#34;&gt;Object&lt;/h1&gt;&#xA;&lt;p&gt;Object是一个单例模式的实现。那既然是单例模式，必然避免不了Static之类的东西，最近在看Java虚拟机的一些内容，就试了试把scala的object编译成字节码的内容，发现了一些有去的内容。&lt;/p&gt;&#xA;&lt;p&gt;对于下面的代码，执行 scalac XXX.scala&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;object HelloWorld {&#xA;  def main(args: Array[String]) {&#xA;    var a: Int = 0&#xA;  }&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;编译之后会产生两个.class文件，一个叫做HelloWorld.class，另一个叫做HelloWorld$.class，那之后用javap -c指令反编译两个class，会发现其实它的实现是这样的：&lt;/p&gt;&#xA;&lt;p&gt;对于HelloWorld：&lt;/p&gt;&#xA;&lt;pre&gt;&#xA;&#x9;Compiled from &#34;XXX.scala&#34;&#xA;&#x9;public final class HelloWorld {&#xA;&#x9;  public static void main(java.lang.String[]);&#xA;&#x9;    Code:&#xA;&#x9;       0: getstatic     #16                 // Field HelloWorld$.MODULE\$:LHelloWorld$;&#xA;&#x9;       3: aload_0&#xA;&#x9;       4: invokevirtual #18                 // Method HelloWorld$.main:([Ljava/lang/String;)V&#xA;&#x9;       7: return&#xA;&#x9;}&#xA;&lt;/pre&gt;&#xA;&lt;p&gt;对于HelloWorld$：&lt;/p&gt;&#xA;&lt;pre&gt;&#xA;&#x9;Compiled from &#34;XXX.scala&#34;&#xA;&#x9;public final class HelloWorld$ {&#xA;&#x9;  public static final HelloWorld\$ MODULE\$;&#xA;&#x9;  public static {};&#xA;&#x9;    Code:&#xA;&#x9;       0: new           #2                  // class HelloWorld$&#xA;&#x9;       3: invokespecial #12                 // Method &#34;\&lt;init\&gt;&#34;:()V&#xA;&#x9;       6: return&#xA;&#x9;  public void main(java.lang.String[]);&#xA;&#x9;    Code:&#xA;&#x9;       0: iconst_0&#xA;&#x9;       1: istore_2&#xA;&#x9;       2: return&#xA;&#x9;}&#xA;&lt;/pre&gt;&#xA;&lt;p&gt;它用来实现单例的方法是会多一个类叫做&amp;lt;Object name&amp;gt;$（&amp;lt;Object name&amp;gt;代指Object的名字，这里就是HelloWorld，下同），这个类中会有一个static final的HelloWorld$类型的变量MODULE$，然后在static{}中会构造这个变量，在scala的object里写的所有函数，成员等等都会在这个单例的类中体现出来，而原本的&amp;lt;Object name&amp;gt;只是得到&amp;lt;Object name&amp;gt;$的静态成员MODULE$，然后基于这个成员进行访问调用。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

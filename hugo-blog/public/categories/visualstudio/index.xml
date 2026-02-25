@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VisualStudio on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/visualstudio/</link>
+    <description>Recent content in VisualStudio on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 29 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/visualstudio/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VS13下遇到的编译错误：cl.exe exited with code 2</title>
+      <link>https://gaocegege.com/Blog/vs13%E4%B8%8B%E9%81%87%E5%88%B0%E7%9A%84%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AFcl.exe-exited-with-code-2/</link>
+      <pubDate>Fri, 29 Aug 2014 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/vs13%E4%B8%8B%E9%81%87%E5%88%B0%E7%9A%84%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AFcl.exe-exited-with-code-2/</guid>
+      <description>&lt;p&gt;VS编译任何项目都会报错：Error 1 error MSB6006: cl.exe exited with code 2&lt;/p&gt;&#xA;&lt;p&gt;这其实不是最奇怪的，奇怪的是在昨天的编译中毫无问题，今天一开机就遇到了这个错误，代码完全一样，目测是IDE的问题。于是百度谷歌寻找答案，据说是文件路径的问题，但是我完全没有任何操作修改系统变量之类的，为何一夜之间惨剧上演？最后功夫不负有心人，我发现了这么一篇日志：&lt;a href=&#34;http://sinojelly.blog.51cto.com/479153/400502&#34;&gt;VS2010编译工具出错的解决办法&lt;/a&gt;。&lt;/p&gt;&#xA;&lt;p&gt;他看上去非常的靠谱，不过作为一个懒人，我选择了在控制面板-&amp;gt;程序-&amp;gt;vs13，把VS13 repair了一次，重启发现一切都解决了。哎，奇奇怪怪的问题。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>SCRAPY框架初探 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="spider, crawler">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="scrapy框架初探">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scrapy框架初探">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/scrapy%E6%A1%86%E6%9E%B6%E5%88%9D%E6%8E%A2/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>scrapy框架初探</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h2 id="什么是爬虫">什么是爬虫</h2>
+<p>首先scrapy是一个爬虫框架，而爬虫其实就是一个爬取互联网上的信息，并对这些信息做一些诸如持久化，结构化处理的程序。爬虫大致从功能来划分可以分为两种，一种是垂直爬虫，一种是水平爬虫。</p>
+<p>所谓水平爬虫，大概就是搜索引擎用到的那种爬虫，其思想可以跟广度优先搜索类比下。就是爬取到一个页面，会顺着这个页面内包含的链接继续爬，之类的。而垂直爬虫，就是说这个爬虫只关心某个特定领域的内容，所以其爬取更具有针对性，而且通常是可以把爬取到的内容很好地结构化的。</p>
+<p>scrapy是比较适合来写垂直爬虫的，因为它对垂直爬虫的情况进行了优化，比如说rule等等功能，对于写垂直爬虫而言，是非常便利的存在。如果要写搜索引擎那种需要水平爬虫的东西，我觉得就不太适合用scrapy来做了，可以考虑nutch之类的。</p>
+<h2 id="scrapy爬虫框架">scrapy爬虫框架</h2>
+<p>介绍完爬虫的概念，来看看最基本的爬虫。最最基本的爬虫，是由这样几个过程组成：首先就是确定初始爬取的url，然后就是针对这些url进行爬取，最后再处理爬取到的结果，如果需要继续爬取，那就根据爬取结果中新得到的url展开新一轮的爬取。大概是这样一个过程。而scrapy抽象了爬虫的爬取过程，把过程分离成了几个独立的模块进行处理，如下图所示。整个框架一共可以分为四个模块，还有一个引擎。对于写爬虫的人而言，spider模块和item pipeline是比较经常接触的模块。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/scrapy/scrapy_architecture.png" height="500" width="500">
+</figure>
+<p>spider模块，就是指定开始爬取的url，并且对爬取下来的数据进行处理，处理下来得到的结果，可能是需要继续爬取的url，也可能是已经爬取得到的结构化的数据。两者都会发给引擎，由引擎去针对不同类型的结果，分发给不同的模块进行处理。</p>
+<p>item pipeline模块，就是从引擎接收来自spider已经从爬取到的response处理好的结构化的数据，然后对于结构化的数据去进行下一步的处理。这种处理包括清洗，持久化存储之类的。</p>
+<p>scheduler，从一个写爬虫的人的角度来看，就是一个调度需要爬取的url的队列。它接收来自引擎的请求，然后对请求进行队列化，然后再通过引擎传递给downloader。</p>
+<p>downloader，是下载器，它的职责就是接收来自scheduler的请求，然后根据相应的url去得到response，然后通过引擎传给spider进行处理。</p>
+<p>值得一提的是，似乎scrapy所有的操作都是异步的，使用了twisted来实现非阻塞的IO操作。</p>
+<h2 id="一个简单的爬虫">一个简单的爬虫</h2>
+<pre><code>import scrapy
+
+
+class StackOverflowSpider(scrapy.Spider):
+    name = 'stackoverflow'
+    start_urls = ['http://stackoverflow.com/questions?sort=votes']
+
+    def parse(self, response):
+        for href in response.css('.question-summary h3 a::attr(href)'):
+            full_url = response.urljoin(href.extract())
+            yield scrapy.Request(full_url, callback=self.parse_question)
+
+    def parse_question(self, response):
+        yield {
+            'title': response.css('h1 a::text').extract()[0],
+            'votes': response.css('.question .vote-count-post::text').extract()[0],
+            'body': response.css('.question .post-text').extract()[0],
+            'tags': response.css('.question .post-tag::text').extract(),
+            'link': response.url,
+        }
+</code></pre>
+<p>这是一个简单的爬虫，其职责是爬取stackoverflow上得票最高的问题的标题，得票数，等等信息。<code>parse</code>函数是一个被重载的函数，会在爬虫被启动的时候由spider调用这个函数，来生成最初的请求。而请求需要指定url与回调函数。因为scrapy是异步的，所以在请求还没有被响应的时候，不会被阻塞，只有当请求的数据已经准备好的时候，会回调之前作为参数传递进去的回调函数。回调函数固定具有一个参数，response，是请求得到的响应。</p>
+<p>通过这样一个爬虫，就可以得到stackoverflow得票最高的一部分问题的信息。值得注意的是，关于请求的生成，是可以在回调函数里去做的。比如说，在<code>parse_question</code>中，如果你想继续爬取页面中的某些链接，可以继续用<code>yield Reuqest(url, callback)</code>的方式生成新的请求。因为所有的回调函数都是一个生成器函数，所以不仅可以处理数据，也可以生成新的请求。</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="http://doc.scrapy.org/en/1.0/">scrapy-doc</a></li>
+<li><a href="https://github.com/scrapy/scrapyd">scrapyd</a></li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

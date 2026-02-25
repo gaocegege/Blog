@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>机器学习平台漫谈 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="机器学习平台漫谈">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习平台漫谈">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0%E6%BC%AB%E8%B0%88/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>机器学习平台漫谈</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>随着深度学习的兴起，机器学习在最近几年以星火燎原之势席卷了整个科技行业。而在整个机器学习的工作流中，模型训练的代码只是其中的一小部分。除此之外，训练任务的监控，日志的回收，超参数的选择与优化，模型的发布与集成，数据清洗，特征提取等等，都是流程中不可或缺的部分。因此，有一些工具和公司的产品，致力于为机器学习从业者提供一个统一的平台，帮助用户更好地完成其机器学习业务的落地。这篇文章是关于机器学习平台产品的分析对比，由于利益相关性只放出国外的产品，如有遗漏或错误还请指出。</p>
+<h3 id="riseml---machine-learning-platform-for-kubernetes"><a href="https://riseml.com/">RiseML</a> - Machine Learning Platform for Kubernetes</h3>
+<p>RiseML 是一个基于 Kubernetes 的机器学习平台，是一家在德国的创业公司的产品。RiseML 的产品特点在于其简约的 API，以及简易的安装方式。RiseML 支持通过 helm chart 进行安装，相比于 Kubernetes 原生的 API，RiseML 提供了更 high level 的 API 定义，有着更高一级的抽象。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l">ai-toaster</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">train</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">framework</span><span class="p">:</span><span class="w"> </span><span class="l">tensorflow</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="m">16384</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">gpus</span><span class="p">:</span><span class="w"> </span><span class="m">4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tensorflow</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="m">1.2.1</span>-<span class="l">gpu</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">distributed</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">worker</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="m">16384</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">gpus</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">&gt;-</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    python train_model.py --num-layers {{ num-layers }}
+</span></span></span><span class="line"><span class="cl"><span class="sd">                          --learning-rate {{ learning-rate }}
+</span></span></span><span class="line"><span class="cl"><span class="sd">                          --training-data /data/my-project</span><span class="w">
+</span></span></span></code></pre></div><p>以分布式的 TensorFlow 训练任务为例，RiseML 只需要指定参数服务器和 worker 的资源情况以及实例个数即可。这样的设计对于平台的初见者非常友好，但同时也会导致一些比较特化的需求难以得到很好地支持。比如 ML 工程师想控制任务的重启逻辑，以及为容器开放特定的端口，绑定数据卷时，就难以用这一套高级的 API 来完成。易用性与灵活性之间的 trade-off 在机器学习平台系统的设计中也值得考虑。</p>
+<p>除此之外，RiseML 支持超参数训练。其 API 同样十分简洁：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l">ai-toaster</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">train</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="m">4096</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">gpus</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">parameters</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">lr</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">0.0001</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">0.001</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">lr-decay</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">1e-6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">1e-7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">epochs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">20</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="m">30</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nvidia/cuda:8.0-cudnn7-runtime</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">&gt;-</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    python train_model.py --num-layers {{num-layers}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">                          --learning-rate {{learning-rate}}
+</span></span></span><span class="line"><span class="cl"><span class="sd">                          --training-data /data/ai-toaster</span><span class="w">
+</span></span></span></code></pre></div><p>在示例中，RiseML 并没有指定超参数的搜索算法，所以对于其的支持相对而言也并不是十分完善的。RiseML 目前的工作主要在训练方面。其提供了一个 CLI，可以发起训练/超参数训练任务以及查看日志和状态等等。而对于推理服务的支持目前还未可见。</p>
+<h3 id="floydhub---deep-learning-platform-for-productive-data-science-teams"><a href="https://www.floydhub.com/">FloydHub</a> - Deep Learning Platform for Productive Data Science Teams</h3>
+<p>FloydHub 是同类产品里比较有名的存在了，因为它收到了来自 Y Combinator，真格基金等知名的孵化器和投资机构的投资。FloydHub 有几个核心概念：项目，工作空间，任务，数据集，环境和输出。其中项目是一群目标一样的工作空间和任务的集合。工作空间是为了模型开发而存在的交互式的交互式开发环境，是基于 JupiterHub 实现的。而任务就是一次模型训练代码的运行，在运行的过程中，任务会拉取代码以及数据集，并且配置相应的环境。数据集是用户上传的数据集合，在 FloydHub 中支持版本化的数据集。之所以分离数据和代码，是因为数据不是经常变动的而代码则是会经常因为调参等等原因发生变化的。这样的分离可以节约数据上传和准备的时间，也利于数据的共享。环境是指代码运行的环境，比如需要的机器学习框架的版本，以及是否需要 GPU 等；值得一提的是 FloydHub 也是基于 Docker 的。最后是输出，输出是在一次任务中用户希望保留的日志，文件或者数据等内容。一个典型的用例是保存 checkpoint。因为是基于 Docker 进行的训练，最后训练任务的容器会要被清理的，这时需要通过输出这一概念来持久化对应的内容。</p>
+<p>FloydHub 已经实现了较好的流水线支持，以下面的例子来说明：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="l">pytorch-0.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">task</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">train</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">machine</span><span class="p">:</span><span class="w"> </span><span class="l">gpu2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">train with lstm</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l">foo/datasets/wine-reviews/1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l">input</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l">train.py /floyd/input/input</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">machine</span><span class="p">:</span><span class="w"> </span><span class="l">gpu</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">evaluate model1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l">foo/projects/nlp/output</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l">model</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l">foo/datasets/wine-reviews-test/1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l">test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l">test.py --model /floyd/input/model --data /floyd/input/test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">serve</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">machine</span><span class="p">:</span><span class="w"> </span><span class="l">cpu</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">serve</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l">foo/projects/nlp/output</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l">model</span><span class="w">
+</span></span></span></code></pre></div><p>与 RiseML 类似，FloydHub 也设计了自己的 high level API，同时有流水线的概念。关于 API 的易用性以及灵活性的问题之前已经讨论过，这里不再多说。而流水线的支持应该是所有的机器学习平台都需要支持的功能，FloydHub 相对是要完善一些。</p>
+<p>除此之外，FloydHub 有一个简洁而且与 GitHub 类似的 UI，这在易用性上是非常巨大的优势。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/mlp/floydhub.jpg" height="500" width="500">
+</figure>
+<h2 id="comet---supercharge-machine-learning"><a href="https://www.comet.ml/">Comet</a> - Supercharge Machine Learning</h2>
+<p>Comet 是与上面的两个产品的做法不太一样的产品，其对用户的训练代码是有侵入性的。举例说明：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">comet_ml</span> <span class="kn">import</span> <span class="n">Experiment</span>
+</span></span><span class="line"><span class="cl"><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&#34;YOUR_API_KEY&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">project_name</span><span class="o">=</span><span class="s2">&#34;my project name&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">auto_param_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+</span></span><span class="line"><span class="cl"><span class="n">num_classes</span> <span class="o">=</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="n">epochs</span> <span class="o">=</span> <span class="mi">20</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">params</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;batch_size&#34;</span><span class="p">:</span><span class="n">batch_size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;epochs&#34;</span><span class="p">:</span><span class="n">epochs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;num_classes&#34;</span><span class="p">:</span><span class="n">num_classes</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">experiment</span><span class="o">.</span><span class="n">log_multiple_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span></span></code></pre></div><p>Comet 目前主要关注在训练和超参数训练这边，它现在主要的使用方式是 Python SDK。我觉得这样有侵入性的使用方式，是不让人喜欢的。其 Python SDK 最大的抽象是 Experiment，对应一次训练。在某些框架下，需要用户将参数告诉 Comet，以便在 Comet 的 Web 端显示对应的参数值。其对超参数训练的支持是引入了一个新的抽象，Optimizer，可以将其看做是一个基于 cloud 的参数搜索的策略。至于参数搜索的策略到底是什么，文档中并未表述。通过这一抽象可以得到下一次尝试的超参数，并且训练模型记录模型的准确性指标。随后在 Comet 的 Web 端可以得到一个不同超参数下准确性的报表。</p>
+<h3 id="mlflow---open-source-framework-for-the-complete-machine-learning-lifecycle"><a href="https://databricks.com/mlflow">mlflow</a> - Open Source Framework for the Complete Machine Learning Lifecycle</h3>
+<p>mlflow 可以被当做是加强版和开源版的 Comet，它们两个的实现思路是一致的，就是通过 Python API 侵入性地获得一些信息。其核心的概念一共有三个：Project，Tracking，Model。其中 Project 可以当成是类似 Dockerfile 的一种简化的替代产物，其存在的意思是定义了一种项目打包的方式，使得工作可以被完整复现。它支持如下的定义：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">My Project</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">conda_env</span><span class="p">:</span><span class="w"> </span><span class="l">my_env.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">entry_points</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">main</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">data_file</span><span class="p">:</span><span class="w"> </span><span class="l">path</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">regularization</span><span class="p">:</span><span class="w"> </span>{<span class="nt">type: float, default</span><span class="p">:</span><span class="w"> </span><span class="m">0.1</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;python train.py -r {regularization} {data_file}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">validate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">data_file</span><span class="p">:</span><span class="w"> </span><span class="l">path</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;python validate.py {data_file}&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>其中 conda_env 是配置代码运行环境时的配置文件，entry_points 与 Dockerfile 中的 entrypoint 概念类似。窃以为这种重新造轮子的方式并不可取，而且一定解决地不如 Docker 好。</p>
+<p>Model 对应一个训练好的模型。其支持方式与 Project 类似，也存在一个描述文件，如下所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">time_created</span><span class="p">:</span><span class="w"> </span><span class="ld">2018-05-25T17:28:53.35</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">flavors</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tensorflow</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">saved_model_dir</span><span class="p">:</span><span class="w"> </span><span class="l">estimator</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">signature_def_key</span><span class="p">:</span><span class="w"> </span><span class="l">predict</span><span class="w">
+</span></span></span></code></pre></div><p>描述文件中最主要的字段是 <code>flavors</code>，可以把它当做转换器的概念，通过 flavor，系统才能知道模型的相关信息，以及需要如何去部署它。以 TensorFlow flavor 为例，它共有两个参数，分别是 <code>saved_model_dir</code>，也就是 saved model 所在的目录，和 <code>signature_def_key</code>，也就是进行预测的函数签名。在 mlflow 的 TFWrapper 中我们可以看到其对应的处理逻辑：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">_TFWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Wrapper class that creates a predict function such that
+</span></span></span><span class="line"><span class="cl"><span class="s2">    predict(data: pandas.DataFrame) -&gt; pandas.DataFrame
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_model_dir</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saved_model_dir</span><span class="p">,</span> <span class="s2">&#34;MLmodel&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">assert</span> <span class="s2">&#34;tensorflow&#34;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">flavors</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="s2">&#34;signature_def_key&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">flavors</span><span class="p">[</span><span class="s2">&#34;tensorflow&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_signature_def_key</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">saved_model</span><span class="o">.</span><span class="n">signature_constants</span> \
+</span></span><span class="line"><span class="cl">                <span class="o">.</span><span class="n">DEFAULT_SERVING_SIGNATURE_DEF_KEY</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_signature_def_key</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">flavors</span><span class="p">[</span><span class="s2">&#34;tensorflow&#34;</span><span class="p">][</span><span class="s2">&#34;signature_def_key&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_saved_model_dir</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">flavors</span><span class="p">[</span><span class="s2">&#34;tensorflow&#34;</span><span class="p">][</span><span class="s2">&#34;saved_model_dir&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">meta_graph_def</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">saved_model</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                        <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">saved_model</span><span class="o">.</span><span class="n">tag_constants</span><span class="o">.</span><span class="n">SERVING</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                                                        <span class="bp">self</span><span class="o">.</span><span class="n">_saved_model_dir</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sig_def</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">saved_model</span><span class="o">.</span><span class="n">get_signature_def_by_key</span><span class="p">(</span><span class="n">meta_graph_def</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_signature_def_key</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="o">...</span>
+</span></span></code></pre></div><p>也就是将对应的参数取出来，然后按照参数的设定去寻找对应的模型目录，然后运行相应的 serving 逻辑。其最大的特色在于定义了一套标准化的方案，使得对模型部署的支持扩展相对比较方便。</p>
+<p>最后的概念就是 Tracking，这个与 Comet 的 Experiment 类似，但是支持更多的保存内容，也支持保存到不同的介质中（本地，HTTP server，Databricks Workspace)，但核心概念并无二致，因此不再赘述。</p>
+<h3 id="kubeflow---ml-stack-on-kubernetes"><a href="https://www.kubeflow.org/">Kubeflow</a> - ML stack on Kubernetes</h3>
+<p>Kubeflow 是在 2017 年底由 Google 开源，Caicloud，Intel，思科，阿里巴巴等等公司共同参与的一个项目，其旨在简化在 Kubernetes 上运维机器学习工作负载的流程。目前其相比于其他的项目，独特之处在于整个生态都是构建在 Kubernetes 之上的，是完完全全 Kubernetes Native 的。Kubeflow 希望能够实现一套流水线，支持从准备数据到模型发布的一整套机器学习端到端的过程。目前支持较好的是训练过程，其实现可参考 <a href="http://gaocegege.com/Blog/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/kubeflow">Kubeflow 安利：在 Kubernetes 上进行机器学习</a>一文。</p>
+<p>其缺点有两个方面，一方面是目前缺乏完整的端到端的系统支持，另一方面是需要用户了解 Kubernetes 相关的知识。针对第一个问题，社区背靠谷歌正在积极地探索完善的解决方案。第二个问题，目前也有一些探索，比如阿里云容器服务组开源的 <a href="https://github.com/AliyunContainerService/arena">arena</a>，它实现了一个 CLI，屏蔽了底层的 Kubernetes，Kubeflow 等系统的细节，是与 FloydCLI 类似的思路。</p>
+<h3 id="seldon---machine-learning-deployment-platform-for-enterprise"><a href="https://www.seldon.io/">Seldon</a> - Machine Learning Deployment Platform for Enterprise</h3>
+<p>Seldon 主打的也是基于 Kubernetes 的开源机器学习系统，它在 KubeCon 上有过一个 Talk：<a href="https://www.youtube.com/watch?v=pDlapGtecbY">Serving ML Models at Scale with Seldon and Kubeflow</a>。它对 Serving 解决地比较好，是通过定义而了一个 CRD，也就是 <a href="https://github.com/SeldonIO/seldon-core/blob/master/docs/reference/seldon-deployment.md">SeldonDeployment</a> 来实现的，除此之外目前还看不到太多独特之处。值得一提的是，它是用 Java 来实现的，这也是目前我看到的唯一使用 Java 作为主要开发语言的开源机器学习平台系统。</p>
+<h3 id="sagemaker---build-train-and-deploy-machine-learning-models-at-scale"><a href="https://aws.amazon.com/cn/sagemaker/">SageMaker</a> - Build, train, and deploy machine learning models at scale</h3>
+<p>SageMaker 是由传统云计算厂商 AWS 推出的机器学习平台，其对传统的机器学习有内置的算法支持，是一个非常完整的系统，但是对于 TensorFlow 等等的支持并不是很好，有很多额外的限制。相比于之前提到的各个平台，SageMaker 先把脏活累活做好了（对传统机器学习各种模型的支持），这部分工作是需要人力但标准化较简单的，对于 AWS 这样不缺人的大公司而言是很好的选择。</p>
+<h2 id="关于作者">关于作者</h2>
+<p><a href="http://gaocegege.com">高策</a>，上海交通大学软件学院研究生，预计 2019 年毕业，Kubeflow Maintainer。如有问题还请不吝赐教。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

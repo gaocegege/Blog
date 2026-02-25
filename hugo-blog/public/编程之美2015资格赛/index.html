@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>编程之美2015资格赛 | 高策</title>
+<meta name="description" content="编程之美">
+<meta name="keywords" content="algorithm">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="编程之美2015资格赛">
+<meta name="twitter:description" content="编程之美">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程之美2015资格赛">
+<meta property="og:description" content="编程之美">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BE%8E2015%E8%B5%84%E6%A0%BC%E8%B5%9B/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>编程之美2015资格赛</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>做了<a href="http://hihocoder.com/hiho">Hihocoder</a>上的两个问题，都是只用了最朴素的做法，估计大数据是过不去的。</p>
+<h1 id="问题二-回文字符序列">问题二-回文字符序列</h1>
+<h2 id="问题描述">问题描述</h2>
+<p>给定字符串，求它的回文子序列个数。回文子序列反转字符顺序后仍然与原序列相同。例如字符串aba中，回文子序列为&quot;a&quot;, &ldquo;a&rdquo;, &ldquo;aa&rdquo;, &ldquo;b&rdquo;, &ldquo;aba&rdquo;，共5个。内容相同位置不同的子序列算不同的子序列。</p>
+<h3 id="输入">输入</h3>
+<p>第一行一个整数T，表示数据组数。之后是T组数据，每组数据为一行字符串。</p>
+<h3 id="输出">输出</h3>
+<p>对于每组数据输出一行，格式为&quot;Case #X: Y&quot;，X代表数据编号（从1开始），Y为答案。答案对100007取模。</p>
+<h3 id="数据范围">数据范围</h3>
+<p>1 ≤ T ≤ 30</p>
+<h3 id="小数据">小数据</h3>
+<p>字符串长度 ≤ 25</p>
+<h3 id="大数据">大数据</h3>
+<p>字符串长度 ≤ 1000</p>
+<h3 id="样例输入">样例输入</h3>
+<pre>
+	5
+	aba
+	abcbaddabcba
+	12111112351121
+	ccccccc
+	fdadfa
+</pre>
+<h3 id="样例输出">样例输出</h3>
+<pre>
+	Case #1: 5
+	Case #2: 277
+	Case #3: 1333
+	Case #4: 127
+	Case #5: 17
+</pre>
+<h2 id="想法">想法</h2>
+<p>我的想法就是动态规划，状态有两个，是表示以i和j开头和结尾的子序列比以i + 1和j - 1 开头的子序列多几个可能，感觉设计的不太好，因为时间复杂度是O(n^4)级别的似乎。但是想不到比较好的做法了，就直接上了。之前也没参加过竞赛，不知道满不满足内存和时间的要求，目测多半是不太满足的。</p>
+<p>这样做的话状态转移是：如果i == j，那么就是1；如果s[i] == s[j]，那么count[i][j] = [i + 1, j - 1]中所有回文子序列的和 + 1。理解起来还是比较直观的，就是如果i和j处的字符相等，那么增加的回文子序列就是[i + 1, j - 1]中所有的回文子序列再在左右分别加一个s[i]和s[j]，另外还多一个1就是s[i]s[j]，所以就是这样的方程。</p>
+<p>但是这样其实时间复杂度很差劲，因为计算[i + 1, j - 1]中所有回文子序列的和需要两重循环来计算。比较差劲。</p>
+<p>跑完小数据，时间是1ms，内存是4MB。</p>
+<h2 id="代码">代码</h2>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int binary(int a)
+{
+	if (a &gt; 0)
+		return 1;
+	else return 0;
+}
+
+int getCount(const vector&lt;vector&lt;int&gt; &gt; &amp;dpCount, int a, int b, int sz)
+{
+	int count = 0;
+	for (int i = a; i &lt; sz; ++i)
+	{
+		for (int j = i; j &lt;= b; ++j)
+		{
+			count += dpCount[i][j];
+		}
+	}
+	return count % 100007;
+}
+
+int dp(const string &amp;s)
+{
+	int sz = s.size();
+	vector&lt;vector&lt;int&gt; &gt; dpCount(sz, vector&lt;int&gt;(sz, 0));
+	for (int i = 0; i &lt; sz; i++)
+	{
+		dpCount[i][i] = 1;
+	}
+
+	for(int i = 1; i &lt; sz; i++)
+	{
+		int tmp = 0;
+		for(int j = 0; j + i &lt; sz; j++)
+		{
+			if(s[j] == s[j + i])
+			{
+				dpCount[j][j + i] = (getCount(dpCount, j + 1, j + i - 1, sz) + 1) % 100007;
+			}
+		}
+	}
+
+	return getCount(dpCount, 0, sz - 1, sz);
+}
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	cin &gt;&gt; n;
+	for (int i = 1; i &lt;= n; i++)
+	{
+		string s;
+		cin &gt;&gt; s;
+		cout &lt;&lt; &quot;Case #&quot; &lt;&lt; i &lt;&lt; &quot;: &quot; &lt;&lt; dp(s) &lt;&lt; endl;
+	}
+	return 0;
+}
+</code></pre>
+<h1 id="问题三-基站选址">问题三-基站选址</h1>
+<h2 id="问题描述-1">问题描述</h2>
+<p>需要在一个N × M的网格中建立一个通讯基站，通讯基站仅必须建立在格点上。网格中有A个用户，每个用户的通讯代价是用户到基站欧几里得距离的平方。网格中还有B个通讯公司，维护基站的代价是基站到最近的一个通讯公司的路程（路程定义为曼哈顿距离）。在网格中建立基站的总代价是用户通讯代价的总和加上维护基站的代价，最小总代价。</p>
+<h3 id="输入-1">输入</h3>
+<p>第一行为一个整数T，表示数据组数。每组数据第一行为四个整数：N, M, A, B。接下来的A+B行每行两个整数x, y，代表一个坐标，前A行表示各用户的坐标，后B行表示各通讯公司的坐标。</p>
+<h3 id="输出-1">输出</h3>
+<p>对于每组数据输出一行&quot;Case #X: Y&quot;，X代表数据编号（从1开始），Y代表所求最小代价。</p>
+<h3 id="数据范围-1">数据范围</h3>
+<p>1 ≤ T ≤ 20</p>
+<p>1 ≤ x ≤ N</p>
+<p>1 ≤ y ≤ M</p>
+<p>1 ≤ B ≤ 100</p>
+<h3 id="小数据-1">小数据</h3>
+<p>1 ≤ N, M ≤ 100</p>
+<p>1 ≤ A ≤ 100</p>
+<h3 id="大数据-1">大数据</h3>
+<p>1 ≤ N, M ≤ 107</p>
+<p>1 ≤ A ≤ 1000</p>
+<h3 id="样例输入-1">样例输入</h3>
+<pre>
+	2
+	3 3 4 1
+	1 2
+	2 1
+	2 3
+	3 2
+	2 2
+	4 4 4 2
+	1 2
+	2 4
+	3 1
+	4 3
+	1 4
+	1 3
+</pre>
+<h3 id="样例输出-1">样例输出</h3>
+<pre>
+	Case #1: 4
+	Case #2: 13
+</pre>
+<h2 id="想法-1">想法</h2>
+<p>这题完全没想到有什么算法，就直接暴力地循环来求解了，不出所料时间复杂度极其差劲，跑完小数据就72ms了，内存到了193MB，大数据是指定不能过了。时间复杂度似乎是O(max(a, b) * n * m)，空间复杂度是O(n * m)。</p>
+<p>想法大概是这样的，因为维修费用是到最近的一个公司的，所以在知道了所有的公司后，可以计算出地图上每一个位置的维修费用。计算完这个以后，公司的数据就没有其他作用了，接下来再迭代计算所有的用户到地图上某位置的费用之和，这个和与之前的维修费用加起来就是总共的费用，在所有的节点中选择那个费用最低的就好了。</p>
+<p>这道题目想了一段时间了，还是没有想出比较好的做法，求指导。</p>
+<h2 id="代码-1">代码</h2>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+#include &lt;cmath&gt;
+#include &lt;limits&gt;
+
+using namespace std;
+
+struct Point
+{
+	int x;
+	int y;
+	Point(int x_, int y_) :x(x_), y(y_) {}
+};
+
+void updateFixCost(vector&lt;vector&lt;int&gt; &gt; &amp;costMap, const vector&lt;Point&gt; &amp;company, int n, int m, int b)
+{
+	for (int i = 0; i &lt; b; ++i)
+	{
+		for (int j = 0; j &lt; n; ++j)
+		{
+			for (int k = 0; k &lt; m; ++k)
+			{
+				int tmp = abs(j - company[i].x) + abs(k - company[i].y);
+				if (tmp &lt; costMap[j][k])
+					costMap[j][k] = tmp;
+			}
+		}
+	}
+}
+
+int getRes(vector&lt;vector&lt;int&gt; &gt; &amp;costMap, const vector&lt;Point&gt; &amp;user, int n, int m, int a)
+{
+	int res = numeric_limits&lt;int&gt;::max();
+	for (int j = 0; j &lt; n; ++j)
+	{
+		for (int k = 0; k &lt; m; ++k)
+		{
+			int tmp = costMap[j][k];
+			for (int i = 0; i &lt; a; ++i)
+			{
+				tmp += (j - user[i].x) * (j - user[i].x) + (k - user[i].y) * (k - user[i].y);
+			}
+			if (tmp &lt; res)
+				res = tmp;
+		}
+	}
+	return res;
+}
+
+int main(int argc, char const *argv[])
+{
+	int sz;
+	cin &gt;&gt; sz;
+	for (int bufsz = 1; bufsz &lt;= sz; ++bufsz)
+	{
+		int n, m, a, b;
+		cin &gt;&gt; n &gt;&gt; m &gt;&gt; a &gt;&gt; b;
+		vector&lt;vector&lt;int&gt; &gt; costMap(n, vector&lt;int&gt;(m, numeric_limits&lt;int&gt;::max()));
+		vector&lt;Point&gt; user(a, Point(0, 0));
+		vector&lt;Point&gt; company(b, Point(0, 0));
+		for (int i = 0; i &lt; a; ++i)
+		{
+			int bufx, bufy;
+			cin &gt;&gt; bufx &gt;&gt; bufy;
+			user[i] = Point(bufx, bufy);
+		}
+		for (int i = 0; i &lt; b; ++i)
+		{
+			int bufx, bufy;
+			cin &gt;&gt; bufx &gt;&gt; bufy;
+			company[i] = Point(bufx, bufy);
+		}
+		// get the cost of fix
+		updateFixCost(costMap, company, n, m, b);
+		cout &lt;&lt; &quot;Case #&quot; &lt;&lt; bufsz &lt;&lt; &quot;: &quot; &lt;&lt; getRes(costMap, user, n, m, a) &lt;&lt; endl;
+
+	}
+
+
+	return 0;
+}
+</code></pre>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

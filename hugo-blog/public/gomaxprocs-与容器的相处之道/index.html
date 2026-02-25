@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>GOMAXPROCS 与容器的相处之道 | 高策</title>
+<meta name="description" content="GOMAXPROCS 在 Kubernetes 和 Docker 中的表现和原理分析">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="GOMAXPROCS 与容器的相处之道">
+<meta name="twitter:description" content="GOMAXPROCS 在 Kubernetes 和 Docker 中的表现和原理分析">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GOMAXPROCS 与容器的相处之道">
+<meta property="og:description" content="GOMAXPROCS 在 Kubernetes 和 Docker 中的表现和原理分析">
+<meta property="og:url" content="https://gaocegege.com/Blog/gomaxprocs-%E4%B8%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E7%9B%B8%E5%A4%84%E4%B9%8B%E9%81%93/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>GOMAXPROCS 与容器的相处之道</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><h2 id="引言">引言</h2>
+<p>众所周知，<code>GOMAXPROCS</code> 是 Golang 提供的非常重要的一个环境变量设定。通过设定 <code>GOMAXPROCS</code>，用户可以调整 Runtime Scheduler 中 Processor（简称P）的数量。由于每个系统线程，必须要绑定 P 才能真正地进行执行。所以 P 的数量会很大程度上影响 Golang Runtime 的并发表现。<code>GOMAXPROCS</code> 在目前版本（1.12）的默认值是 CPU 核数，而以 Docker 为代表的容器虚拟化技术，会通过 cgroup 等技术对 CPU 资源进行隔离。以 Kubernetes 为代表的基于容器虚拟化实现的资源管理系统，也支持这样的特性。这类技术对 CPU 的隔离限制，是否能够影响到 Golang 中的 <code>GOMAXPROCS</code>，进而影响到 Golang Runtime 的并发表现呢？这是一个值得探索的话题，本文从 Docker 和 Kubernetes 对 CPU 资源的限制出发，利用实验的方式验证了这一问题，并且给出了一些个人看法。</p>
+<h2 id="背景">背景</h2>
+<p>Goroutines 是 Golang 最吸引人的特性之一，它是 stackful coroutines 的一种实现。为了支持这一特性，Golang 需要一个运行时，在 Goroutines 和系统线程之间进行调度，这也就是 go-scheduler 的作用。go-scheduler 引入了三个抽象，分别是 Processor，Machine（简称 M） 和 Goroutine（简称 G）。其中 G 就是用户创建的 goroutines，而 M 则是系统线程，是负责真正执行 goroutines 的系统线程。 Processor 是类似于 CPU 核心的概念，其用来控制并发的 M 数量。</p>
+<figure>
+	<img src="http://morsmachine.dk/in-motion.jpg" height="300" width="300">
+    <figcaption>Credits: morsmachine.dk</figcaption>
+</figure>
+<p>当 M 需要执行 G 的时候，它需要寻找到一个空闲的 P，只有跟一个 P 绑定后，M 才能被执行。通过这样的方式，go-scheduler 保证了在同一时间内，最多只有 P 个系统线程在真正地执行。P 的数量在默认情况下，会被设定为 CPU 的数量。而 M 虽然需要跟 P 绑定执行，但数量上并不与 P 相等。这是因为 M 会因为系统调用或者其他事情被阻塞，因此随着程序的执行，M 的数量可能增长，而 P 在没有用户干预的情况下，则会保持不变。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// runtime/proc.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// The bootstrap sequence is:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	call osinit</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	call schedinit</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	make &amp; queue new G</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	call runtime·mstart</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// The new G calls runtime·main.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">schedinit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">procs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">ncpu</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">atoi32</span><span class="p">(</span><span class="nf">gogetenv</span><span class="p">(</span><span class="s">&#34;GOMAXPROCS&#34;</span><span class="p">));</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">procs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">n</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nf">procresize</span><span class="p">(</span><span class="nx">procs</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nf">throw</span><span class="p">(</span><span class="s">&#34;unknown runnable goroutine during bootstrap&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// runtime/os_linux.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">osinit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">ncpu</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">getproccount</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// runtime/os_linux.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">getproccount</span><span class="p">()</span><span class="w"> </span><span class="kt">int32</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// This buffer is huge (8 kB) but we are on the system stack</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// and there should be plenty of space (64 kB).</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Also this is a leaf, so we&#39;re not holding up the memory for long.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// See golang.org/issue/11823.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// The suggested behavior here is to keep trying with ever-larger</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// buffers, but we don&#39;t have a dynamic memory allocator at the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// moment, so that&#39;s a bit tricky and seems like overkill.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">const</span><span class="w"> </span><span class="nx">maxCPUs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">buf</span><span class="w"> </span><span class="p">[</span><span class="nx">maxCPUs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">r</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">buf</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">n</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">int32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">buf</span><span class="p">[:</span><span class="nx">r</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="nx">v</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">n</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nb">int32</span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">v</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">n</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">n</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>上述代码，就是 go-scheduler 确定 P 数量的逻辑。在 Linux 上，它会利用系统调用 <a href="https://linux.die.net/man/2/sched_getaffinity">sched_getaffinity</a> 来获得系统的 CPU 核数。在了解了 Golang 的行为之后，接下来我们可以在 Kubernetes 和 Docker 上，通过实验来观察一下它的表现和影响，再分析一下原因。</p>
+<h2 id="测试环境">测试环境</h2>
+<h3 id="cpu">CPU</h3>
+<p>由于实验是利用 XPS-13 笔记本进行的，所以 CPU 只有四核，其具体的配置如下：</p>
+<pre tabindex="0"><code>Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  2
+Core(s) per socket:  2
+Socket(s):           1
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               142
+Model name:          Intel(R) Core(TM) i7-7560U CPU @ 2.40GHz
+Stepping:            9
+CPU MHz:             1011.469
+CPU max MHz:         3800.0000
+CPU min MHz:         400.0000
+BogoMIPS:            4800.00
+Virtualization:      VT-x
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            4096K
+NUMA node0 CPU(s):   0-3
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+</code></pre><h3 id="测试代码">测试代码</h3>
+<p>Runtime 提供了两个函数可以获得 <code>GOMAXPROCS</code> 的值，分别是 <code>runtime.NumCPU</code> 和 <code>runtime.GOMAXPROCS</code>。因此，在实验中可以利用这两个函数来查看未经过修改的 <code>GOMAXPROCS</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nx">main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;fmt&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;runtime&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;NumCPU: %d, GOMAXPROCS: %d\n&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">runtime</span><span class="p">.</span><span class="nf">NumCPU</span><span class="p">(),</span><span class="w"> </span><span class="nx">runtime</span><span class="p">.</span><span class="nf">GOMAXPROCS</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>为了实验的方便，首先已经将其构建成了 Docker 镜像 <code>gaocegege/get-maxprocs:v1.0.0</code>。</p>
+<h2 id="实验结果">实验结果</h2>
+<h3 id="kubernetes">Kubernetes</h3>
+<p>首先，利用 Kubernetes Job，先运行一个没有任何 CPU 限制的任务：</p>
+<pre tabindex="0"><code>apiVersion: batch/v1
+kind: Job
+metadata:
+  name: get-gomaxprocs
+spec:
+  template:
+    spec:
+      containers:
+      - name: get
+        image: gaocegege/get-maxprocs:v1.0.0
+      restartPolicy: Never
+  backoffLimit: 4
+</code></pre><p>随后，再逐渐给 CPU 加上资源利用的请求限制，查看结果，得到如下结果：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: right">Requests</th>
+          <th style="text-align: right">Limits</th>
+          <th style="text-align: right">NumCPU</th>
+          <th style="text-align: right">GOMAXPROCS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">10m</td>
+          <td style="text-align: right">100m</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">10m</td>
+          <td style="text-align: right">1000m</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">100m</td>
+          <td style="text-align: right">1000m</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">100m</td>
+          <td style="text-align: right">2000m</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+  </tbody>
+</table>
+<p>根据结果可以看到，Kubernetes 在 CPU 上的限制并不能影响 <code>GOMAXPROCS</code>。</p>
+<h3 id="docker">Docker</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: right">Arguments</th>
+          <th style="text-align: right">NumCPU</th>
+          <th style="text-align: right">GOMAXPROCS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">&ndash;cpus=1</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">&ndash;cpus=2</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">&ndash;cpu-shares=1024</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">4</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">&ndash;cpuset-cpus 0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">1</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">&ndash;cpuset-cpus 0,1</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: right">2</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="性能测试">性能测试</h3>
+<p>既然不少隔离 CPU 的方式无法限制 Go 运行时对 CPU 数量的判定，那这一问题是否会影响运行的性能，是一个值得分析的问题。利用了上游社区提供的 CPU bound 的 Benchmark <a href="https://github.com/embano1/gotutorials/tree/master/concprime">concprime</a>，对不同的限制手段和 GOMAXPROCS 取值进行了详细的性能测试，得到了如下结果。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/maxprocs/gomaxprocs.png" height="700" width="700">
+    <figcaption>测试结果</figcaption>
+</figure>
+<h2 id="结果分析">结果分析</h2>
+<p>Kubernetes 与 <code>docker --cpus</code> 一样，都是利用 <a href="https://www.kernel.org/doc/Documentation/scheduler/sched-bwc.txt">CFS Bandwith Control</a> 来对 CPU 进行资源使用的限制的。以使用 Docker 运行时的 Kubernetes 为例，当用户利用 <code>.spec.containers[].resources.limit.cpu</code> 来限制 CPU 的 hard limit 时，其背后的行为是向 Docker 容器中加入了 <code>HostConfig.CpuPeriod</code> 和 <code>HostConfig.CpuQuota</code>。最后两个 <code>cpu,cpuacct</code>cgroup 下的值 <code>cpu.cfs_period_us</code> 和 <code>cpu.cfs_quota_us</code> 被修改。</p>
+<p><a href="https://www.kernel.org/doc/Documentation/scheduler/sched-bwc.txt">CFS Bandwith Control</a> 原本是为了解决 CPU Share 不能做 hard limit 的问题的，但它同样造成了新的问题，系统调用 <code>sched_getaffinity</code> 并不感知它对进程的限制。这也使得运行在 Kubernetes 中的 Go 程序的运行时始终会认为自己可以使用宿主机上的所有 CPU，进而创建了相同数量的 P。而当其 <code>GOMAXPROCS</code> 被手动地设置为限制后的值后，其在 CPU 密集的任务上的表现得到了很大程度的提高。</p>
+<p>目前 Golang 上游并无好的方式来规避这一问题，而 Uber 提出了一种 Workaround <a href="https://github.com/uber-go/automaxprocs">uber-go/automaxprocs</a>。利用这一个包，可以在运行时根据 cgroup 或者 runtime 来修改 GOMAXPROCS，来选择一个合适的取值，值得一试。</p>
+<h2 id="参考文献">参考文献</h2>
+<ul>
+<li><a href="http://morsmachine.dk/go-scheduler">morsmachine.dk: go-scheduler</a></li>
+<li><a href="https://medium.com/@betz.mark/understanding-resource-limits-in-kubernetes-cpu-time-9eff74d3161b">Understanding resource limits in kubernetes: cpu time</a></li>
+</ul>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

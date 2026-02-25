@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>源码分析 on 高策</title>
+    <link>https://gaocegege.com/Blog/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+    <description>Recent content in 源码分析 on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Fri, 22 Sep 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>浅入了解容器编排框架调度器之 Kubernetes</title>
+      <link>https://gaocegege.com/Blog/%E6%B5%85%E5%85%A5%E4%BA%86%E8%A7%A3%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%E6%A1%86%E6%9E%B6%E8%B0%83%E5%BA%A6%E5%99%A8%E4%B9%8B-kubernetes/</link>
+      <pubDate>Fri, 22 Sep 2017 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/%E6%B5%85%E5%85%A5%E4%BA%86%E8%A7%A3%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%E6%A1%86%E6%9E%B6%E8%B0%83%E5%BA%A6%E5%99%A8%E4%B9%8B-kubernetes/</guid>
+      <description>&lt;p&gt;Kubernetes 是由 Google 捐赠给 &lt;a href=&#34;https://www.cncf.io/&#34;&gt;CNCF&lt;/a&gt; 的一个容器编排框架，也是目前应用最为广泛的编排框架之一。这篇文章是对 Kubernetes 1.8 中的 Scheduler（以下称为 kube-scheduler）的介绍，如果要阅读本文，需要对 Kubernetes 的基本概念如 pod, node 等有所了解。&lt;/p&gt;&#xA;&lt;h2 id=&#34;调度过程&#34;&gt;调度过程&lt;/h2&gt;&#xA;&lt;p&gt;在读代码之前，先对 Kubernetes 整体的调度过程做一个简单的介绍。如果你对 Kubernetes 的调度过程已经熟悉的话，可略过不读。&lt;/p&gt;&#xA;&lt;p&gt;Kubernetes 的调度的目的是把一个 pod 放在它最合适的 node 上去运行，所以调度的过程可以被理解为找一个 node，把 pod 放上去的过程。整个过程可以类比为喜闻乐见的相亲活动，pod 是相亲者，node 是所有可选的相亲对象，而 kube-scheduler 就像是相亲网站，它会负责根据相亲者的要求，找到与其要求最接近的相亲对象。当然这里也有一些不同点，比如每个 node 可以运行多个 pod，但是相亲者与相亲对象绑定以后应该是不能再跟别人进行喜闻乐见的相亲活动了/w\&lt;/p&gt;&#xA;&lt;p&gt;出于性能，可扩展性以及其他各个方面的考虑，Kubernetes 的调度分为两个过程，第一个过程叫做 Predicates，第二个过程叫做 Priorities。&lt;/p&gt;&#xA;&lt;p&gt;在 Predicates 过程中，kube-scheduler 会先执行一系列被称为 predicate 的函数，过滤掉不符合硬性条件的 node。这个环节可以对应相亲活动中的硬条件过滤，比如你想找一个程序员，那相亲网站会帮你过滤掉所有不是程序员的选择。而所有通过了 Predicates 过程的 node，都会进入下一个过程。&lt;/p&gt;&#xA;&lt;p&gt;在 Priorities 过程中，kube-scheduler 会将所有通过 Predicates 过程的 node 根据自己的标准打分，然后从中选择一个得分最高的 node，将其与 pod 绑定在一起，即在该 node 上运行此 pod。这就好比，相亲网站过滤好了潜在的相亲对象，会再帮你对他们做一个打分，然后推荐给你一个条件最好的给你。（不要问我为什么这么熟练）&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/kubernetes/initial-state.png&#34; alt=&#34;State&#34; height=&#34;300&#34; width=&#34;300&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;文字性的叙述过于单调，这里用图来说明这个过程。在图中一共有 16 台服务器，有着不同的配置。&lt;/p&gt;&#xA;&lt;figure&gt;&#xA;&#x9;&lt;img src=&#34;https://gaocegege.com/Blog/images/kubernetes/algorithm.png&#34; alt=&#34;State&#34; height=&#34;500&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&lt;p&gt;经过了两个 predicate 后，过滤掉了不满足条件的 node，剩下的 node 都足以运行 pod，这时候就需要 Priorities 过程来找到最适合的那个 node。经过两轮 priority 后，发现了一个最适合的 node，于是 pod 和 node 终于在一起了。在绝大多数情况下，调度就结束了。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

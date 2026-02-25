@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>跨DOCKER MACHINE搭建CONSUL | 高策</title>
+<meta name="description" content="Consul试水">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="跨docker machine搭建Consul">
+<meta name="twitter:description" content="Consul试水">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨docker machine搭建Consul">
+<meta property="og:description" content="Consul试水">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E8%B7%A8docker-machine%E6%90%AD%E5%BB%BAconsul/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>跨docker machine搭建Consul</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>最近开始着手把<a href="http://gaocegege.com/scrala/">scrala</a>做成分布式的，采取的方法是做成一个Master/Slave的架构，Slave是一个Long running的Actor，用Consul来帮助Master发现Slave。</p>
+<p>于是就开始填坑了，第一步遇到的问题就是，如何启动Consul服务，这里我采取的是用docker的image，<a href="https://hub.docker.com/r/progrium/consul/">progrium/consul</a>。为了更好地模拟分布式的环境，我想试试在Docker Machine之间能不能搭建起Consul Cluster。目前的尝试，在Docker Machine下的Docker中跑Consul的container的方法是做不到的。原因是虚拟层次太深了，不同Docker Machine中的Container互相发现不了IP。</p>
+<p>各种遇到的坑就不说了，就说说我是如何跑整个Cluster的吧~</p>
+<p>首先是创建两个Docker Machine，用来测试</p>
+<pre><code>docker-machine create -d virtualbox &lt;name&gt;
+</code></pre>
+<p>之后，在第一个Machine上，我启动了三个Consul Server容器，一个Consul Client容器，其中只有一个Server暴露端口给host，Client也会暴露8500等等端口给host。</p>
+<pre><code>$ docker run -d --name node1 -h node1 progrium/consul -server -bootstrap-expect 3
+$ JOIN_IP=&quot;$(docker inspect -f '{{.NetworkSettings.IPAddress}}' node1)&quot;
+$ docker run -d --name node2 -h node2 progrium/consul -server -join $JOIN_IP
+$ docker run -d -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302 -p 8302:8302/udp --name node3 -h node3 progrium/consul -server -join $JOIN_IP
+$ docker run -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp --name node4 -h node4 progrium/consul -join $JOIN_IP
+</code></pre>
+<p>这样就可以通过访问host的8500端口下的/ui来进行图形化的访问。这时候在service下应该有一个名字是consul的service，是跑在三个Server上的，在node下则应该有4个。</p>
+<p>第一个Machine很成功，跑一个registrator，再跑redis，就会看到多一个service，那之后试试能不能在第二台上跑一个Client。在新的Machine上执行：</p>
+<pre><code>$ docker run -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp --name node5 -h node5 progrium/consul -join &lt;IP of the Docker Machine 1&gt;
+</code></pre>
+<p>docker给出的日志是这样的：</p>
+<pre><code>==&gt; WARNING: It is highly recommended to set GOMAXPROCS higher than 1
+==&gt; Starting Consul agent...
+==&gt; Starting Consul agent RPC...
+==&gt; Joining cluster...
+    Join completed. Synced with 1 initial agents
+==&gt; Consul agent running!
+         Node name: 'node5'
+        Datacenter: 'dc1'
+            Server: false (bootstrap: false)
+       Client Addr: 0.0.0.0 (HTTP: 8500, HTTPS: -1, DNS: 53, RPC: 8400)
+      Cluster Addr: 172.17.0.4 (LAN: 8301, WAN: 8302)
+    Gossip encrypt: false, RPC-TLS: false, TLS-Incoming: false
+             Atlas: &lt;disabled&gt;
+
+==&gt; Log data will now stream in as it occurs:
+
+    2016/01/28 10:19:03 [INFO] serf: EventMemberJoin: node5 172.17.0.4
+    2016/01/28 10:19:03 [INFO] agent: (LAN) joining: [192.168.99.102]
+    2016/01/28 10:19:03 [INFO] serf: EventMemberJoin: node1 172.17.0.11
+    2016/01/28 10:19:03 [INFO] serf: EventMemberJoin: node4 172.17.0.14
+    2016/01/28 10:19:03 [INFO] serf: EventMemberJoin: node2 172.17.0.12
+    2016/01/28 10:19:03 [INFO] serf: EventMemberJoin: node3 172.17.0.15
+    2016/01/28 10:19:03 [INFO] agent: (LAN) joined: 1 Err: &lt;nil&gt;
+    2016/01/28 10:19:03 [ERR] agent: failed to sync remote state: No known Consul servers
+    2016/01/28 10:19:03 [INFO] consul: adding server node1 (Addr: 172.17.0.11:8300) (DC: dc1)
+    2016/01/28 10:19:03 [INFO] consul: adding server node2 (Addr: 172.17.0.12:8300) (DC: dc1)
+    2016/01/28 10:19:03 [INFO] consul: adding server node3 (Addr: 172.17.0.15:8300) (DC: dc1)
+    2016/01/28 10:19:05 [INFO] memberlist: Suspect node2 has failed, no acks received
+    2016/01/28 10:19:06 [INFO] memberlist: Suspect node4 has failed, no acks received
+    2016/01/28 10:19:06 [ERR] agent: failed to sync remote state: rpc error: failed to get conn: dial tcp 172.17.0.11:8300: no route to host
+    2016/01/28 10:19:07 [INFO] memberlist: Suspect node3 has failed, no acks received
+    2016/01/28 10:19:08 [INFO] memberlist: Suspect node1 has failed, no acks received
+</code></pre>
+<p>回到之前的ui，会发现node多了一个，但是是fail掉的，原因是新的node得到的其他node的IP是在Docker Machine 1上的docker container内部的IP，出了Docker Machine 1就找不到了。</p>
+<p>那如何解决这个问题，之后想明白了。之前的尝试，是每个Machine上跑多个node，所以很难处理跨Machine间的node的互相发现问题。那改进下之前的方法，一个Machine上跑一个node，把这个node需要用到的端口全部映射到host上，这样就可以保证不会出现node只能与其他Machine的一个node互相发现的问题。因为现在每个Machine上只有一个node。</p>
+<pre><code># the ip of the docker machine is 192.168.99.102 and the docker0 is 172.17.42.1
+$ docker run -d -h node1 \
+    -p 192.168.99.102:8300:8300 \
+    -p 192.168.99.102:8301:8301 \
+    -p 192.168.99.102:8301:8301/udp \
+    -p 192.168.99.102:8302:8302 \
+    -p 192.168.99.102:8302:8302/udp \
+    -p 192.168.99.102:8400:8400 \
+    -p 192.168.99.102:8500:8500 \
+    -p 172.17.42.1:53:53/udp \
+    progrium/consul -server -advertise 192.168.99.102 -bootstrap-expect 2
+
+# the ip of the docker machine is 192.168.99.100 and the docker0 is 172.17.42.1
+$ docker run -d -h node2  \
+    -p 192.168.99.100:8300:8300 \
+    -p 192.168.99.100:8301:8301 \
+    -p 192.168.99.100:8301:8301/udp \
+    -p 192.168.99.100:8302:8302 \
+    -p 192.168.99.100:8302:8302/udp \
+    -p 192.168.99.100:8400:8400 \
+    -p 192.168.99.100:8500:8500 \
+    -p 172.17.42.1:53:53/udp \
+    progrium/consul -server -advertise 192.168.99.100 -join 192.168.99.102
+</code></pre>
+<p>这样就在两个Docker Machine上做成了一个Consul Cluster。这也是dockerhub上的那个镜像提出的在生产环境上使用docker构建Consul Cluster的方法。</p>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

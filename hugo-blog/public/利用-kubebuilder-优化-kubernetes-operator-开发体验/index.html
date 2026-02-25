@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>利用 KUBEBUILDER 优化 KUBERNETES OPERATOR 开发体验 | 高策</title>
+<meta name="description" content="江湖小虾米">
+<meta name="keywords" content="Kubernetes">
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="利用 kubebuilder 优化 Kubernetes Operator 开发体验">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 kubebuilder 优化 Kubernetes Operator 开发体验">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/%E5%88%A9%E7%94%A8-kubebuilder-%E4%BC%98%E5%8C%96-kubernetes-operator-%E5%BC%80%E5%8F%91%E4%BD%93%E9%AA%8C/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>利用 kubebuilder 优化 Kubernetes Operator 开发体验</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>Kubernetes 现在已经成为了容器集群管理，乃至云计算的事实标准。相比于它曾经的竞争对手如 Mesos，Docker Swarm 等，其最大的优势在于扩展性。其扩展性的一个重要的体现，就是 <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource</a> 这一特性。Kubernetes 本身有很多资源类型，被我们熟知的有 Pod，Job，Deployment 等等。而通过 <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource</a>，用户可以定义自己的资源，并实现对应的 Operator（控制器）来处理对资源的请求。用户实现的 Operator 通过与 Kubernetes 的 API server 交互，来实现自身的业务逻辑。</p>
+<p>在没有 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 之前，为了实现一个 Operator，用户需要完全实现从 Kubernetes Client 的创建开始，到监听 Kubernetes API Server 的请求，再到请求的队列化，以及后面的业务逻辑一整套的逻辑。在整个过程中，有一些逻辑是所有的 Operator 在实现的时候都需要的。因此 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 将其进行了封装和抽象成了公共的库（<a href="https://github.com/kubernetes-sigs/controller-runtime">controller-runtime</a>）和公共的工具（<a href="https://github.com/kubernetes-sigs/controller-tools">controller-tools</a>）。随后在开发 Operator 的时候，只需要通过 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 生成一些 Scaffolding（脚手架）代码，用户不再需要关心 Kubernetes API Server 发来的请求是怎样进入请求队列，然后被依次执行的，只需要关心要如何处理当前的请求即可。其他的事情会由 Scaffolding 代码中用到的 <a href="https://github.com/kubernetes-sigs/controller-runtime">controller-runtime</a> 等库来帮助开发者处理。</p>
+<p>因此接下来，本文主要介绍利用 <a href="https://github.com/kubernetes-sigs/kubebuilder/tree/master/pkg/scaffold/v1">kubebuilder v1 scaffolding</a> 简化 Operator 开发的过程。目前 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 社区已经推出了正在开发中的<a href="https://github.com/kubernetes-sigs/kubebuilder/blob/master/designs/simplified-scaffolding.md">第二版实现</a>，这一实现将在后续文章进行介绍。</p>
+<h2 id="开发流程">开发流程</h2>
+<h3 id="初始化项目">初始化项目</h3>
+<p>首先，我们需要初始化项目：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubebuilder init
+</span></span></code></pre></div><p>在当前目录会生成一个最小可编译版本，但其中没有任何的 Operator 实现。目录结构如下所示：</p>
+<pre tabindex="0"><code>├── cmd
+│   └── manager
+│       └── main.go
+├── config
+│   ├── default
+│   │   ├── kustomization.yaml
+│   │   ├── manager_auth_proxy_patch.yaml
+│   │   ├── manager_image_patch.yaml
+│   │   └── manager_prometheus_metrics_patch.yaml
+│   ├── manager
+│   │   └── manager.yaml
+│   └── rbac
+│       ├── auth_proxy_role_binding.yaml
+│       ├── auth_proxy_role.yaml
+│       └── auth_proxy_service.yaml
+├── Dockerfile
+├── Gopkg.toml
+├── hack
+│   └── boilerplate.go.txt
+├── Makefile
+├── pkg
+│   ├── apis
+│   │   └── apis.go
+│   ├── controller
+│   │   └── controller.go
+│   └── webhook
+│       └── webhook.go
+└── PROJECT
+</code></pre><p>其中 cmd 目录是关于可执行文件的代码。config 是在 Kubernetes 上部署 Operator 的配置文件。Dockerfile 是把 Operator 打包为 Docker 镜像的配置文件。Gopkg.toml 是自动生成的关于依赖的配置文件。hack 目录下是有关 Copyright Header 的文件。而 pkg 下则是随后的 API 和代码实现。</p>
+<h3 id="创建-crd-和-operator-的-scaffolding-代码">创建 CRD 和 Operator 的 Scaffolding 代码</h3>
+<p>随后我们运行如下命令来创建 CRD 和对应的 Operator 的实现：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubebuilder create api --group ship --version v1beta1 --kind Frigate
+</span></span></code></pre></div><p>可以看到在目录内生成了一些新的文件和目录：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">├── pkg
+</span></span><span class="line"><span class="cl">│   ├── apis
+</span></span><span class="line"><span class="cl"><span class="gi">+│   │   ├── addtoscheme_ship_v1beta1.go
+</span></span></span><span class="line"><span class="cl">│   │   ├── apis.go
+</span></span><span class="line"><span class="cl">│   │   └── ship
+</span></span><span class="line"><span class="cl">│   │       ├── group.go
+</span></span><span class="line"><span class="cl"><span class="gi">+│   │       └── v1beta1
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           ├── doc.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           ├── frigate_types.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           ├── frigate_types_test.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           ├── zz_generated.deepcopy.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           ├── register.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │           └── v1beta1_suite_test.go
+</span></span></span><span class="line"><span class="cl">│   ├── controller
+</span></span><span class="line"><span class="cl"><span class="gi">+│   │   ├── add_frigate.go
+</span></span></span><span class="line"><span class="cl">│   │   ├── controller.go
+</span></span><span class="line"><span class="cl"><span class="gi">+│   │   └── frigate
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │       ├── frigate_controller.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │       ├── frigate_controller_suite_test.go
+</span></span></span><span class="line"><span class="cl"><span class="gi">+│   │       └── frigate_controller_test.go
+</span></span></span><span class="line"><span class="cl">│   └── webhook
+</span></span><span class="line"><span class="cl">│       └── webhook.go
+</span></span><span class="line"><span class="cl">└── PROJECT
+</span></span></code></pre></div><p>其中，需要用户修改的文件主要有两个，分别是 <code>frigate_types.go</code> 和 <code>frigate_controller.go</code>。前者是 CRD 的 API 定义相关内容，后者是 CRD 对应的 Operator 实现。</p>
+<h3 id="修改-api">修改 API</h3>
+<p>在 <code>frigate_types.go</code> 中，我们可以看到有提示用户编辑的注释：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// FrigateSpec defines the desired state of Frigate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="nx">FrigateSpec</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Important: Run &#34;make&#34; to regenerate code after modifying this file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// FrigateStatus defines the observed state of Frigate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="nx">FrigateStatus</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Important: Run &#34;make&#34; to regenerate code after modifying this file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>关于 Kubernetes Custom Resource 相关的 API 定义相关内容，建议参考 <a href="https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/">Extend the Kubernetes API with CustomResourceDefinitions</a>，此处不再赘述。用户只需要修改对应的 <code>Spec</code> 与 <code>Status</code> 的数据结构。值得一提的是，一般而言，如果不依赖 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 实现 Operator，通常需要为定义好的 CRD 生成 Kubernetes Client，Informer 等，以便 Operator 可以利用其进行监听 API 请求等操作。而 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 使用的 <a href="https://github.com/kubernetes-sigs/controller-runtime">controller-runtime</a> 利用了 dynamic client，unstructured client 和其他相关的方式完成了这些操作，因此在使用时无需生成 Kubernetes Client，Informer 等包。</p>
+<h3 id="修改-controller-实现">修改 Controller 实现</h3>
+<p>在 Controller 中，主要有两处需要修改，一处为：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// add adds a new Controller to mgr with r as the reconcile.Reconciler</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="nx">mgr</span><span class="w"> </span><span class="nx">manager</span><span class="p">.</span><span class="nx">Manager</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Reconciler</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Create a new controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">c</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">controller</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;frigate-controller&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">mgr</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span><span class="nx">Reconciler</span><span class="p">:</span><span class="w"> </span><span class="nx">r</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Watch for changes to Frigate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nf">Watch</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">source</span><span class="p">.</span><span class="nx">Kind</span><span class="p">{</span><span class="nx">Type</span><span class="p">:</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shipv1beta1</span><span class="p">.</span><span class="nx">Frigate</span><span class="p">{}},</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">handler</span><span class="p">.</span><span class="nx">EnqueueRequestForObject</span><span class="p">{})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// TODO(user): Modify this to be the types you create</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Uncomment watch a Deployment created by Frigate - change this for objects you create</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nf">Watch</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">source</span><span class="p">.</span><span class="nx">Kind</span><span class="p">{</span><span class="nx">Type</span><span class="p">:</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">appsv1</span><span class="p">.</span><span class="nx">Deployment</span><span class="p">{}},</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">handler</span><span class="p">.</span><span class="nx">EnqueueRequestForOwner</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">IsController</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">OwnerType</span><span class="p">:</span><span class="w">    </span><span class="o">&amp;</span><span class="nx">shipv1beta1</span><span class="p">.</span><span class="nx">Frigate</span><span class="p">{},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>在这里用户需要指定 Operator 需要监听哪些资源的变动。在此例中，监听了被定义的新资源拥有（Own） 的 Deployment 的变动。当 Owner 为 Frigate 的 Deployment 的 Spec 或者 Status 一旦发生了变动时，Operator 都会接收到来自 Kubernetes API Server 的请求。</p>
+<p>另外一处为 <code>ReconcileFrigate</code> 结构的方法 <code>Reconcile</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Reconcile reads that state of the cluster for a Frigate object and makes changes based on the state read</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// and what is in the Frigate.Spec</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// TODO(user): Modify this Reconcile function to implement your Controller logic.  The scaffolding writes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// a Deployment as an example</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Automatically generate RBAC rules to allow the Controller to read and write Deployments</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// +kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get;update;patch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// +kubebuilder:rbac:groups=ship.example.com,resources=frigates,verbs=get;list;watch;create;update;patch;delete</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// +kubebuilder:rbac:groups=ship.example.com,resources=frigates/status,verbs=get;update;patch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="o">*</span><span class="nx">ReconcileFrigate</span><span class="p">)</span><span class="w"> </span><span class="nf">Reconcile</span><span class="p">(</span><span class="nx">request</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Fetch the Frigate instance</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">instance</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shipv1beta1</span><span class="p">.</span><span class="nx">Frigate</span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">(),</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">NamespacedName</span><span class="p">,</span><span class="w"> </span><span class="nx">instance</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">errors</span><span class="p">.</span><span class="nf">IsNotFound</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// Object not found, return.  Created objects are automatically garbage collected.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// For additional cleanup logic use finalizers.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Error reading the object - requeue the request.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// TODO(user): Change this to be the object type created by your controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Define the desired Deployment object</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">deploy</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">appsv1</span><span class="p">.</span><span class="nx">Deployment</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">ObjectMeta</span><span class="p">:</span><span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">Name</span><span class="p">:</span><span class="w">      </span><span class="nx">instance</span><span class="p">.</span><span class="nx">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;-deployment&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">Namespace</span><span class="p">:</span><span class="w"> </span><span class="nx">instance</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Spec</span><span class="p">:</span><span class="w"> </span><span class="nx">appsv1</span><span class="p">.</span><span class="nx">DeploymentSpec</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">Selector</span><span class="p">:</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">metav1</span><span class="p">.</span><span class="nx">LabelSelector</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="nx">MatchLabels</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;deployment&#34;</span><span class="p">:</span><span class="w"> </span><span class="nx">instance</span><span class="p">.</span><span class="nx">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;-deployment&#34;</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">Template</span><span class="p">:</span><span class="w"> </span><span class="nx">corev1</span><span class="p">.</span><span class="nx">PodTemplateSpec</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="nx">ObjectMeta</span><span class="p">:</span><span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="p">{</span><span class="nx">Labels</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;deployment&#34;</span><span class="p">:</span><span class="w"> </span><span class="nx">instance</span><span class="p">.</span><span class="nx">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;-deployment&#34;</span><span class="p">}},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="nx">Spec</span><span class="p">:</span><span class="w"> </span><span class="nx">corev1</span><span class="p">.</span><span class="nx">PodSpec</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="nx">Containers</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="nx">corev1</span><span class="p">.</span><span class="nx">Container</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">							</span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&#34;nginx&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">							</span><span class="nx">Image</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;nginx&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">controllerutil</span><span class="p">.</span><span class="nf">SetControllerReference</span><span class="p">(</span><span class="nx">instance</span><span class="p">,</span><span class="w"> </span><span class="nx">deploy</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">scheme</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// TODO(user): Change this for the object type created by your controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Check if the Deployment already exists</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">found</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">appsv1</span><span class="p">.</span><span class="nx">Deployment</span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">(),</span><span class="w"> </span><span class="nx">types</span><span class="p">.</span><span class="nx">NamespacedName</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span><span class="w"> </span><span class="nx">Namespace</span><span class="p">:</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">},</span><span class="w"> </span><span class="nx">found</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">errors</span><span class="p">.</span><span class="nf">IsNotFound</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Creating Deployment&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;namespace&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;name&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">(),</span><span class="w"> </span><span class="nx">deploy</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// TODO(user): Change this for the object type created by your controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Update the found object and write the result back if there are any changes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Spec</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="p">.</span><span class="nx">Spec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">found</span><span class="p">.</span><span class="nx">Spec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Spec</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Updating Deployment&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;namespace&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Namespace</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;name&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">deploy</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nf">Update</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">(),</span><span class="w"> </span><span class="nx">found</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">reconcile</span><span class="p">.</span><span class="nx">Result</span><span class="p">{},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>这里是处理所有来自 API Server 的请求的函数入口。在此例中，每次请求都会根据 Custom Resource 的 name 在内存中维护一个期望的 Deployment 的实例，随后将其与 API Server 中已有的实例进行比对，如果其 Spec 字段有不同之处，则通过 API Server 更新这一实例。Deployment Controller 会进行接下来的处理，根据更新后的 Spec 修改在集群上的 Pod 的相关运行情况。</p>
+<h3 id="编译与运行-operator">编译与运行 Operator</h3>
+<p>如果是在本地运行，我们需要利用 <code>make manager</code> 来编译 Operator 为二进制可执行文件。最后的可执行文件在 <code>bin</code> 目录下。
+如果是需要运行在 Kubernetes 集群中，我们可以利用 <code>make docker-push &amp;&amp; make docker-push &amp;&amp; make deploy</code> 来进行部署。</p>
+<h2 id="under-the-hood">Under the Hood</h2>
+<p>看完了使用上的过程，接下来我们来看看，<a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 生成的代码到底是怎么去运行的。这一部分主要涉及 <a href="https://github.com/kubernetes-sigs/controller-runtime">controller-runtime</a> 中的实现，因此需要有一定的 Kubernetes 基础会比较好理解。</p>
+<p>首先来看看 cmd 中的代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Create a new Cmd to provide shared dependencies and start components</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;setting up manager&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">mgr</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">manager</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">cfg</span><span class="p">,</span><span class="w"> </span><span class="nx">manager</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span><span class="nx">MetricsBindAddress</span><span class="p">:</span><span class="w"> </span><span class="nx">metricsAddr</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;unable to set up overall controller manager&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Registering Components.&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Setup Scheme for all resources</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;setting up scheme&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">apis</span><span class="p">.</span><span class="nf">AddToScheme</span><span class="p">(</span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetScheme</span><span class="p">());</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;unable add APIs to scheme&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Setup all Controllers</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Setting up controller&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">controller</span><span class="p">.</span><span class="nf">AddToManager</span><span class="p">(</span><span class="nx">mgr</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;unable to register controllers to the manager&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;setting up webhooks&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">webhook</span><span class="p">.</span><span class="nf">AddToManager</span><span class="p">(</span><span class="nx">mgr</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;unable to register webhooks to the manager&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Start the Cmd</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Starting the Cmd.&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">Start</span><span class="p">(</span><span class="nx">signals</span><span class="p">.</span><span class="nf">SetupSignalHandler</span><span class="p">());</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;unable to run the manager&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nf">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>之前说到 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 是开发 Operator 的框架，其实并不十分准确。准确来说，<a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 是开发 Controller Manager 的框架，Controller Manager 会管理一个或者多个 Operator。因此 cmd 中的代码也主要是围绕 Controller Manager 展开的。<code>manager.New</code> 首先创建了一个 Manager 实例，在这一实例中有 client，cache 等之后需要的对象。</p>
+<p><code>apis.AddToScheme</code> 将 CRD 的结构与 Kubernetes GroupVersionKinds 的映射添加到 Manager 的 Scheme 中。这一步是为了能够让 Manager 知道 CRD 的存在。</p>
+<p>接下来，就是通过 <code>controller.AddToManager</code> 创建出定义的 Operator，并且添加到 Manager 中。<code>webhook.AddToManager</code> 会创建对应的 Webhook，主要是做数据校验，与默认值的赋值等操作，这里就不多介绍了，因为与 Controller 主要的逻辑无关。最后的 <code>mgr.Start</code> 会真正运行 Manager。</p>
+<p><code>controller.AddToManager</code> 中会用 <code>controller.New</code> 创建出 Operator，然后 Watch 对应的资源，最后返回。下面是 <code>controller.New</code> 的实现：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// New returns a new Controller registered with the Manager.  The Manager will ensure that shared Caches have</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// been synced before the Controller is Started.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">New</span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">mgr</span><span class="w"> </span><span class="nx">manager</span><span class="p">.</span><span class="nx">Manager</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="nx">Options</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">Controller</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">Reconciler</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;must specify Reconciler&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;must specify Name for Controller&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">MaxConcurrentReconciles</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">options</span><span class="p">.</span><span class="nx">MaxConcurrentReconciles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Inject dependencies into Reconciler</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">Reconciler</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Create controller with dependencies set</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">c</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Controller</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Do</span><span class="p">:</span><span class="w">                      </span><span class="nx">options</span><span class="p">.</span><span class="nx">Reconciler</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Cache</span><span class="p">:</span><span class="w">                   </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetCache</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Config</span><span class="p">:</span><span class="w">                  </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetConfig</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Scheme</span><span class="p">:</span><span class="w">                  </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetScheme</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Client</span><span class="p">:</span><span class="w">                  </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetClient</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Recorder</span><span class="p">:</span><span class="w">                </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">GetRecorder</span><span class="p">(</span><span class="nx">name</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Queue</span><span class="p">:</span><span class="w">                   </span><span class="nx">workqueue</span><span class="p">.</span><span class="nf">NewNamedRateLimitingQueue</span><span class="p">(</span><span class="nx">workqueue</span><span class="p">.</span><span class="nf">DefaultControllerRateLimiter</span><span class="p">(),</span><span class="w"> </span><span class="nx">name</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">MaxConcurrentReconciles</span><span class="p">:</span><span class="w"> </span><span class="nx">options</span><span class="p">.</span><span class="nx">MaxConcurrentReconciles</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Name</span><span class="p">:</span><span class="w">                    </span><span class="nx">name</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Add the controller as a Manager components</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">c</span><span class="p">,</span><span class="w"> </span><span class="nx">mgr</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>其中 <code>options.Reconciler</code> 就是我们定义的实现了 <code>Reconcile</code> 函数的结构的实例。这一结构的 <code>Reconcile</code> 函数的实现也就是前文中提到的 Operator 实现所需的第二处需要修改的地方。<code>mgr.SetFields(options.Reconciler)</code> 利用依赖注入的方式，将 Manager 的 Client 和 Scheme 注入到 <code>options.Reconciler</code> 中，然后将其赋值给 Controller 中指向 <code>reconcile.Reconciler</code> 接口的字段 Do 中。可以看到除了这一字段，Controller 还有 Queue，Recorder， Client 等其他的字段。因此 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 是对 Controller 进行了更高层次的抽象，其有关业务逻辑的实现都通过 <code>reconcile.Reconciler</code> 这一接口进行，而 Queue 等底层的对象，则是由 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 来替开发者维护。</p>
+<p>最后一步 <code>mgr.Add(c)</code> 将 Operator 加入到 Manager 的一个 Operator 数组中。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="nx">controllerManager</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// runnables is the set of Controllers that the controllerManager injects deps into and Starts.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">runnables</span><span class="w"> </span><span class="p">[]</span><span class="nx">Runnable</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Add sets dependencies on i, and adds it to the list of runnables to start.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">cm</span><span class="w"> </span><span class="o">*</span><span class="nx">controllerManager</span><span class="p">)</span><span class="w"> </span><span class="nf">Add</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="nx">Runnable</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">cm</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">defer</span><span class="w"> </span><span class="nx">cm</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Set dependencies on the object</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">cm</span><span class="p">.</span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">r</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Add the runnable to the list</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">cm</span><span class="p">.</span><span class="nx">runnables</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">runnables</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">cm</span><span class="p">.</span><span class="nx">started</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// If already started, start the controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">go</span><span class="w"> </span><span class="kd">func</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">cm</span><span class="p">.</span><span class="nx">errChan</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nf">Start</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">internalStop</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>接下来，我们回过头来看下 Controller 是如何实现 Watch Kubernetes API Server 的资源的：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Watch implements controller.Controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">*</span><span class="nx">Controller</span><span class="p">)</span><span class="w"> </span><span class="nf">Watch</span><span class="p">(</span><span class="nx">src</span><span class="w"> </span><span class="nx">source</span><span class="p">.</span><span class="nx">Source</span><span class="p">,</span><span class="w"> </span><span class="nx">evthdler</span><span class="w"> </span><span class="nx">handler</span><span class="p">.</span><span class="nx">EventHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">prct</span><span class="w"> </span><span class="o">...</span><span class="nx">predicate</span><span class="p">.</span><span class="nx">Predicate</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">c</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">defer</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Inject Cache into arguments</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">src</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">evthdler</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">pr</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">prct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">pr</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">log</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;Starting EventSource&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;controller&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;source&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">src</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">src</span><span class="p">.</span><span class="nf">Start</span><span class="p">(</span><span class="nx">evthdler</span><span class="p">,</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">Queue</span><span class="p">,</span><span class="w"> </span><span class="nx">prct</span><span class="o">...</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>这里的 SetFields 是 Manager 将其自己的 SetFields 函数注入了进来，所以等同于调用了 Manager 的 SetFields 方法，其定义如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">cm</span><span class="w"> </span><span class="o">*</span><span class="nx">controllerManager</span><span class="p">)</span><span class="w"> </span><span class="nf">SetFields</span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="kd">interface</span><span class="p">{})</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">ConfigInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">config</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">ClientInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">client</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">SchemeInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">scheme</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">CacheInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">InjectorInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">SetFields</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">StopChannelInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">internalStop</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">inject</span><span class="p">.</span><span class="nf">DecoderInto</span><span class="p">(</span><span class="nx">cm</span><span class="p">.</span><span class="nx">admissionDecoder</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Cache is used by the ControllerManager to inject Cache into Sources, EventHandlers, Predicates, and</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Reconciles</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="nx">Cache</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nf">InjectCache</span><span class="p">(</span><span class="nx">cache</span><span class="w"> </span><span class="nx">cache</span><span class="p">.</span><span class="nx">Cache</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// CacheInto will set informers on i and return the result if it implements Cache.  Returns</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cp">//// false if i does not implement Cache.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">CacheInto</span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="nx">cache</span><span class="p">.</span><span class="nx">Cache</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="kd">interface</span><span class="p">{})</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">i</span><span class="p">.(</span><span class="nx">Cache</span><span class="p">);</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nf">InjectCache</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>以 <code>inject.CacheInto</code> 为例介绍下实现，其检查被注入的对象有没有实现 Cache 接口，即有没有实现 <code>InjectCache(cache cache.Cache) error</code> 方法。如果实现了，则执行注入，否则直接返回。也就是通过这样的方式，Manager 最终把 Cache 注入到了 Source 中，同时如果需要的话，把 Scheme 注入到了 <code>EventHandler</code> 中。这里的 Scheme 在指定 Owner 的 <code>EventHandler</code> 会被用来获取 Owner 的 <code>GroupKind</code>。</p>
+<p>接下来，后面 <code>src.Start(evthdler, c.Queue, prct...)</code> 也就是顺理成章的实现了：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Start is internal and should be called only by the Controller to register an EventHandler with the Informer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// to enqueue reconcile.Requests.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">ks</span><span class="w"> </span><span class="o">*</span><span class="nx">Kind</span><span class="p">)</span><span class="w"> </span><span class="nf">Start</span><span class="p">(</span><span class="nx">handler</span><span class="w"> </span><span class="nx">handler</span><span class="p">.</span><span class="nx">EventHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">queue</span><span class="w"> </span><span class="nx">workqueue</span><span class="p">.</span><span class="nx">RateLimitingInterface</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">prct</span><span class="w"> </span><span class="o">...</span><span class="nx">predicate</span><span class="p">.</span><span class="nx">Predicate</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Type should have been specified by the user.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">ks</span><span class="p">.</span><span class="nx">Type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;must specify Kind.Type&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// cache should have been injected before Start was called</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">ks</span><span class="p">.</span><span class="nx">cache</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;must call CacheInto on Kind before calling Start&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Lookup the Informer from the Cache and add an EventHandler which populates the Queue</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">ks</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nf">GetInformer</span><span class="p">(</span><span class="nx">ks</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">kindMatchErr</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">err</span><span class="p">.(</span><span class="o">*</span><span class="nx">meta</span><span class="p">.</span><span class="nx">NoKindMatchError</span><span class="p">);</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">log</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;if kind is a CRD, it should be installed before calling Start&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="s">&#34;kind&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">kindMatchErr</span><span class="p">.</span><span class="nx">GroupKind</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">i</span><span class="p">.</span><span class="nf">AddEventHandler</span><span class="p">(</span><span class="nx">internal</span><span class="p">.</span><span class="nx">EventHandler</span><span class="p">{</span><span class="nx">Queue</span><span class="p">:</span><span class="w"> </span><span class="nx">queue</span><span class="p">,</span><span class="w"> </span><span class="nx">EventHandler</span><span class="p">:</span><span class="w"> </span><span class="nx">handler</span><span class="p">,</span><span class="w"> </span><span class="nx">Predicates</span><span class="p">:</span><span class="w"> </span><span class="nx">prct</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>其利用被注入到 Source 中的 Cache 获取到针对 Source 的资源类型的 Informer，然后将 EventHandler 作为处理 Informer 的事件的处理器。这就是 <a href="https://github.com/kubernetes-sigs/kubebuilder/">kubebuilder</a> 的高层 API 背后做的事情。</p>
+<h2 id="关于作者">关于作者</h2>
+<p><a href="http://gaocegege.com">高策</a>，<a href="https://caicloud.io">才云科技</a> AI 平台组工程师。如有问题，敬请斧正。</p>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>

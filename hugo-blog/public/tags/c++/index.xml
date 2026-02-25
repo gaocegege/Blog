@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on 高策</title>
+    <link>https://gaocegege.com/Blog/tags/c&#43;&#43;/</link>
+    <description>Recent content in C&#43;&#43; on 高策</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>gaocegege@hotmail.com (高策)</managingEditor>
+    <webMaster>gaocegege@hotmail.com (高策)</webMaster>
+    <lastBuildDate>Mon, 06 Apr 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gaocegege.com/Blog/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43; Associative Containers</title>
+      <link>https://gaocegege.com/Blog/c-associative-containers/</link>
+      <pubDate>Mon, 06 Apr 2015 00:00:00 +0000</pubDate><author>gaocegege@hotmail.com (高策)</author>
+      <guid>https://gaocegege.com/Blog/c-associative-containers/</guid>
+      <description>&lt;h1 id=&#34;c-associative-containers&#34;&gt;C++ Associative Containers&lt;/h1&gt;&#xA;&lt;p&gt;这个应该如何翻译呢，应该是关系型容器吧。这一类容器的特点是，首先是关系，然后是有序的。这类容器都与集合，二元关系等等有关系，所以叫做这个名字吧Orz。&lt;/p&gt;&#xA;&lt;p&gt;Associative Containers共有四种，分别是Set，Map，Multiset，Multimap。&lt;/p&gt;&#xA;&lt;h2 id=&#34;set&#34;&gt;Set&lt;/h2&gt;&#xA;&lt;p&gt;Set，集合。最大的特点是集合内的元素不允许重复，同时不可修改。与其在数学上的定义类似。因为要保证有序，所以内部是使用平衡二叉树实现（红黑树）。&lt;/p&gt;&#xA;&lt;h2 id=&#34;map&#34;&gt;Map&lt;/h2&gt;&#xA;&lt;p&gt;Map，中文应该是什么，大概是映射吧。是一个存放二元关系&lt;code&gt;&amp;lt;key, value&amp;gt;&lt;/code&gt;的容器。同一个key对应同一个value，不允许key的重复。Set可以存放一元关系，而Map只能存放二元关系对。因为要保证有序，所以内部是使用平衡二叉树实现（红黑树）。&lt;/p&gt;&#xA;&lt;h2 id=&#34;multiset&#34;&gt;Multiset&lt;/h2&gt;&#xA;&lt;p&gt;之前提到Set不允许重复，那Multiset就是允许重复的Set。&lt;/p&gt;&#xA;&lt;h2 id=&#34;multimap&#34;&gt;Multimap&lt;/h2&gt;&#xA;&lt;p&gt;同样，Map不允许同一个key对应多个value，那Multimap就可以这样。&lt;/p&gt;&#xA;&lt;h2 id=&#34;区别&#34;&gt;区别&lt;/h2&gt;&#xA;&lt;p&gt;如果是存放二元关系，Set与Map是有一些类似的地方的。下面的例子就是利用Set存放&lt;code&gt;pair&amp;lt;int, int&amp;gt;&lt;/code&gt;，Map也是存放&lt;code&gt;int, int&lt;/code&gt;的键值对。&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;&#xA;#include &amp;lt;set&amp;gt;&#xA;#include &amp;lt;map&amp;gt;&#xA;&#xA;using namespace std;&#xA;&#xA;int main(int argc, char const *argv[])&#xA;{&#xA;&#x9;// test case&#xA;&#x9;pair&amp;lt;int, int&amp;gt; p1(1, 1); &#xA;&#x9;pair&amp;lt;int, int&amp;gt; p2(1, 2);&#xA;&#x9;pair&amp;lt;int, int&amp;gt; p3(1, 1);&#xA;&#xA;&#x9;// set&#xA;&#x9;set&amp;lt; pair&amp;lt;int, int&amp;gt; &amp;gt; s; &#xA;&#x9;s.insert(p1); &#xA;&#x9;s.insert(p2); &#xA;&#x9;s.insert(p3);&#xA;&#xA;&#x9;// map&#xA;&#x9;map&amp;lt;int, int&amp;gt; m; &#xA;&#x9;m.insert(p1); &#xA;&#x9;m.insert(p2);&#xA;&#x9;m.insert(p3); &#xA;&#xA;&#x9;// multiset&#xA;&#x9;multiset&amp;lt; pair&amp;lt;int, int&amp;gt; &amp;gt; ms;&#xA;&#x9;ms.insert(p1); &#xA;&#x9;ms.insert(p2);&#xA;&#x9;ms.insert(p3);&#xA;&#xA;&#x9;// multimap&#xA;&#x9;multimap&amp;lt;int, int&amp;gt; mm;&#xA;&#x9;mm.insert(p1);&#xA;&#x9;mm.insert(p2);&#xA;&#x9;mm.insert(p3);&#xA;&#xA;&#x9;// print&#xA;&#x9;cout &amp;lt;&amp;lt; &amp;quot;Set size = &amp;quot; &amp;lt;&amp;lt; s.size() &amp;lt;&amp;lt; endl; &#xA;&#x9;cout &amp;lt;&amp;lt; &amp;quot;Map size = &amp;quot; &amp;lt;&amp;lt; m.size() &amp;lt;&amp;lt; endl;&#xA;&#x9;cout &amp;lt;&amp;lt; &amp;quot;MuitiSet size = &amp;quot; &amp;lt;&amp;lt; ms.size() &amp;lt;&amp;lt; endl; &#xA;&#x9;cout &amp;lt;&amp;lt; &amp;quot;MultiMap size = &amp;quot; &amp;lt;&amp;lt; mm.size() &amp;lt;&amp;lt; endl;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;上面代码的输出是这样的~&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

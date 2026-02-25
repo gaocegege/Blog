@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>MPI，OPENMPI 与深度学习 | 高策</title>
+<meta name="description" content="江湖小虾米">
+
+
+
+<meta http-equiv="Cache-control" content="public">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/gaocegege.jpg">
+
+<meta name="twitter:title" content="MPI，OpenMPI 与深度学习">
+<meta name="twitter:description" content="江湖小虾米">
+<meta name="twitter:creator" content="@">
+
+
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MPI，OpenMPI 与深度学习">
+<meta property="og:description" content="江湖小虾米">
+<meta property="og:url" content="https://gaocegege.com/Blog/mpiopenmpi-%E4%B8%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+<meta property="og:site_name" content="高策">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/normalize.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/foundation.min.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/nprogress.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/style.css">
+<link rel="stylesheet" href="https://gaocegege.com/Blog/css/post.css">
+
+
+<script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://gaocegege.com/Blog/js/vendor/highlight/styles/tomorrow.css">
+<script src="https://gaocegege.com/Blog/js/vendor/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.ico">
+<link rel="shortcut icon" href="https://gaocegege.com/Blog/favicon.png">
+
+
+<link href="https://gaocegege.com/Blog/index.xml" type="application/atom+xml" rel="alternate" title="高策 Feed">
+
+</head>
+<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
+    
+<main id="summer-page-container" class="summer-page-container" role="main">
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            <a class="summer-blog-logo" href="https://gaocegege.com/Blog/">
+                <img src="https://gaocegege.com/Blog/images/gaocegege.jpg" alt="Blog Logo">
+            </a>
+            
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/">主页</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/featured/">编程</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/relaxed/">消遣</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/categories/">分类</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/about/">关于我</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/analytics/">博客数据统计</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/opensource/">开源项目</a>
+        </li>
+        
+        <li>
+            <a href="https://gaocegege.com/Blog/index.xml">RSS</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>MPI，OpenMPI 与深度学习</h1>
+            </div>
+        </div>
+    </header>
+
+    <article class="summer-page-content">
+        <div><p>随着分布式深度学习在工业界的普及，MPI（比我的年纪还要大两岁）又迎来了新的活力。作为一个从没有在 HPC 领域有过积累的小学生，学习了许多论文与博客，还是没有理清 MPI，OpenMPI，AllReduce，ReduceScatter，RingAllReduce 等等概念之间的关系。在前段时间为了能够更好地阅读 Horovod 和 BytePS 的代码，Horovod 本身的实现并不十分复杂，但是它的部分工作其实是借助 MPI 来实现的。因此针对性地学习了一下 MPI 的相关知识，这里抛砖引玉地介绍一下 MPI 与深度学习的关系，也留作最近业余时间学习过程的记录。近来与朋友交流，有感于之前文章都过于阳春白雪，对于不熟悉这一领域的读者来说不太友好。因此这一篇文章可能会有针对性地铺垫一些背景知识，因此全文可能较长，对熟悉 MPI 的朋友来说可以跳过前面。</p>
+<p>MPI 是什么？这里引用一段 <a href="https://mpitutorial.com/tutorials/mpi-introduction/zh_cn/">MPI 教程介绍</a> 中的内容：</p>
+<blockquote>
+<p>在 90 年代之前，程序员可没我们这么幸运。对于不同的计算架构写并发程序是一件困难而且冗长的事情。当时，很多软件库可以帮助写并发程序，但是没有一个大家都接受的标准来做这个事情。</p>
+<p>在当时，大多数的并发程序只出现在科学和研究的领域。最广为接受的模型就是消息传递模型。什么是消息传递模型？它其实只是指程序通过在进程间传递消息（消息可以理解成带有一些信息和数据的一个数据结构）来完成某些任务。在实践中，并发程序用这个模型去实现特别容易。举例来说，主进程（master process）可以通过对从进程（slave process）发送一个描述工作的消息来把这个工作分配给它。另一个例子就是一个并发的排序程序可以在当前进程中对当前进程可见的（我们称作本地的，locally）数据进行排序，然后把排好序的数据发送的邻居进程上面来进行合并的操作。几乎所有的并行程序可以使用消息传递模型来描述。</p>
+<p>由于当时很多软件库都用到了这个消息传递模型，但是在定义上有些微小的差异，这些库的作者以及一些其他人为了解决这个问题就在 Supercomputing 1992 大会上定义了一个消息传递接口的标准，也就是 MPI。这个标准接口使得程序员写的并发程序可以在所有主流的并发框架中运行。并且允许他们可以使用当时已经在使用的一些流行库的特性和模型。</p>
+<p>到 1994 年的时候，一个完整的接口标准定义好了（MPI-1）。我们要记住 MPI 只是一个接口的定义而已。然后需要程序员去根据不同的架构去实现这个接口。很幸运的是，仅仅一年之后，一个完整的 MPI 实现就已经出现了。在第一个实现之后，MPI 就被大量地使用在消息传递应用程序中，并且依然是写这类程序的标准（de-facto）。</p>
+</blockquote>
+<p>这里十分推荐先阅读完 <a href="https://mpitutorial.com/tutorials/">MPI 教程</a> 的全部内容，它是我在互联网上能找到的所有关于 MPI 的公开材料中最为深入浅出的一个教程。</p>
+<p>简单地来理解 MPI，它是一个定义了多个原语的消息传递接口，这一接口主要被用于多进程间的通信。它的竞品包括 RPC，Distributed Shared Memory 等。关于它们的比较可以参考论文 <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.2490&amp;rep=rep1&amp;type=pdf">Message Passing, Remote Procedure Calls and Distributed Shared Memory as Communication Paradigms for Distributed Systems</a>。</p>
+<p>MPI 的详细文档可以参考 <a href="https://www.mpi-forum.org/">MPI Forum</a>，这里有 MPI 各个版本的文档（目前发布到了 3.1）。在当代的 MPI 中，接口已经有相当多。不过对我们而言最重要的只有三个部分，也对应着 <a href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report.pdf">MPI 文档</a> 中的第三和第五章节：端到端通信，数据类型，和集合通信（Collective Communication）。</p>
+<p>端到端通信部分主要实现了从一个进程到另一个进程的通信，核心功能由两个原语提供：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">MPI_Send</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dest</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">MPI_Recv</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">source</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tag</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_Status</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span>
+</span></span></code></pre></div><p>具体内容请参考 <a href="https://mpitutorial.com/tutorials/mpi-send-and-receive/zh_cn/">MPI 教程：MPI Send and Receive</a>。</p>
+<p>集合通讯是建立在端到端通信的基础上，在一组进程内的通讯原语。其中主要包括：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Broadcasts a message from the process with rank root to all other processes of the group. 
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">MPI_Bcast</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Gathers values from a group of processes. 
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">MPI_Gather</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sendcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">sendtype</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">recvcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">recvtype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Sends data from one task to all tasks in a group. 
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">MPI_Scatter</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sendcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">sendtype</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">recvcount</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">recvtype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span></code></pre></div><p>更多请参考 <a href="https://mpitutorial.com/tutorials/mpi-broadcast-and-collective-communication/zh_cn/">MPI 教程：广播以及集体(collective)通信</a>，<a href="https://mpitutorial.com/tutorials/mpi-scatter-gather-and-allgather/zh_cn/">MPI 教程：MPI Scatter, Gather, and Allgather</a> 和 <a href="https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report.pdf">MPI 文档</a>。</p>
+<p>MPI 提出了这一系列为了解决进程间消息传递问题而存在的接口，但它们需要一个实现。OpenMPI 是 MPI 的常用实现之一。因此我们可以理解，MPI 是定义，是接口，而 OpenMPI 是这一接口的对应实现。这里还有一个容易混淆的概念，就是 OpenMP。OpenMP（Open Multi-Processing）与 OpenMPI，MPI 并无任何关系。它是一个针对共享内存并行编程的 API。这里特意提出，避免混淆。</p>
+<p>而既然 OpenMPI 是 MPI 的一种实现，那针对不同的原语，采用什么算法和数据结构来实现，是实现者的自由。我们应该可以轻易地想到，针对不同的情况（主要是消息的大小等），采用不同的算法会提高整体的性能。OpenMPI 也是这样做的。</p>
+<p>回到 AllReduce，它是 MPI 定义的一个集合通信的原语，它的语义是：</p>
+<blockquote>
+<p>Combines values from all processes and distributes the result back to all processes.</p>
+</blockquote>
+<figure>
+	<img src="https://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/mpi_allreduce_1.png" height="400" width="400">
+    <figcaption>MPI_AllReduce</figcaption>
+</figure>
+<p>在语义上（注意，仅限于语义的角度，在实现角度并不一定如此），MPI_AllReduce 等于 MPI_Reduce 加 MPI_Bcast。MPI_Reduce 会把结果聚集在 Root 进程，而再利用 MPI_Bcast 把 Root 进程的结果分发给所有进程，就实现了跟 MPI_AllReduce 等价的功能。</p>
+<p>而从实现的角度，MPI_AllReduce 这一接口有非常多不同的算法实现，不同的算法在不同情景下具有不同的优劣势。在介绍算法之前，先来介绍一下 MPI_AllReduce 跟深度学习有什么关系。</p>
+<p>要理解它们之间的关系，首先要介绍一下模型训练。在一次模型训练中，首先我们会利用数据对模型进行前向的计算。所谓的前向计算，就是将模型上一层的输出作为下一层的输入，并计算下一层的输出，从输入层一直算到输出层为止。根据目标函数，我们将反向计算模型中每个参数的导数，并且结合学习率来更新模型的参数。在分布式训练的场景中，这一问题就会更为复杂一些。比如我们利用 4 个 Worker，利用不同的数据同步地训练相同结构的模型（数据并行的同步训练），在每个 Worker 计算好梯度后，就涉及到一个梯度同步的问题。每个 Worker 都有根据自己的数据计算的梯度，如何能够让自己得到的梯度也能作用于其他的 Worker 呢？有一种方式，是引入一个中心化的组件，参数服务器。所有的参数都存储在参数服务器中，而 Worker 是万年打工仔。Worker 们只负责辛辛苦苦地计算梯度，并且把计算好的梯度发送给参数服务器。参数服务器收到梯度后，执行一定的计算（梯度平均等）后，更新其维护的参数，再把更新好的新参数返回给所有的 Worker。Worker 打工仔们会再进行下一轮的前后向计算。</p>
+<figure>
+	<img src="https://pic1.zhimg.com/80/v2-ffd6d4a16b2a1fe6c5f0cf49080e8078_1440w.jpg" height="500" width="500">
+    <figcaption>参数服务器更新梯度和参数（图来自参考文献）</figcaption>
+</figure>
+<p>除了这样的方式之外，我们发现，MPI_AllReduce 语义也可以很好地满足这一需要。</p>
+<p>我们可以把每个 Worker 看作是 MPI 概念中的一个进程，4 个 Worker 组成了一个 4 个进程组成的组。我们在这四个进程中对梯度进行一次 MPI_AllReduce。根据 MPI_AllReduce 的语义，所有参与计算的进程都有结果，所以梯度就完成了分发。只要在初始化的时候，我们可以保证每个 Worker 的参数是一致的，那在后续的迭代计算中，参数会一直保持一致，因为梯度信息是一致的。</p>
+<figure>
+	<img src="https://pic1.zhimg.com/80/v2-68138c656ef1501ad3911a5524271960_1440w.jpg" height="500" width="500">
+    <figcaption>MPI_AllReduce 方式更新梯度（图来自参考文献）</figcaption>
+</figure>
+<p>所以，MPI_AllReduce 的语义可以很好地解决深度学习中梯度同步的问题。但是，到底能不能使用它，还是要看下层的实现对这一场景是否足够友好。</p>
+<p>在 OpenMPI 的实现中，MPI_AllReduce 主要有 7 种算法，具体可以参考 <a href="https://github.com/open-mpi/ompi/blob/98afc838aa53da88cba339f6dcbab256806a5745/ompi/mca/coll/tuned/coll_tuned_allreduce_decision.c">ompi/mca/coll/tuned/coll_tuned_allreduce_decision.c</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* valid values for coll_tuned_allreduce_forced_algorithm */</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">mca_base_var_enum_value_t</span> <span class="n">allreduce_algorithms</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="s">&#34;ignore&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#34;basic_linear&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#34;nonoverlapping&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="s">&#34;recursive_doubling&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="s">&#34;ring&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="s">&#34;segmented_ring&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="s">&#34;rabenseifner&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>我们可以静态地指定算法，也可以让 OpenMPI 来<a href="https://github.com/open-mpi/ompi/blob/2b1f0533451b59dc3800a26c169b0a330f329e2f/ompi/mca/coll/tuned/coll_tuned_decision_dynamic.c#L74">决定</a>。当然，这不是这篇文章的重点。在深度学习这一场景下，被最为广泛应用的是 RingAllReduce 这一实现。在 OpenMPI 中，这一实现在 <a href="https://github.com/open-mpi/ompi/blob/2ae3cfd9bc9aa8cab80986a1921fd7ad9d198d07/ompi/mca/coll/base/coll_base_allreduce.c#L277">ompi/mca/coll/base/coll_base_allreduce.c</a>。它的注释非常简洁明了地介绍了实现原理，建议阅读。简单来说，它利用了 MPI 的端到端通信的原语，实现了 RingAllReduce 的功能。将 RingAllReduce 分为了两个阶段。第一个阶段等价于 MPI_ReduceScatter 的语义，是将结果计算到不同的进程。第二个阶段等价于 MPI_AllGather 语义，将计算结果聚合到所有进程。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/mpi/ringallreduce.png" height="500" width="500">
+    <figcaption>MPI_AllReduce Ring 实现</figcaption>
+</figure>
+<p>MPI_ReduceScatter 这一接口，本身也对应着非常多的实现。如果先做一次 MPI_Reduce 再做一次 MPI_Scatter（对应 <a href="https://github.com/open-mpi/ompi/blob/2ae3cfd9bc9aa8cab80986a1921fd7ad9d198d07/ompi/mca/coll/base/coll_base_reduce_scatter.c#L47">ompi_coll_base_reduce_scatter_intra_nonoverlapping</a>），性能一定无法接受。所以这里的实现使用的是 <a href="https://github.com/open-mpi/ompi/blob/2ae3cfd9bc9aa8cab80986a1921fd7ad9d198d07/ompi/mca/coll/base/coll_base_reduce_scatter.c#L397">ompi_coll_base_reduce_scatter_intra_ring</a>。通过 N-1 步，我们可以实现 MPI_ReduceScatter 的语义。其中每步中每个进程的上下行通信量都是 M/N。其中个 M 是数组的长度，N 是进程的数量。数组会被分为 N 等分，所以每次通信量是 M/N。</p>
+<p>第二个阶段，就是 MPI_AllGather 了。MPI_AllGather 本身也有非常多的算法实现。RingAllReduce 使用的是 <a href="https://github.com/open-mpi/ompi/blob/2ae3cfd9bc9aa8cab80986a1921fd7ad9d198d07/ompi/mca/coll/base/coll_base_allgather.c#L350">ompi_coll_base_allgather_intra_ring</a>。这一实现一共需要 N-1 步。在第 i 步的时候，Rank r 进程会收到来自 r-1 进程的信息，这一信息中包括了 r-i-1 进程的数据。同时，r 进程会给 r+1 进程发送包含 r-i 进程的数据。所以每步中每个进程的上下行通信量同样都是 M/N。</p>
+<figure>
+	<img src="https://gaocegege.com/Blog/images/mpi/allgather.png" height="500" width="500">
+    <figcaption>MPI_Allgather Ring 实现</figcaption>
+</figure>
+<p>所以整体来看，单步中每个进程的上下行通信量为 M/N，而在整个过程中，每个进程的上下行通信量都是 2(N-1)*M/N。所以我们认为 RingAllReduce 对带宽特别友好，能很好地解决参数服务器架构中的带宽瓶颈问题。其实 MPI_AllGather 除了 Ring 之外还有很多更高效的实现，但由于 MPI_RingAllReduce 中对带宽的要求至少是 M/N，因此 ompi_coll_base_allgather_intra_ring 的实现已经完全够用，在任意时刻都占满 M/N 的上下行。</p>
+<p>将 RingAllReduce 引入深度学习，是百度的工作，这一工作开源在 <a href="https://github.com/baidu-research/tensorflow-allreduce/commit/66d5b855e90b0949e9fa5cca5599fd729a70e874">baidu-research/tensorflow-allreduce</a>。百度利用了 MPI 端到端通信的原语，重新实现了 ompi_coll_base_allgather_intra_ring 和 ompi_coll_base_reduce_scatter_intra_ring。至于不直接使用 MPI_AllReduce 的原语，猜测应该是为了兼容更多的 MPI 实现，同时避免动态选择算法导致没有启用 RingAllReduce 的可能（尽管 OpenMPI 可以静态选择算法，但可能其他实现不支持）。</p>
+<p>百度的这一实现非常易懂，总共只有 3000 行不到的代码，其中相当部分是测试。百度提供了一个自己的 Optimizer，重载了 compute_gradients 的实现。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DistributedOptimizer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    An optimizer that wraps another tf.Optimizer, using an MPI allreduce to
+</span></span></span><span class="line"><span class="cl"><span class="s2">    average gradient values before applying gradients to model weights.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_locking</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Construct a new DistributedOptimizer, which uses another optimizer
+</span></span></span><span class="line"><span class="cl"><span class="s2">        under the hood for computing single-process gradient values and
+</span></span></span><span class="line"><span class="cl"><span class="s2">        applying gradient updates after the gradient values have been averaged
+</span></span></span><span class="line"><span class="cl"><span class="s2">        across all the MPI ranks.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">          optimizer:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            Optimizer to use for computing gradients and applying updates.
+</span></span></span><span class="line"><span class="cl"><span class="s2">          name:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            Optional name prefix for the operations created when applying
+</span></span></span><span class="line"><span class="cl"><span class="s2">            gradients. Defaults to &#34;Distributed&#34; followed by the provided
+</span></span></span><span class="line"><span class="cl"><span class="s2">            optimizer type.
+</span></span></span><span class="line"><span class="cl"><span class="s2">          use_locking:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            Whether to use locking when updating variables.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            See Optimizer.__init__ for more info.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;Distributed</span><span class="si">{}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">DistributedOptimizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">use_locking</span><span class="o">=</span><span class="n">use_locking</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Compute gradients of all trainable variables.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        See Optimizer.compute_gradients() for more info.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        In DistributedOptimizer, compute_gradients() is overriden to also
+</span></span></span><span class="line"><span class="cl"><span class="s2">        allreduce the gradients before returning them.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">gradients</span> <span class="o">=</span> <span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">DistributedOptimizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                     <span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">[(</span><span class="n">allreduce</span><span class="p">(</span><span class="n">gradient</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span> <span class="ow">in</span> <span class="n">gradients</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Session</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    A class for running TensorFlow operations, with copies of the same graph
+</span></span></span><span class="line"><span class="cl"><span class="s2">    running distributed across different MPI nodes.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    The primary difference between `tf.Session` and `tf.contrib.mpi.Session` is
+</span></span></span><span class="line"><span class="cl"><span class="s2">    that the MPI `Session` ensures that the `Session` options are correct for
+</span></span></span><span class="line"><span class="cl"><span class="s2">    use with `tf.contrib.mpi`, and initializes MPI immediately upon the start
+</span></span></span><span class="line"><span class="cl"><span class="s2">    of the session.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Creates a new TensorFlow MPI session.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Unlike a normal `tf.Session`, an MPI Session may only use a single GPU,
+</span></span></span><span class="line"><span class="cl"><span class="s2">        which must be specified in advance before the session is initialized.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        In addition, it only uses a single graph evaluation thread, and
+</span></span></span><span class="line"><span class="cl"><span class="s2">        initializes MPI immediately upon starting.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        If no `graph` argument is specified when constructing the session,
+</span></span></span><span class="line"><span class="cl"><span class="s2">        the default graph will be launched in the session. If you are
+</span></span></span><span class="line"><span class="cl"><span class="s2">        using more than one graph (created with `tf.Graph()` in the same
+</span></span></span><span class="line"><span class="cl"><span class="s2">        process, you will have to use different sessions for each graph,
+</span></span></span><span class="line"><span class="cl"><span class="s2">        but each graph can be used in multiple sessions. In this case, it
+</span></span></span><span class="line"><span class="cl"><span class="s2">        is often clearer to pass the graph to be launched explicitly to
+</span></span></span><span class="line"><span class="cl"><span class="s2">        the session constructor.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        target: (Optional.) The execution engine to connect to.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        graph: (Optional.) The `Graph` to be launched (described above).
+</span></span></span><span class="line"><span class="cl"><span class="s2">        config: (Optional.) A `ConfigProto` protocol buffer with configuration
+</span></span></span><span class="line"><span class="cl"><span class="s2">        options for the session.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">Session</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Initialize MPI on the relevant device.</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># TODO: Move this to library load and eliminate mpi.Session()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">())</span>
+</span></span></code></pre></div><p>在初始化 optimizer，和使用 session 的时候，语句如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">DistributedOptimizer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">mpi</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span></code></pre></div><p>在 optimizer 调用 compute_gradients 的时候，首先会利用 TF 自己的 optimizer 计算出本地梯度，然后利用 AllReduce 来得到各个进程平均后的梯度。而在 Session 初始化的时候会预先执行 MPI_Init 进行 MPI 环境的初始化。</p>
+<p>在底层，AllReduce 被注册为 Op，在 ComputeAsync 中，计算请求被入队到一个队列中。这一队列会被一个统一的后台线程处理。之所以引入这样一个后台线程，在<a href="https://github.com/baidu-research/tensorflow-allreduce/commit/66d5b855e90b0949e9fa5cca5599fd729a70e874#diff-3d530d590e551619acd776cfe7eaff06R517">注释</a>中有详细的介绍。</p>
+<p>在百度的实现中，不同 Rank 的角色是不一样的，Rank 0 会充当 coordinator 的角色。它会协调来自其他 Rank 的 MPI 请求，起到一个调度协调的作用。这是一个工程上的考量，具体可以参考注释。顺便一提，百度的这个工作注释非常详尽，真乃学术界的典范。这一设计也被后来的 Horovod 采用。</p>
+<p>Horovod 相比于百度的工作，并无学术上的贡献。但是 Horovod 扎实的工程实现，使得它受到了更多的关注。它最大的优势在于对 RingAllReduce 进行了更高层次的抽象，使其支持多种不同的框架。同时引入了 Nvidia NCCL，对 GPU 更加友好。</p>
+<p>与百度的实现类似，Horovod 也需要先进行初始化。只不过百度把这个过程放在了 Session 构建的时候，而 Horovod 提供了显式初始化的函数。在初始化的时候，Horovod 会调用 MPI_Comm_dup 获取一个 Communicator。之所以不直接使用默认的 <code>MPI_COMM_WORLD</code>，参考这里的<a href="https://mpitutorial.com/tutorials/introduction-to-groups-and-communicators/">文档</a>：</p>
+<blockquote>
+<p>While MPI_Comm_split is the most common communicator creation function, there are many others. MPI_Comm_dup is the most basic and creates a duplicate of a communicator. It may seem odd that there would exist a function that only creates a copy, but this is very useful for applications which use libraries to perform specialized functions, such as mathematical libraries. In these kinds of applications, it’s important that user codes and library codes do not interfere with each other. To avoid this, the first thing every application should do is to create a duplicate of MPI_COMM_WORLD, which will avoid the problem of other libraries also using MPI_COMM_WORLD. The libraries themselves should also make duplicates of MPI_COMM_WORLD to avoid the same problem.</p>
+</blockquote>
+<p>除此之外，在初始化的时候，Horovod 还会创建一个后台线程。这里的后台线程的作用与百度的实现类似。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">horovod_init_comm</span><span class="p">(</span><span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">MPI_Comm_dup</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mpi_context</span><span class="p">.</span><span class="n">mpi_comm</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">InitializeHorovodOnce</span><span class="p">(</span><span class="k">nullptr</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Start Horovod background thread. Ensure that this is
+</span></span></span><span class="line"><span class="cl"><span class="c1">// only done once no matter how many times this function is called.
+</span></span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">InitializeHorovodOnce</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">ranks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nranks</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// Ensure background thread is only started once.
+</span></span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">horovod_global</span><span class="p">.</span><span class="n">initialize_flag</span><span class="p">.</span><span class="n">test_and_set</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">horovod_global</span><span class="p">.</span><span class="n">control_operation</span> <span class="o">=</span> <span class="n">ParseControllerOpsFromEnv</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">horovod_global</span><span class="p">.</span><span class="n">cpu_operation</span> <span class="o">=</span> <span class="n">ParseCPUOpsFromEnv</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#if HAVE_MPI
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Enable mpi is it&#39;s used either in cpu data transfer or controller
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">horovod_global</span><span class="p">.</span><span class="n">cpu_operation</span> <span class="o">==</span> <span class="n">LibType</span><span class="o">::</span><span class="n">MPI</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">        <span class="n">horovod_global</span><span class="p">.</span><span class="n">control_operation</span> <span class="o">==</span> <span class="n">LibType</span><span class="o">::</span><span class="n">MPI</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">mpi_context</span><span class="p">.</span><span class="n">Enable</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">horovod_global</span><span class="p">.</span><span class="n">control_operation</span> <span class="o">==</span> <span class="n">LibType</span><span class="o">::</span><span class="n">MPI</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">      <span class="n">horovod_global</span><span class="p">.</span><span class="n">controller</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">MPIController</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">          <span class="n">horovod_global</span><span class="p">.</span><span class="n">response_cache</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="n">horovod_global</span><span class="p">.</span><span class="n">tensor_queue</span><span class="p">,</span> <span class="n">horovod_global</span><span class="p">.</span><span class="n">timeline</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="n">horovod_global</span><span class="p">.</span><span class="n">parameter_manager</span><span class="p">,</span> <span class="n">mpi_context</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">      <span class="n">horovod_global</span><span class="p">.</span><span class="n">controller</span><span class="o">-&gt;</span><span class="n">SetRanks</span><span class="p">(</span><span class="n">ranks</span><span class="p">,</span> <span class="n">nranks</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Reset initialization flag
+</span></span></span><span class="line"><span class="cl">    <span class="n">horovod_global</span><span class="p">.</span><span class="n">initialization_done</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">horovod_global</span><span class="p">.</span><span class="n">background_thread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">BackgroundThreadLoop</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ref</span><span class="p">(</span><span class="n">horovod_global</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// Wait to ensure that the background thread has finished initializing MPI.
+</span></span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">horovod_global</span><span class="p">.</span><span class="n">initialization_done</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="n">LOG</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Background thread init done&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>在这个后台线程的初始化过程中，它会利用进程内共享的全局状态在自己的内存里创建一些对象，以及一些逻辑判断。比如要不要进行 Hierarchical AllReduce，要不要 AutoTune（后面会详细介绍）等。这里是初始化阶段的日志。</p>
+<pre tabindex="0"><code>$ horovodrun -np 2 python hvd.py
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:48.952760: D horovod/common/utils/env_parser.cc:106] Using MPI to perform controller operations.
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:48.952813: D horovod/common/utils/env_parser.cc:72] Using MPI to perform CPU operations.
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:48.952922: D horovod/common/mpi/mpi_context.h:46] MPI context enabled.
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:48.952968: D horovod/common/mpi/mpi_controller.h:32] MPI Controller Initialized.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 27002: D horovod/common/utils/env_parser.cc:106] Using MPI to perform controller operations.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 27064: D horovod/common/utils/env_parser.cc:72] Using MPI to perform CPU operations.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 27094: D horovod/common/mpi/mpi_context.h:46] MPI context enabled.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 27118: D horovod/common/mpi/mpi_controller.h:32] MPI Controller Initialized.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 88254: D horovod/common/mpi/mpi_context.cc:142] Using MPI_COMM_WORLD as a communicator.
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:49. 88459: D horovod/common/mpi/mpi_context.cc:142] Using MPI_COMM_WORLD as a communicator.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 88947: D horovod/common/mpi/mpi_controller.cc:39] Started Horovod with 2 processes
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 89143: D horovod/common/mpi/mpi_controller.cc:80] MPI controller initialized.
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 89195: I horovod/common/operations.cc:506] [0]: Horovod Initialized
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:49. 89147: D horovod/common/mpi/mpi_controller.cc:80] MPI controller initialized.
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:49. 89489: I horovod/common/operations.cc:506] [1]: Horovod Initialized
+[1,0]&lt;stdout&gt;:[2020-07-09 10:27:49. 89945: D horovod/common/operations.cc:649] Background thread init done
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:49. 91335: D horovod/common/operations.cc:649] Background thread init done
+</code></pre><p>在初始化的过程中，有一些比较重要的对象会被构造出来。不过这里暂且按下不表，后续再介绍。在初始化好之后，我们利用下面的代码进行模型的训练：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nd">@tf.function</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">first_batch</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">probs</span> <span class="o">=</span> <span class="n">mnist_model</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">loss_value</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Horovod: add Horovod Distributed GradientTape.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tape</span> <span class="o">=</span> <span class="n">hvd</span><span class="o">.</span><span class="n">DistributedGradientTape</span><span class="p">(</span><span class="n">tape</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">grads</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss_value</span><span class="p">,</span> <span class="n">mnist_model</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">opt</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">mnist_model</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Horovod: broadcast initial variable states from rank 0 to all other processes.</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># This is necessary to ensure consistent initialization of all workers when</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># training is started with random weights or restored from a checkpoint.</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Note: broadcast should be done after the first gradient step to ensure optimizer</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># initialization.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">first_batch</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hvd</span><span class="o">.</span><span class="n">broadcast_variables</span><span class="p">(</span><span class="n">mnist_model</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="n">root_rank</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hvd</span><span class="o">.</span><span class="n">broadcast_variables</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">variables</span><span class="p">(),</span> <span class="n">root_rank</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">loss_value</span>
+</span></span></code></pre></div><p>首先会利用 Bcast 来同步 Rank 0 进程的初始化参数给所有的进程，这里是为了保证初始参数一致。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">broadcast_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">root_rank</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Broadcasts variables from root rank to all other processes.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Arguments:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        variables: variables for broadcast
+</span></span></span><span class="line"><span class="cl"><span class="s2">        root_rank: rank of the process from which global variables will be broadcasted
+</span></span></span><span class="line"><span class="cl"><span class="s2">                   to all other processes.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">broadcast_group</span> <span class="o">=</span> <span class="n">_make_broadcast_group_fn</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">broadcast_group</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">root_rank</span><span class="p">)</span>
+</span></span></code></pre></div><p>由于我们是利用 TensorFlow 2 来进行训练。所以梯度更新部分的实现不是基于计算图的实现，而是使用 <a href="https://github.com/horovod/horovod/blob/426dd7f084e4f1c5ceca17ca01a4ec8086fb2d42/horovod/tensorflow/__init__.py#L464"><code>hvd.DistributedGradientTape</code></a>。它的实现如下所示，当调用 <code>gradient</code> 的时候，首先会调用 tf.GradientTape 的同名函数，同时进行 AllReduce。这里的逻辑与百度实现中的 Optimizer 是否似曾相识：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">_DistributedGradientTape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">output_gradients</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">gradients</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">output_gradients</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allreduce_grads</span><span class="p">(</span><span class="n">gradients</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@_cache</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_make_allreduce_grads_fn</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">device_dense</span><span class="p">,</span> <span class="n">device_sparse</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                             <span class="n">compression</span><span class="p">,</span> <span class="n">sparse_as_dense</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">allreduce_grads</span><span class="p">(</span><span class="n">grads</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&#34;_Allreduce&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">sparse_as_dense</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">grads</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                         <span class="k">if</span> <span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">IndexedSlices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                         <span class="k">else</span> <span class="n">grad</span> <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[</span><span class="n">_allreduce_cond</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">device_dense</span><span class="o">=</span><span class="n">device_dense</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">device_sparse</span><span class="o">=</span><span class="n">device_sparse</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">op</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">grad</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_allreduce_cond</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">allreduce_fn</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">allreduce</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">id_fn</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">tensor</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">size_op</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">allreduce_fn</span><span class="p">,</span> <span class="n">id_fn</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_allreduce</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">Sum</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;An op which reduces an input tensor over all the Horovod processes. The
+</span></span></span><span class="line"><span class="cl"><span class="s2">    default reduction is a sum.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    The reduction operation is keyed by the name of the op. The tensor type and
+</span></span></span><span class="line"><span class="cl"><span class="s2">    shape must be the same on all Horovod processes for a given name. The reduction
+</span></span></span><span class="line"><span class="cl"><span class="s2">    will not start until all processes are ready to send and receive the tensor.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Returns:
+</span></span></span><span class="line"><span class="cl"><span class="s2">      A tensor of the same shape and type as `tensor`, summed across all
+</span></span></span><span class="line"><span class="cl"><span class="s2">      processes.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_executing_eagerly</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;HorovodAllreduce_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">_normalize_name</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">MPI_LIB</span><span class="o">.</span><span class="n">horovod_allreduce</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">reduce_op</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+</span></span></code></pre></div><p><a href="https://github.com/horovod/horovod/blob/426dd7f084e4f1c5ceca17ca01a4ec8086fb2d42/horovod/tensorflow/__init__.py#L225"><code>allreduce_grads</code></a> 会修改 name scope，添加后缀 _Allreduce。在后续的调用中，进行了一些复杂但不核心的逻辑，如压缩等。最后调用 <a href="https://github.com/horovod/horovod/blob/426dd7f084e4f1c5ceca17ca01a4ec8086fb2d42/horovod/tensorflow/mpi_ops.py#L89"><code>_allreduce</code></a>。在这一函数中，会直接调用 C++ 实现的 Kernel。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">ComputeAsync</span><span class="p">(</span><span class="n">OpKernelContext</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="n">DoneCallback</span> <span class="n">done</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">OP_REQUIRES_OK_ASYNC</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">ConvertStatus</span><span class="p">(</span><span class="n">common</span><span class="o">::</span><span class="n">CheckInitialized</span><span class="p">()),</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">done</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">enqueue_result</span> <span class="o">=</span> <span class="n">EnqueueTensorAllreduce</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hvd_context</span><span class="p">,</span> <span class="n">hvd_tensor</span><span class="p">,</span> <span class="n">hvd_output</span><span class="p">,</span> <span class="n">ready_event</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="n">context</span><span class="p">,</span> <span class="n">done</span><span class="p">](</span><span class="k">const</span> <span class="n">common</span><span class="o">::</span><span class="n">Status</span><span class="o">&amp;</span> <span class="n">status</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="n">context</span><span class="o">-&gt;</span><span class="n">SetStatus</span><span class="p">(</span><span class="n">ConvertStatus</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">          <span class="n">done</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span> <span class="n">reduce_op</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></div><p>在 <a href="https://github.com/horovod/horovod/blob/426dd7f084e4f1c5ceca17ca01a4ec8086fb2d42/horovod/tensorflow/mpi_ops.cc#L379"><code>ComputeAsync</code></a> 里，会把这一 AllReduce 的请求入队。可以看到，在 TensorFlow 支持的实现上，Horovod 与百度大同小异。都是自定义了 AllReduce Op，在 Op 中把请求入队。</p>
+<p>所以在 Horovod 的日志中，我们可以看到这样的日志（当然要设置 <code>HOROVOD_LOG_LEVEL=trace</code> 环境变量）。DistributedGradientTape 的 name scope 被改写成了 DistributedGradientTape_Allreduce，名字被加上了 HorovodAllreduce_ 的前缀。</p>
+<pre tabindex="0"><code>[1,1]&lt;stdout&gt;:[2020-07-09 10:27:56.839122: T horovod/common/operations.cc:849] [1]: Enqueued DistributedGradientTape_Allreduce/HorovodAllreduce_gradient_tape_sequential_dense_1_BiasAdd_BiasAddGrad_0
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:56.839176: T horovod/common/operations.cc:849] [1]: Enqueued DistributedGradientTape_Allreduce/HorovodAllreduce_gradient_tape_sequential_dense_1_MatMul_1_0
+[1,1]&lt;stdout&gt;:[2020-07-09 10:27:56.839280: T horovod/common/operations.cc:849] [1]: Enqueued DistributedGradientTape_Allreduce/HorovodAllreduce_gradient_tape_sequential_dense_BiasAdd_BiasAddGrad_0
+</code></pre><p><a href="https://github.com/horovod/horovod/blob/d0180a84a4f8fd87a560ec86ad863ac324ddb039/horovod/common/operations.cc#L815">EnqueueTensorAllreduce</a> 是进入了一个进程内共享的全局对象维护的一个队列中。之前提到的后台进程，会一直在执行一个循环 <a href="https://github.com/horovod/horovod/blob/d0180a84a4f8fd87a560ec86ad863ac324ddb039/horovod/common/operations.cc#L557"><code>RunLoopOnce</code></a>。在其中，后台线程会利用 <a href="https://github.com/horovod/horovod/blob/d0180a84a4f8fd87a560ec86ad863ac324ddb039/horovod/common/mpi/mpi_controller.h#L25">MPIController</a> 来处理入队的请求。<a href="https://github.com/horovod/horovod/blob/d0180a84a4f8fd87a560ec86ad863ac324ddb039/horovod/common/mpi/mpi_controller.h#L25">MPIController</a> 可以理解为是协调不同的 Rank 进程，处理请求的对象。这个抽象是百度所不具备的，主要是为了支持 Facebook gloo 等其他的集合计算库。因此 Horovod 也有 GlooController 等等实现。</p>
+<p>在后台线程里，最重要的一个函数调用是 <a href="https://github.com/horovod/horovod/blob/d0180a84a4f8fd87a560ec86ad863ac324ddb039/horovod/common/controller.h#L61"><code>ComputeResponseList</code></a>。Horovod 也遵循着 Coordinator 的设计，与百度类似。无论是百度还是 Horovod 中的 Coordinator 都类似是 Actor 模式，主要起来协调多个进程工作的作用。在真正执行计算的时候，Horovod 同样引入了一个新的抽象 op_manager。从某种程度来说，我们可以把 controller 看做是对通信和协调管理能力的抽象，而 op_manager 是对实际计算的抽象。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">OperationManager</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">OperationManager</span><span class="p">(</span><span class="n">ParameterManager</span><span class="o">*</span> <span class="n">param_manager</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AllreduceOp</span><span class="o">&gt;&gt;</span> <span class="n">allreduce_ops</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AllgatherOp</span><span class="o">&gt;&gt;</span> <span class="n">allgather_ops</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">BroadcastOp</span><span class="o">&gt;&gt;</span> <span class="n">broadcast_ops</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">JoinOp</span><span class="o">&gt;</span> <span class="n">join_op</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">AllreduceOp</span><span class="o">&gt;&gt;</span> <span class="n">adasum_ops</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                   <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ErrorOp</span><span class="o">&gt;</span> <span class="n">error_op</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">virtual</span> <span class="o">~</span><span class="n">OperationManager</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">Status</span> <span class="nf">ExecuteAllreduce</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TensorTableEntry</span><span class="o">&gt;&amp;</span> <span class="n">entries</span><span class="p">,</span> <span class="k">const</span> <span class="n">Response</span><span class="o">&amp;</span> <span class="n">response</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>总结来说，Horovod 的设计与实现都与百度的工作并无二致，只是进行了更多的抽象，支持更多的通信库，更多的训练框架。这些工作虽然都是 dirty work，但也是它受欢迎的最大原因。Horovod 可以说是 RingAllReduce 数据并行训练框架方面的 State-of-art 了，不过最近还有一个工作，同样受到了很多的关注，那就是字节跳动的 <a href="https://github.com/bytedance/byteps">BytePS</a>，甚至发了 SOSP（羡慕到变形！）。论文在<a href="https://i.cs.hku.hk/~cwu/papers/yhpeng-sosp19.pdf">此处</a>可预览。不过论文和实现有挺大不同的，这里我们以开源实现为准，介绍一下 byteps。</p>
+<p>BytePS 的代码目录结构跟 Horovod 很像，在 TensorFlow 的支持上，做法与百度和 Horovod 并无二致。对 <a href="https://github.com/bytedance/byteps/blob/948c774c30f520d8c9e36931f257da2eda386a48/byteps/tensorflow/__init__.py#L185"><code>Optimizer</code></a> 进行了包装，实现了自定义的 Op。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">            <span class="k">def</span> <span class="nf">push_pull_grads</span><span class="p">(</span><span class="n">grads</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">+</span> <span class="s2">&#34;_Push_Pull&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scope</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sparse_as_dense</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">grads</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">IndexedSlices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">else</span> <span class="n">grad</span> <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                    <span class="k">return</span> <span class="p">[</span><span class="n">push_pull</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">device_dense</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_dense</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">device_sparse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_sparse</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">compression</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="n">enable_async</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_enable_async</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">grad</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">_executing_eagerly</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_push_pull_grads</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">eager</span><span class="o">.</span><span class="n">defun</span><span class="p">(</span><span class="n">push_pull_grads</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_push_pull_grads</span> <span class="o">=</span> <span class="n">push_pull_grads</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;&#34;&#34;Compute gradients of all trainable variables.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            See Optimizer.compute_gradients() for more info.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            In DistributedOptimizer, compute_gradients() is overriden to also
+</span></span></span><span class="line"><span class="cl"><span class="s2">            push_pull the gradients before returning them.
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">gradients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_async</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">grads</span><span class="p">,</span> <span class="nb">vars</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">gradients</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">avg_grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_push_pull_grads</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">avg_grads</span><span class="p">,</span> <span class="nb">vars</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">gradients</span>
+</span></span></code></pre></div><p>在 Horovod 里，C++ 的 Op 会把请求入队到全局的队列中，被后台进程中。而在 BytePS 里，逻辑也类似。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">ComputeAsync</span><span class="p">(</span><span class="o">::</span><span class="n">tensorflow</span><span class="o">::</span><span class="n">OpKernelContext</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">DoneCallback</span> <span class="n">done</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">bps_context</span><span class="p">.</span><span class="n">initialized</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">StartTask</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">tmp_name</span><span class="p">,</span> <span class="n">bps_input</span><span class="p">,</span> <span class="n">bps_output</span><span class="p">,</span> <span class="n">ready_event</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">(</span><span class="n">StartTask</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">tmp_name</span><span class="p">,</span> <span class="n">bps_input</span><span class="p">,</span> <span class="n">bps_output</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ready_event</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">t</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">StartTask</span><span class="p">(</span><span class="o">::</span><span class="n">tensorflow</span><span class="o">::</span><span class="n">OpKernelContext</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">               <span class="o">::</span><span class="n">tensorflow</span><span class="o">::</span><span class="n">AsyncOpKernel</span><span class="o">::</span><span class="n">DoneCallback</span> <span class="n">done</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">               <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">TFTensor</span><span class="o">&gt;</span> <span class="n">byteps_input</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">               <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">TFTensor</span><span class="o">&gt;</span> <span class="n">byteps_output</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">               <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">common</span><span class="o">::</span><span class="n">ReadyEvent</span><span class="o">&gt;</span> <span class="n">ready_event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="k">auto</span> <span class="n">queue_list</span> <span class="o">=</span> <span class="n">common</span><span class="o">::</span><span class="n">GetPushQueueList</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">auto</span> <span class="n">queue_list_pull</span> <span class="o">=</span> <span class="n">common</span><span class="o">::</span><span class="n">GetPullQueueList</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">queue_list</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">queue_list</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">(),</span> <span class="n">queue_list_pull</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">queue_list_pull</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// TODO: assign priority based on topological sort
+</span></span></span><span class="line"><span class="cl">  <span class="k">auto</span> <span class="n">enqueue_result</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">      <span class="n">EnqueueTensor</span><span class="p">(</span><span class="n">byteps_context</span><span class="p">,</span> <span class="n">byteps_input</span><span class="p">,</span> <span class="n">byteps_output</span><span class="p">,</span> <span class="n">ready_event</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">device</span><span class="p">,</span> <span class="o">-</span><span class="n">byteps_context</span><span class="p">.</span><span class="n">declared_key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">[</span><span class="n">context</span><span class="p">,</span> <span class="n">done</span><span class="p">](</span><span class="k">const</span> <span class="n">common</span><span class="o">::</span><span class="n">Status</span><span class="o">&amp;</span> <span class="n">status</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">context</span><span class="o">-&gt;</span><span class="n">SetStatus</span><span class="p">(</span><span class="n">ConvertStatus</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">done</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">queue_list</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">OP_REQUIRES_OK_ASYNC</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">ConvertStatus</span><span class="p">(</span><span class="n">enqueue_result</span><span class="p">),</span> <span class="n">done</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><a href="https://github.com/bytedance/byteps/blob/948c774c30f520d8c9e36931f257da2eda386a48/byteps/tensorflow/ops.cc#L155">代码注释</a>里写到需要给 Tensor 根据拓扑序设定优先级，这个是在 BytePS 的论文中提到的一个非常重要的优化，看代码这部分的逻辑应该已经实现了，具体可以见<a href="https://github.com/dyweb/papers-notebook/issues/177#issuecomment-656026592">这里的讨论</a>。至于这里的注释是什么意思，还需要问一下上游才能确定。</p>
+<p>最终请求会在 Partition 后入队。<a href="https://github.com/bytedance/byteps/blob/948c774c30f520d8c9e36931f257da2eda386a48/byteps/common/operations.cc#L163"><code>EnqueueTensor</code></a> 与 Horvod 虽然类似，但是它会划分 Partition，默认是 4096000 字节一个 Task，这个优化在论文中也有提到，不过在开源实现中没有找寻到论文中提到的基于贝叶斯优化的 AutoTune 的痕迹。</p>
+<p>跟 Horovod 相比，还有一个比较大的不同。BytePS 为了能够流水线地处理 Push 和 Pull，引入了 <code>QueueType</code> 这个概念。上述代码中的 <code>queue_list</code> 就是将为了处理 Push 和 Pull 的不同事件组成了一个事件队列。后续 BytePS 会按照这一队列依次处理事件，处理完里面的所有事件后，就完成了 PushPullGradients 的过程。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">Status</span> <span class="nf">EnqueueTensor</span><span class="p">(</span><span class="n">BPSContext</span> <span class="o">&amp;</span><span class="n">context</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Tensor</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Tensor</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ReadyEvent</span><span class="o">&gt;</span> <span class="n">ready_event</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">device</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="k">const</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">version</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">StatusCallback</span> <span class="n">callback</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">QueueType</span><span class="o">&gt;&gt;</span> <span class="n">queue_list</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">TensorTableEntry</span><span class="o">&gt;&gt;</span> <span class="n">partitions</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">PartitionTensor</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">partitions</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">...</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">accumulated</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">partitions</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">task</span> <span class="o">=</span> <span class="n">partitions</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">task</span><span class="o">-&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">context</span><span class="p">.</span><span class="n">key_list</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  <span class="c1">// assign the key now
+</span></span></span><span class="line"><span class="cl">    <span class="n">BPS_CHECK</span><span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">tensor_name</span> <span class="o">!=</span> <span class="s">&#34;&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BPS_LOG</span><span class="p">(</span><span class="n">TRACE</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;EnqueueTensor: &#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">tensor_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                   <span class="o">&lt;&lt;</span> <span class="s">&#34;, key=&#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">key</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;, offset=&#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">offset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                   <span class="o">&lt;&lt;</span> <span class="s">&#34;, len=&#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;, device=&#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">task</span><span class="o">-&gt;</span><span class="n">device</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                   <span class="o">&lt;&lt;</span> <span class="s">&#34; rank=&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">BytePSGlobal</span><span class="o">::</span><span class="n">GetLocalRank</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">BytePSGlobal</span><span class="o">::</span><span class="n">GetScheduledQueue</span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">queue_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">addTask</span><span class="p">(</span><span class="n">task</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">accumulated</span> <span class="o">+=</span> <span class="n">task</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">auto</span> <span class="n">tensor</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">tensor</span> <span class="o">?</span> <span class="n">e</span><span class="o">-&gt;</span><span class="nl">tensor</span> <span class="p">:</span> <span class="n">e</span><span class="o">-&gt;</span><span class="n">output</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">BPS_CHECK</span><span class="p">(</span><span class="n">tensor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">BPS_CHECK_EQ</span><span class="p">(</span><span class="n">accumulated</span><span class="p">,</span> <span class="n">tensor</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">      <span class="o">&lt;&lt;</span> <span class="s">&#34;accumulated partition size not equal to original tensor size&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">BPS_LOG</span><span class="p">(</span><span class="n">TRACE</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;EnqueueTensor finished: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">name</span>
+</span></span><span class="line"><span class="cl">                 <span class="o">&lt;&lt;</span> <span class="s">&#34;, rank=&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">BytePSGlobal</span><span class="o">::</span><span class="n">GetLocalRank</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">Status</span><span class="o">::</span><span class="n">OK</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>BytePS 的 PS 部分是利用 <a href="https://github.com/dmlc/ps-lite/">dmlc/ps-lite</a> 实现的，<a href="https://github.com/dmlc/ps-lite/">dmlc/ps-lite</a> 也被用于 MXNet，因此 BytePS 的分布式训练中也有三个角色，Server，Worker 和 Scheduler。其中的 Server 并不是传统意义上的 Parameter Server，而是一个具备一定的计算能力和 KV 存储能力的，只使用 CPU 的普通 Server。为了加法做的足够好，Server 这边对加法操作也有一个抽象，那就是 <a href="https://github.com/bytedance/incubator-mxnet/pull/4/files">CPUReducer</a>。从这个角度来理解，BytePS 是采用了 Server-Worker 这种通信的模型实现了 AllReduce 的语义，并不是传统意义上的 PS。从这样的设计来讲，确实可以通过 Tensor 的分区分段把流水线跑起来。就像知乎老师木的<a href="https://www.zhihu.com/question/331936923/answer/732262268">回答</a>一样。不过我对老师木说的这是把 ReduceScatter 和 AllGather 流水起来还是不太理解。</p>
+<p>总体来看，自从百度的 RingAllReduce 以来，后续越来越多的工作是关注在怎么样能够把计算和通信重叠起来，通过类似于流水线的方式隐藏掉一部分的成本。这里我很赞同 BytePS 在文档里的两点观察：</p>
+<blockquote>
+<ul>
+<li>Cloud, either public or private, is different from HPC. Using ideas from HPC is a shortcut, but not optimal.</li>
+<li>In a (public or private) cloud, PS architecture is theoretically better than allreduce, with minimal additional costs.</li>
+</ul>
+</blockquote>
+<p>AllReduce 来自 HPC，如果在真实的集群环境里不能做到机架感知，会带来一定的影响。BytePS 同样对调度提出了新要求，但这种拿 CPU 和一点点的网络换训练速度的事情，非常值得一试。</p>
+<h2 id="参考文献">参考文献</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/50116885">分布式训练的方案和效率对比</a></li>
+</ul>
+<h2 id="license">License</h2>
+<ul>
+<li>This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>.</li>
+<li>Please contact me for commercial use.</li>
+</ul>
+</div>
+    </article>
+    <div class="cf"></div>
+    <footer class="summer-site-footer with-bg-cover">
+    <div class="flink">
+        <h4>Friends</h4>
+        <div>
+            <a href="http://blog.xuruowei.com/">女朋友肉肉</a> | <a href="http://blog.weiyiminhenqiang.com/">刁宝乐</a> | 学帅 | <a href="http://www.flygon.net/">飞龙</a> | <a href="http://azard.me/blog">Azard</a> | <a href="http://hczhcz.github.io/">hcz</a> | <a href="http://zhangwenli.com/blog/">羡辙</a> | <a href="http://s684373.github.io/">zhou</a> | <a href="http://consiiii.me/">consiiii</a> | <a href="https://at15.dev">at15</a> | <a href="https://raspberryice.github.io/">Sha Li</a> | <a href="http://blog.zhengzi.me/">政子哥哥</a> | <a href="http://yicodes.com/">易极</a> | <a href="https://www.qtmuniao.com/">木鸟杂记</a>
+        </div>
+    </div>
+    <div class="buf"></div>
+    <div class="copyright">
+         <section>All content copyright <a href="https://gaocegege.com/Blog/about">高策</a> &copy; 2026 &bull; All rights reserved.</section>
+         <section>Proudly published with <a class="icon-ghost" href="https://gohugo.io/">Hugo</a></section>
+    </div>
+    <div class="social-icons">
+        
+        <a href="http://www.renren.com/325460067/profile">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-renren fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://weibo.com/constructcece">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-weibo fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        <a href="http://github.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        <a href="http://facebook.com/gaocegege">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+
+</main>
+
+    <script src="https://gaocegege.com/Blog/js/jquery.min.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/modernizr.js"></script>
+<script src="https://gaocegege.com/Blog/js/foundation.min.js"></script>
+
+<script src="https://gaocegege.com/Blog/js/summer.js"></script>
+<script src="https://gaocegege.com/Blog/js/vendor/nprogress.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54253120-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+</script>
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});
+</script>
+
+
+
+
+</body>
+</html>
