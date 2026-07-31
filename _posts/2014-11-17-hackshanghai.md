@@ -72,21 +72,21 @@ HackShanghai是上海纽约大学举办的Hackathon活动，共有250左右的�
 # 照片
 
 <figure>
-	<img src="{{ site.url }}/images/HackShanghai/1.jpg" alt="铭牌" height="500" width="500">
+	<img src="{{ '/images/HackShanghai/1.jpg' | relative_url }}" alt="铭牌" height="500" width="500">
 	<figcaption>我的铭牌</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ site.url }}/images/HackShanghai/2.jpg" alt="Computer" height="500" width="500">
+	<img src="{{ '/images/HackShanghai/2.jpg' | relative_url }}" alt="Computer" height="500" width="500">
 	<figcaption>我的电脑与Leap Motion</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ site.url }}/images/HackShanghai/3.jpg" alt="Computer" height="500" width="500">
+	<img src="{{ '/images/HackShanghai/3.jpg' | relative_url }}" alt="Computer" height="500" width="500">
 	<figcaption>比赛现场</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ site.url }}/images/HackShanghai/us.jpg" alt="us" height="500" width="500">
+	<img src="{{ '/images/HackShanghai/us.jpg' | relative_url }}" alt="us" height="500" width="500">
 	<figcaption>我们</figcaption>
 </figure>

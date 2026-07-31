@@ -186,7 +186,7 @@ spec:
 既然不少隔离 CPU 的方式无法限制 Go 运行时对 CPU 数量的判定，那这一问题是否会影响运行的性能，是一个值得分析的问题。利用了上游社区提供的 CPU bound 的 Benchmark [concprime](https://github.com/embano1/gotutorials/tree/master/concprime)，对不同的限制手段和 GOMAXPROCS 取值进行了详细的性能测试，得到了如下结果。
 
 <figure>
-	<img src="{{ site.url }}/images/maxprocs/gomaxprocs.png" height="700" width="700">
+	<img src="{{ '/images/maxprocs/gomaxprocs.png' | relative_url }}" height="700" width="700">
     <figcaption>测试结果</figcaption>
 </figure>
 

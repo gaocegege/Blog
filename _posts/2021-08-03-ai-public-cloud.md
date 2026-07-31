@@ -18,7 +18,7 @@ featured: true
 ## 背景与现状
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/background.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/background.png' | relative_url }}" height="500" width="500">
     <figcaption>内存墙问题</figcaption>
 </figure>
 
@@ -27,14 +27,14 @@ featured: true
 因此，无论是在计算机视觉、自然语言处理等领域，还是互联网行业落地广泛的搜索广告推荐领域，分布式训练都成为了主流训练方式。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/frameworks.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/frameworks.png' | relative_url }}" height="500" width="500">
     <figcaption>深度学习框架</figcaption>
 </figure>
 
 与之相对应的，深度学习框架也呈百花齐放的态势。传统的框架如 TensorFlow、PyTorch、Keras 仍然十分流行。而一些新的框架也逐渐出现，比如微软的 DeepSpeed、百度的 Paddle 等。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/sumback.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/sumback.png' | relative_url }}" height="500" width="500">
     <figcaption>背景</figcaption>
 </figure>
 
@@ -43,7 +43,7 @@ featured: true
 ## 在公有云上的 AI 落地
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/public.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/public.png' | relative_url }}" height="500" width="500">
     <figcaption>公有云总结</figcaption>
 </figure>
 
@@ -55,7 +55,7 @@ featured: true
 ## 落地实践
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/techstack.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/techstack.png' | relative_url }}" height="500" width="500">
     <figcaption>技术栈</figcaption>
 </figure>
 
@@ -68,14 +68,14 @@ featured: true
 尽管 Kubeflow 已经能够支持用户进行模型的训练和评估，但是直接使用 Kubeflow 仍然具有一些问题。不同的数据依赖可能在不同的数据系统中，因此数据处理的逻辑可能非常复杂。为了简化算法工程师的使用流程，提高用户体验，一般在上层会构建一个流水线系统，用来将机器学习流程中的各个环节进行组合连接。同时会提供方便的可编程环境，帮助算法工程师更快地实现业务。在这一环节中，一般来说可选的系统包括 Jupyter、Argo Workflow、Airflow、Kubeflow 等。从用户的角度看，算法工程师只需要关心最上层的实验环境和流水线系统。而其下的各层 Infra 则由基础设施团队和公有云提供。这样的分层能够降低不同角色的工程师的心智负担，提高效率。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/distributed.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/distributed.png' | relative_url }}" height="500" width="500">
     <figcaption>分布式训练</figcaption>
 </figure>
 
 接下来，我们就以分布式训练为例，介绍选型中可能遇到的问题，以及解决办法。在分布式训练中，按照参数更新的方式不同，可以分为 Parameter Server（以下简称为 PS）Worker 的模式和 AllReduce 的模式。在 PS 模式下，一共有两个角色参与训练，分别是 PS 和 Worker。其中 Worker 负责主要的计算，计算好的梯度会发送给对应的 PS，PS 更新对应的参数，随后发回给 Worker。在 AllReduce 模式中，每个 Worker 中有全量的模型，不同 Worker 接受不同的数据，相互之间传递梯度，进行梯度的更新与同步。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/distributed2.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/distributed2.png' | relative_url }}" height="500" width="500">
     <figcaption>分布式训练总结</figcaption>
 </figure>
 
@@ -83,35 +83,35 @@ featured: true
 
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/comm.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/comm.png' | relative_url }}" height="500" width="500">
     <figcaption>通信问题</figcaption>
 </figure>
 
 在公有云上，通常云服务器不提供 RDMA 网卡，内网带宽通常在 20-50Gbps 左右。在这样的环境下，为了能够降低梯度同步带来的带宽压力，一般会需要进行梯度压缩等优化。梯度压缩可以降低单次同步的梯度大小，与此同时，也可以替换 AllReduce 的实现，选择对低带宽环境更为友好的实现，如 2DReduce 等。这些工作在腾讯云的 Ti-Horovod 中都有对应实现。它在低带宽的情况下会有比原生的 Horovod 更好的表现。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/horovod.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/horovod.png' | relative_url }}" height="500" width="500">
     <figcaption>RDMA</figcaption>
 </figure>
 
 而如果在裸金属等服务器上进行训练，则可以利用 RDMA 网卡进行梯度的加速。在这样的训练环境中，存在一张 VPC 网卡，用于与对象存储等云产品交互；一张 RoCE 网卡以及一个显卡。因此需要进行一定的改造，来支持通过 VPC 网卡进行训练样本的拉取，而梯度同步更新则通过 RDMA 网卡进行。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/cache.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/cache.png' | relative_url }}" height="500" width="500">
     <figcaption>计算侧缓存</figcaption>
 </figure>
 
 而这样的方式，会有比较高的概率遇到之前所说的存储带宽的问题。梯度的同步通过高带宽的 RDMA 进行了加速，相对应地存储上就更有可能成为瓶颈。为了解决这一问题，在公有云上可以利用计算侧的缓存产品，如腾讯云的 GooseFS，或者开源的 Allxuio 等方案，将数据缓存在集群内，避免在训练时在线拉取对象存储中的数据，避免存储带来的瓶颈问题。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/serving.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/serving.png' | relative_url }}" height="500" width="500">
     <figcaption>推理技术栈</figcaption>
 </figure>
 
 在推理场景下，架构相对更为简单。最底层依然是云服务器组成的 Kubernetes 集群，模型一般而言会存储在对象存储中，模型服务则会通过 TFServing、Triton Inference Server 或者自研服务框架的方式对外提供服务。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/serving2.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/serving2.png' | relative_url }}" height="500" width="500">
     <figcaption>推理的主要问题</figcaption>
 </figure>
 
@@ -122,7 +122,7 @@ featured: true
 AI 业务在上公有云的过程中，有各种各样的问题。在通信、存储侧的带宽瓶颈自不必说。除此之外，深度学习往往依赖 Nvidia 的诸多底层库，以及 Python 的各类依赖。在集成环境中，Jupyter 占用的 GPU 显存以及计算的利用率过低等。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/elastic.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/elastic.png' | relative_url }}" height="500" width="500">
     <figcaption>弹性训练</figcaption>
 </figure>
 
@@ -131,7 +131,7 @@ AI 业务在上公有云的过程中，有各种各样的问题。在通信、�
 目前，能看到有越来越多的深度学习框架正在支持弹性训练。以 Horovod 为例，它引入了 Driver 的概念，管理 Worker 的生命周期。当有任何一个 Worker 出现问题时，Driver 会捕获到异常并且根据配置重新建立环，让训练继续下去。在这一过程中，训练不会中断。这使得训练任务可以在集群负载低，有空闲 GPU 的时候扩容，在集群负载高的时候缩容。这样的架构能够结合公有云的弹性实例等能力，在提高容错性的同时，降低训练的成本。
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/jupyter.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/jupyter.png' | relative_url }}" height="500" width="500">
     <figcaption>Jupyter 弹性服务</figcaption>
 </figure>
 
@@ -140,7 +140,7 @@ AI 业务在上公有云的过程中，有各种各样的问题。在通信、�
 ## 总结
 
 <figure>
-	<img src="{{ site.url }}/images/ai-public-cloud/summary.png" height="500" width="500">
+	<img src="{{ '/images/ai-public-cloud/summary.png' | relative_url }}" height="500" width="500">
     <figcaption>总结</figcaption>
 </figure>
 

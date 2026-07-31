@@ -16,21 +16,21 @@ featured: false
 大二有段时间一直痴迷于Minecraft中无法自拔，以至于一度差点荒废学业。现在想想，一部分原因是自己上大学以后不太在意成绩，另一部分原因也是因为Minecraft的可玩性实在是太高了。。那首先回顾下大二暑假那个浪的飞起的暑假吧
 
 <figure>
-	<img src="{{ site.url }}/images/mc/mc.jpg" alt="人生中第一个mod" height="400" width="400">
+	<img src="{{ '/images/mc/mc.jpg' | relative_url }}" alt="人生中第一个mod" height="400" width="400">
 	<figcaption>写的第一个Mod Demo</figcaption>
 </figure>
 
 上面的图是大二暑假的时候，花了一上午的时间用Eclipse写的第一个MC的mod，就是新定义了一种方块，方块上有一个"测"字，现在看起来10分钟就可以写完啦，但在当时那个非常弱的时候，这个给了我好大的成就感(≖ ‿ ≖)✧
 
 <figure>
-	<img src="{{ site.url }}/images/mc/ipad.jpg" alt="造轮子" height="400" width="400">
+	<img src="{{ '/images/mc/ipad.jpg' | relative_url }}" alt="造轮子" height="400" width="400">
 	<figcaption>手撸ipad</figcaption>
 </figure>
 
 也是大二暑假，照着网上的模型手撸了一个ipad，当时是因为学帅听说我拿了点评Hackathon的奖品，是一个ipad mini，开玩笑让我也给他一个（这人好黑啊），然后就花时间撸了一个出来hhh，当时也是费心费力啊。
 
 <figure>
-	<img src="{{ site.url }}/images/mc/ass.jpg" alt="Assassin" height="400" width="400">
+	<img src="{{ '/images/mc/ass.jpg' | relative_url }}" alt="Assassin" height="400" width="400">
 	<figcaption>Assassin在金字塔前</figcaption>
 </figure>
 
@@ -49,7 +49,7 @@ featured: false
 刚刚提到的Minecraft Structure Planner说白了就是用来建模的，它建立的模型可以导出成schematic文件格式，至于这个文件格式是什么可以看[这里](http://minecraft-zh.gamepedia.com/Schematic%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F)。
 
 <figure>
-	<img src="{{ site.url }}/images/mc/planner.png" alt="Minecraft Structure Planner操作页面" height="400" width="400">
+	<img src="{{ '/images/mc/planner.png' | relative_url }}" alt="Minecraft Structure Planner操作页面" height="400" width="400">
 	<figcaption>Minecraft Structure Planner操作页面</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ featured: false
 接下来就是使用大名鼎鼎的Mcedit来把schematic文件中的模型放在地图文件中了。
 
 <figure>
-	<img src="{{ site.url }}/images/mc/mcedit.png" alt="mcedit操作页面" height="400" width="400">
+	<img src="{{ '/images/mc/mcedit.png' | relative_url }}" alt="mcedit操作页面" height="400" width="400">
 	<figcaption>mcedit操作页面</figcaption>
 </figure>
 
@@ -73,7 +73,7 @@ featured: false
 这一步要用到Mineways，这个软件似乎在OS X平台是跑在wine上的，呃当然我也不确定，也不需要去管，似乎在使用过程中倒是没有什么大问题
 
 <figure>
-	<img src="{{ site.url }}/images/mc/mineways.png" alt="mineways操作页面" height="400" width="400">
+	<img src="{{ '/images/mc/mineways.png' | relative_url }}" alt="mineways操作页面" height="400" width="400">
 	<figcaption>mineways操作页面</figcaption>
 </figure>
 
