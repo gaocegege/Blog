@@ -130,7 +130,7 @@ wasmer 也做过一些优化，也是通过类似于快照和缓存的思路。�
 比较值得一提的是 [monty](https://github.com/pydantic/monty)。它是一个支持 python 部分子集的解释器。跟一些常见的技术对比如图所示。
 
 <figure>
-	<img src="{{ site.url }}/images/unikernel-agent/table.png" alt="Monty 对比" height="500" width="700">
+	<img src="{{ '/images/unikernel-agent/table.png' | relative_url }}" alt="Monty 对比" height="500" width="700">
     <figcaption>Monty 对比</figcaption>
 </figure>
 

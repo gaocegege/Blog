@@ -22,14 +22,14 @@ featured: true
 这意味着只需 1 美元即可存储 400k 个向量，从而大幅节省成本：与 Pinecone（存储优化实例）相比，向量数量多 6 倍，与 pgvector/pgvecto.rs 相比，价格相同，向量数量多 26 倍。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/1.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/1.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>Vectors for $1</figcaption>
 </figure>
 
 在基于 MyScale Benchmark 数据的向量存储月度成本比较中，突出展示了 VectorChord 如何成为一种经济实惠的选择，存储 1 亿个向量的价格仅为 247 美元。相比之下，尽管 Pinecone 的存储经过了优化，但每月成本为 1,600 美元，而 Qdrant 的价格为 4,374 美元。pgvector/pgvecto.rs 的成本要高得多，为 6,580 美元。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/2.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/2.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>Monthly cost</figcaption>
 </figure>
 
@@ -57,7 +57,7 @@ VectorChord 采用 IVF（倒排文件索引）和 RaBitQ[1] 量化来提供快�
 以下是 GIST 数据集的一些初始基准测试结果，该数据集包含 960 个维度的 100 万个向量。在召回率相同的情况下，VectorChord 的 QPS 可能是 pgvector 的两倍。更多详细信息将在 Benchmark 章节提供。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/3.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/3.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>GIST 1M</figcaption>
 </figure>
 
@@ -68,7 +68,7 @@ VectorChord 采用 IVF（倒排文件索引）和 RaBitQ[1] 量化来提供快�
 VectorChord 基于 IVF 构建，允许在外部（例如在 GPU 上）进行 KMeans 聚类并轻松导入数据库。我们在具有 2 个 vCPU 和 16 GB RAM 的 AWS i4i.large 实例上执行了测试以测量索引和插入时间。用于此测试的数据集是 GIST 1M。我们插入了 700,000 个向量，构建了索引，然后添加了另外 300,000 个向量。在预热系统后，我们使用单个线程执行查询。在这个过程中，我们评估了索引的构建时间和插入时间。结果如下：
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/4.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/4.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>GIST 1M</figcaption>
 </figure>
 
@@ -83,14 +83,14 @@ VectorChord 使用一台单独的机器进行 KMeans 聚类，构建索引耗时
 我们使用 LAION 5M 数据集进行了实验，结果对 Vectorchord 来说令人鼓舞。与其他平台相比，它始终实现更高的每秒查询数 (RPS)。虽然许多数据库在召回率提高时难以在速度和准确率之间保持平衡，但 Vectorchord 即使在更高的召回率水平下也能保持高效。这一特性使其成为需要快速响应和准确率的应用程序的合适选择。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/5.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/5.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>LAION 5M Top 10</figcaption>
 </figure>
 
 实验采用 Myscale Benchmark，在一台 r6a.xlarge 机器上进行，该机器具有 4 个 vCPU、32GB 内存和 200GB EBS 存储。实验设置的参数包括 nlist 为 8192、共享缓冲区为 28GB、JIT 禁用、有效 I/O 并发数为 200。我们在没有预热的情况下进行了两次实验。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/6.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/6.png' | relative_url }}" alt="vectorchord" height="500" width="700">
     <figcaption>LAION 5M Top 100</figcaption>
 </figure>
 
@@ -103,13 +103,13 @@ VectorChord 使用一台单独的机器进行 KMeans 聚类，构建索引耗时
 为了评估可扩展性，我们使用 AWS i4i.xlarge 实例对 LAION 100M 数据集（768 个维度）进行了实验，这是一个经济实惠的配置，每月价格为 250 美元。
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/7.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/7.png' | relative_url }}" alt="vectorchord" height="500" width="700">
 </figure>
 
 它只有 4 个 CPU 和 32 GB 内存，其中 937 GB 的 SSD 用于存储 1 亿个向量。在此设置下，我们通过单线程查询实现了前 10 个结果的 QPS 为 16.2 @ recall 0.95，前 100 个结果的 QPS 为 4.3 @ recall 0.95。以下是令人印象深刻的结果：
 
 <figure>
-	<img src="{{ site.url }}/images/vectorchord/8.png" alt="vectorchord" height="500" width="700">
+	<img src="{{ '/images/vectorchord/8.png' | relative_url }}" alt="vectorchord" height="500" width="700">
 </figure>
 
 在保持召回率大于0.95的前提下，我们还在这台4vCPU的机器上测试了多线程QPS，在这个场景下，随着请求线程数从1个增加到8个，向量查询的QPS可以线性提升，说明VectorChord具有很好的可扩展性。

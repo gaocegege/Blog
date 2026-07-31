@@ -24,7 +24,7 @@ featured: true
 而 Ray 则是承载这一愿景的一个重要项目。
 
 <figure>
-	<img src="{{ site.url }}/images/opensourcehistory/ray/ray.png" height="700" width="700">
+	<img src="{{ '/images/opensourcehistory/ray/ray.png' | relative_url }}" height="700" width="700">
     <figcaption>Ray</figcaption>
 </figure>
 
@@ -104,7 +104,7 @@ tune.run(PPOTrainer, config={"env": "CartPole-v0"})
 在 Ray 的论文中有对其架构的介绍，虽然演化到如今已经有了一定的不同，但可以借鉴来了解一下。
 
 <figure>
-	<img src="{{ site.url }}/images/opensourcehistory/ray/arch.png" height="500" width="500">
+	<img src="{{ '/images/opensourcehistory/ray/arch.png' | relative_url }}" height="500" width="500">
     <figcaption>Ray 论文中的架构图</figcaption>
 </figure>
 

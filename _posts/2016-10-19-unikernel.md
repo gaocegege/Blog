@@ -75,7 +75,7 @@ ExoKernel分离了对硬件的使用和保护，使得应用程序可以直接�
 所谓LibOS，全称是Library Operation System。LibOS提供对于硬件的抽象，与用户代码编译成一个二进制，在同一地址空间。而且LibOS可以修改定制，来适配上层用户对硬件的具体需求，如控制物理内存的相邻等等。
 
 <figure>
-	<img src="{{ site.url }}/images/unikernel/exokernel.png" alt="ExoKernel" height="500" width="500">
+	<img src="{{ '/images/unikernel/exokernel.png' | relative_url }}" alt="ExoKernel" height="500" width="500">
 	<figcaption>ExoKernel</figcaption>
 </figure>
 
@@ -92,7 +92,7 @@ Unikernel是一种LibOS，它有着自己的哲学，那就是一个操作系统
 UniKernel从某种程度而言，冲击了容器的地位，但是其实容器也是可以跟UniKernel一起来用的：
 
 <figure>
-	<img src="{{ site.url }}/images/unikernel/docker-on-unikernel.png" alt="Docker on UniKernel" height="500" width="500">
+	<img src="{{ '/images/unikernel/docker-on-unikernel.png' | relative_url }}" alt="Docker on UniKernel" height="500" width="500">
 	<figcaption>Docker on UniKernel</figcaption>
 </figure>
 

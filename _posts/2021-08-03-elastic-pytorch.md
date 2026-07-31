@@ -125,7 +125,7 @@ def launch_agent(
 elastic agent 是一个独立的进程，负责管理其下的 workers。它起到了类似进程管理系统 supervisor 的作用，会在启动的时候确保每个 worker 的设置正确。由于有关 WORLD_SIZE 和 RANK 的信息不再需要用户提供，elastic agent 会负责处理。除此之外，worker 的失效也是由 elastic agent 负责捕获处理。可以说 elastic agent 是弹性训练中最核心的抽象概念。
 
 <figure>
-	<img src="{{ site.url }}/images/elastic-pytorch/agent_diagram.jpeg" height="500" width="500">
+	<img src="{{ '/images/elastic-pytorch/agent_diagram.jpeg' | relative_url }}" height="500" width="500">
     <figcaption>elastic agent</figcaption>
 </figure>
 
@@ -214,7 +214,7 @@ class EtcdRendezvousHandler(RendezvousHandler):
 其中 `etcd` 相关的是之前推荐使用的实现，在 `c10d` 出现后就不再推荐了。`etcd` 的实现中，不同 worker 之间的状态通过 etcd 的 kv 接口存储。确定参与训练的实例和对应的 `RANK` 的过程如下图所示。
 
 <figure>
-	<img src="{{ site.url }}/images/elastic-pytorch/etcd_rdzv_diagram.png" height="500" width="500">
+	<img src="{{ '/images/elastic-pytorch/etcd_rdzv_diagram.png' | relative_url }}" height="500" width="500">
     <figcaption>elastic agent</figcaption>
 </figure>
 
