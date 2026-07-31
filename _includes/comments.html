@@ -1,0 +1,13 @@
+{% if page.comments == true %}
+<section class="summer-disqus row">
+    <div class="small-12 columns">
+        <h1 class="summer-comments-header">评论</h1>
+        {% if site.comments_sys == 'giscus' %}
+            {% include giscus_comments.html %}
+        {% elsif site.comments_sys == 'disqus' and site.disqus_shortname %}
+            <div id="disqus_thread"></div>
+            {% include disqus_comments.html %}
+        {% endif %}
+    </div>
+</section>
+{% endif %}

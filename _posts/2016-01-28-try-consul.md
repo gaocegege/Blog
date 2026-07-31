@@ -26,7 +26,7 @@ featured: true
 之后，在第一个Machine上，我启动了三个Consul Server容器，一个Consul Client容器，其中只有一个Server暴露端口给host，Client也会暴露8500等等端口给host。
 
 	$ docker run -d --name node1 -h node1 progrium/consul -server -bootstrap-expect 3
-	$ JOIN_IP="$(docker inspect -f '{{.NetworkSettings.IPAddress}}' node1)"
+	$ JOIN_IP="$(docker inspect -f '{% raw %}{{.NetworkSettings.IPAddress}}{% endraw %}' node1)"
 	$ docker run -d --name node2 -h node2 progrium/consul -server -join $JOIN_IP
 	$ docker run -d -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302 -p 8302:8302/udp --name node3 -h node3 progrium/consul -server -join $JOIN_IP
 	$ docker run -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp --name node4 -h node4 progrium/consul -join $JOIN_IP

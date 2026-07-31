@@ -4,11 +4,11 @@ permalink: /opensource/index.html
 title: 开源项目
 tags: [SJTU, SE]
 imagefeature:
-chart: true
+comments: true
 ---
 
 <p align="center">
-	<a href="http://gaocegege.com/Blog"><img src="https://img.shields.io/badge/blog-100k%20pageviews-ffffff.svg?style=social" alt="Blog"></a>
+	<a href="https://gaocegege.com/Blog"><img src="https://img.shields.io/badge/blog-100k%20pageviews-ffffff.svg?style=social" alt="Blog"></a>
 	<a href="https://github.com/gaocegege/"><img src="https://img.shields.io/github/followers/gaocegege.svg?style=social&label=Follow" alt="GitHub"></a>
 	<a href="http://gaocegege.com/resume/"><img src="https://img.shields.io/badge/resume-english-blue.svg" alt="Resume"></a>
 	<a href="http://gaocegege.com/resume/cn/"><img src="https://img.shields.io/badge/%E7%AE%80%E5%8E%86-%E4%B8%AD%E6%96%87-blue.svg" alt="Resume in Chinese"></a>
@@ -956,13 +956,3 @@ Opened 6 issues in 6 repositories
 |1	|[0ssifrage/SJTUScoreFetcher](https://github.com/0ssifrage/SJTUScoreFetcher/issues?q=is%3Aissue+author%3Agaocegege+)|
 |1	|[kirkas/Ascensor.js](https://github.com/kirkas/Ascensor.js/issues?q=is%3Aissue+author%3Agaocegege+)|
 |1	|[victorporof/Sublime-HTMLPrettify](https://github.com/victorporof/Sublime-HTMLPrettify/issues?q=is%3Aissue+author%3Agaocegege+)|
-
-<div class="cf"></div>
-
-<section class="summer-disqus row">
-    <div class="small-12 columns">
-        <h1 class="summer-comments-header">评论</h1>
-        <div id="disqus_thread"></div>
-        {% include disqus_comments.html %}
-    </div>
-</section>
