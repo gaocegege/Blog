@@ -4,17 +4,19 @@ permalink: /relaxed/
 title: 消遣
 description: "比较轻松的博文"
 ---
-{% assign featuredcount = '0' %}
+{% assign postcount = 0 %}
 <ul class="post-list">
 {% for post in site.posts %}
-{% unless post.featured %}
-{% assign featuredcount = featuredcount | plus:'1' %}
-  <li><article><i class="fa fa-star-half-o"></i> <a href="{{ site.url }}{{ post.url }}">{{ post.title }} <span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time></span></a></article></li>
-{% endunless %}
+{% assign section = post.section %}
+{% unless section %}{% if post.featured %}{% assign section = 'tech' %}{% else %}{% assign section = 'life' %}{% endif %}{% endunless %}
+{% if section == 'life' %}
+{% assign postcount = postcount | plus: 1 %}
+  <li><article><i class="fa fa-star-half-o"></i> <a href="{{ post.url | relative_url }}">{{ post.title }} <span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time></span></a></article></li>
+{% endif %}
 {% endfor %}
 </ul>
-{% if featuredcount == '0' %}
+{% if postcount == 0 %}
 <div class="summer-page-title row">
-    <h1>No posts has been featured yet</h1>
+    <h1>暂无消遣文章</h1>
 </div>
 {% endif %}

@@ -1,21 +1,21 @@
 ---
-layout: nil
+layout: null
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>{{ site.url }}</loc>
+        <loc>{{ '/' | absolute_url }}</loc>
     </url>
     
     {% for page in site.pages %}
     <url>
-        <loc>{{ site.url }}{{ page.url }}</loc>
+        <loc>{{ page.url | absolute_url }}</loc>
     </url>
     {% endfor %}
 
     {% for post in site.posts %}
     <url>
-        <loc>{{ site.url }}{{ post.url }}</loc>
+        <loc>{{ post.url | absolute_url }}</loc>
     </url>
     {% endfor %}
 </urlset>

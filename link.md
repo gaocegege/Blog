@@ -4,7 +4,7 @@ permalink: /link/index.html
 title: 友情链接
 tags: [链接]
 imagefeature: 
-chart: true
+comments: true
 ---
 
 <table align='center'>
@@ -37,13 +37,3 @@ chart: true
 <td>电院CS的学弟</td>
 </tr>
 </table>
-        
-<div class="cf"></div>
-
-<section class="summer-disqus row">
-<div class="small-12 columns">
-<h1 class="summer-comments-header">Comments</h1>
-<div id="disqus_thread"></div>
-{% include duoshuo_comments.html %}
-</div>
-</section>

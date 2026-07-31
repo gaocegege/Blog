@@ -5,90 +5,53 @@ description: "高策的个人博客，记录生活"
 headline: An Engineer's Diary
 tags: [高策, 上海交通大学, 软件工程]
 ---
-{% if site.paginate %}
-	{% for post in paginator.posts %}
-    <article class="summer-index-post post row">
-        <div class="small-12 medium-3 large-2 columns datetime">
-            <span class="summer-post-meta">
-                <time datetime="{{ post.date | date_to_xmlschema }}">
-                    <span class="day">
-                        {{ post.date | date: "%d" }}
-                    </span>
-                    <span class="month-year">
-                        {{ post.date | date: "%B %Y" }}
-                    </span>
-                </time>
-            </span>
+{% if paginator %}
+    {% assign posts = paginator.posts %}
+{% else %}
+    {% assign posts = site.posts %}
+{% endif %}
+
+{% for post in posts %}
+<article class="summer-index-post post row">
+    <div class="small-12 medium-3 large-2 columns datetime">
+        <span class="summer-post-meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">
+                <span class="day">{{ post.date | date: "%d" }}</span>
+                <span class="month-year">{{ post.date | date: "%B %Y" }}</span>
+            </time>
+        </span>
+    </div>
+    <div class="small-12 medium-9 large-10 columns">
+        <header class="summer-post-header">
+            <h3 class="summer-post-title">
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </h3>
+        </header>
+        {% if post.categories and post.categories != empty %}
+        <div class="summer-index-post-tags">
+            {% for category in post.categories %}
+            <a href="{{ '/categories/' | relative_url }}#{{ category | cgi_escape }}" title="Other posts from the {{ category | capitalize }} category">{{ category | capitalize }}</a>{% unless forloop.last %}&nbsp;{% endunless %}
+            {% endfor %}
         </div>
-        <div class="small-12 medium-9 large-10 columns">
-            <header class="summer-post-header">
-                <h3 class="summer-post-title">
-                    <a href="{{ site.url }}{{ post.url }}">
-                        {{ post.title }}
-                    </a>
-                </h3>
-            </header>
-            
-                <div class="summer-index-post-tags">
-                {% for tag in post.categories %}<a href="{{ site.url }}/categories/index.html#{{ post.categories | cgi_encode }}" title="Other posts from the {{ tag | capitalize }} category">{{ tag | capitalize }}</a>{% unless forloop.last %}&nbsp;{% endunless %}{% endfor %}
-                    
-                </div>
-            
-        </div>
-    </article>
-	{% endfor %}
-    <nav class="pagination" role="navigation">
+        {% endif %}
+    </div>
+</article>
+{% endfor %}
+
+{% if paginator and paginator.total_pages > 1 %}
+<nav class="pagination" role="navigation" aria-label="文章分页">
     {% if paginator.previous_page %}
-	    {% if paginator.previous_page == 1 %}
-	    <a class="newer-posts" href="{{ site.url }}"><i class="fa fa-chevron-left"></i> Newer</a>
-	    {% else %}
-	    <a class="newer-posts" href="{{ site.url }}/page{{ paginator.previous_page }}"><i class="fa fa-chevron-left"></i> Newer</a>
-	    {% endif %}
-	{% else %}
-    <span class="newer-posts faded"><i class="fa fa-chevron-left"></i> Newer</span>
+    <a class="newer-posts" href="{{ paginator.previous_page_path | relative_url }}"><i class="fa fa-chevron-left" aria-hidden="true"></i> Newer</a>
+    {% else %}
+    <span class="newer-posts faded"><i class="fa fa-chevron-left" aria-hidden="true"></i> Newer</span>
     {% endif %}
 
-    
     <span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
-    	{% if paginator.next_page %} 
-        <a class="older-posts" href="{{ site.url }}/page{{ paginator.next_page }}/">Older <i class="fa fa-chevron-right"></i></a>
-    	{% else %}
-    	<span class="older-posts faded">Older <i class="fa fa-chevron-right"></i></span>
-    	{% endif %}
-	</nav>
-{% else %}
-	{% for post in site.posts %}
-    <article class="summer-index-post post row">
-        <div class="small-12 medium-3 large-2 columns datetime">
-            <span class="summer-post-meta">
-                <time datetime="{{ post.date | date_to_xmlschema }}">
-                    <span class="day">
-                        {{ post.date | date: "%d" }}
-                    </span>
-                    <span class="month-year">
-                        {{ post.date | date: "%B %Y" }}
-                    </span>
-                </time>
-            </span>
-        </div>
-        <div class="small-12 medium-9 large-10 columns">
-            <header class="summer-post-header">
-                <h3 class="summer-post-title">
-                    <a href="{{ site.url }}{{ post.url }}">
-                        {{ post.title }}
-                    </a>
-                </h3>
-            </header>
-            <section class="summer-post-excerpt">
-                <p>{{ post.content | strip_html | truncatewords:100 }}</p>
-            </section>
-            
-                <div class="summer-index-post-tags">
-                {% for tag in post.categories %}<a href="{{ site.url }}/categories/index.html#{{ post.categories | cgi_encode }}" title="Other posts from the {{ tag | capitalize }} category">{{ tag | capitalize }}</a>{% unless forloop.last %}&nbsp;{% endunless %}{% endfor %}
-                    
-                </div>
-            
-        </div>
-    </article>
-	{% endfor %}  
+
+    {% if paginator.next_page %}
+    <a class="older-posts" href="{{ paginator.next_page_path | relative_url }}">Older <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+    {% else %}
+    <span class="older-posts faded">Older <i class="fa fa-chevron-right" aria-hidden="true"></i></span>
+    {% endif %}
+</nav>
 {% endif %}

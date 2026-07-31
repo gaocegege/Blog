@@ -1,0 +1,10 @@
+<p>
+    by <strong>{{ site.owner.name }}</strong> &#8212;
+    {% if page.tags and page.tags != empty %}
+    on
+    {% for tag in page.tags %}
+    <a href="{{ '/tags/' | relative_url }}#{{ tag | cgi_escape }}" data-toggle="tooltip" title="Posts tagged with {{ tag }}" rel="tag">{{ tag }}</a>{% unless forloop.last %}&nbsp;&comma;&nbsp;{% endunless %}
+    {% endfor %}
+    {% endif %}
+    <strong><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d %b %Y" }}</time></strong>
+</p>

@@ -1,0 +1,19 @@
+---
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+{% include head.html %}
+</head>
+{% if page.layout == 'home' %}
+  {% assign body_class = 'home-template' %}
+{% elsif page.layout == 'page' %}
+  {% assign body_class = 'post-template page' %}
+{% else %}
+  {% assign body_class = 'post-template' %}
+{% endif %}
+<body class="{{ body_class }}" itemscope itemtype="https://schema.org/WebPage">
+{{ content }}
+{% include scripts.html %}
+</body>
+</html>

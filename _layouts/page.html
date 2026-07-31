@@ -1,55 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-{% include head.html %}
-</head>
-<body class="post-template page" itemscope itemtype="http://schema.org/WebPage">
-
+---
+layout: default
+---
 <main id="summer-page-container" class="summer-page-container" role="main">
-    
-    
-        <header class="summer-page-header">
-            <div class="summer-page-menu-header">
-                
-                    <a class="summer-blog-logo" href="{{ site.url }}">
-                        <img src="{{ site.url }}/images/{{ site.logo }}" alt="Blog Logo">
-                    </a>
-                
-                
-                
-                <div class="summer-blog-menu">      
-    <div class="summer-mobile-menu show-for-small">
-        <a href="#"><i class="fa fa-bars"></i></a>
-    </div>
-    <ul class="summer-menu">
-        <li class="summer-mobile-close-btn show-for-small text-right">
-            <a href="#"><i class="fa fa-times"></i></a>
-        </li>
-{% for link in site.links %}
-            <li>{% if link.external %}
-                    <a href="{{ link.url }}">{{ link.title }}</a>
-                {% else %}
-                    <a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
-                {% endif %} </li>
-{% endfor %}            
-           <!-- <li><a href="{{ site.url }}/rss.xml" title="Atom/RSS feed"><i class="icon-rss"></i> Feed</a></li> -->
-    </ul>
-</div>
+    <header class="summer-page-header">
+        <div class="summer-page-menu-header">
+            {% include navigation.html %}
+        </div>
+        <div class="summer-page-title row">
+            <div class="small-12 columns">
+                <h1>{{ page.title }}</h1>
             </div>
-            <div class="summer-page-title row">
-                <div class="small-12 columns">
-                    <h1>{{ page.title }}</h1>
-                </div>
-            </div>
-        </header>
+        </div>
+    </header>
 
-<article class="summer-page-content">
-                    <div>{{ content }}</div>
-</article>
-        <div class="cf"></div>
+    <article class="summer-page-content">
+        <div>{{ content }}</div>
+    </article>
+    <div class="cf"></div>
+    {% include comments.html %}
     {% include footer.html %}
 </main>
-
-{% include scripts.html %}  
-</body>
-</html>

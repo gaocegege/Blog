@@ -1,0 +1,24 @@
+{% capture logo_path %}/images/{{ site.logo }}{% endcapture %}
+<a class="summer-blog-logo" href="{{ '/' | relative_url }}">
+    <img src="{{ logo_path | relative_url }}" alt="{{ site.title }}" />
+</a>
+
+<div class="summer-blog-menu">
+    <div class="summer-mobile-menu show-for-small">
+        <a href="#" aria-label="打开导航菜单"><i class="fa fa-bars" aria-hidden="true"></i></a>
+    </div>
+    <ul class="summer-menu">
+        <li class="summer-mobile-close-btn show-for-small text-right">
+            <a href="#" aria-label="关闭导航菜单"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </li>
+        {% for link in site.links %}
+        <li>
+            {% if link.external %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {% else %}
+            <a href="{{ link.url | relative_url }}">{{ link.title }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>

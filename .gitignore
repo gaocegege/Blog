@@ -217,6 +217,10 @@ pip-log.txt
 
 #Jekyll generated dir
 _site/
+.jekyll-cache/
+.sass-cache/
+.bundle/
+vendor/bundle/
 
 # user
 evil/
