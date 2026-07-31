@@ -61,7 +61,7 @@ featured: true
 畅言是搜狐旗下的社会化评论服务，我觉得跟网易云跟帖差不多，都是跟自家的评论有点关系的，被拆分出来的云服务。
 
 <figure>
-	<img src="{{ site.url }}/images/duoshuo/changyan.png" alt="畅言" height="500" width="500">
+	<img src="{{ '/images/duoshuo/changyan.png' | relative_url }}" alt="畅言" height="500" width="500">
 	<figcaption>畅言</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ featured: true
 友言是国内社会化评论服务中味道最正的一家了。我觉得友言有希望能够成为接任多说的产品。
 
 <figure>
-	<img src="{{ site.url }}/images/duoshuo/youyan.png" alt="友言" height="500" width="500">
+	<img src="{{ '/images/duoshuo/youyan.png' | relative_url }}" alt="友言" height="500" width="500">
 	<figcaption>友言</figcaption>
 </figure>
 
@@ -83,7 +83,7 @@ featured: true
 来必力是韩国的一款社会化评论服务，它的完成度很高，拥有和多说类似的功能，而且非常美观，看历史也不是很快就会死的服务。
 
 <figure>
-	<img src="{{ site.url }}/images/duoshuo/livere.png" alt="来必力" height="500" width="650">
+	<img src="{{ '/images/duoshuo/livere.png' | relative_url }}" alt="来必力" height="500" width="650">
 	<figcaption>来必力</figcaption>
 </figure>
 

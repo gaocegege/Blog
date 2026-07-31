@@ -50,7 +50,7 @@ featured: true
 我们遵循了一个中心化的设计，在控制面中有多个组件，下图展示了这些组件之间的关系。
 
 <figure>
-	<img src="{{ site.url }}/images/modelz/arch.png" alt="Architecture" height="500" width="700">
+	<img src="{{ '/images/modelz/arch.png' | relative_url }}" alt="Architecture" height="500" width="700">
     <figcaption>Architecture</figcaption>
 </figure>
 
@@ -141,7 +141,7 @@ X-Request-Id: Root=1-64019a9a-2a1c8df34f329c2167b71ce2
 我们采取了与 [OpenFaaS](https://github.com/openfaas) 类似的系统设计以支持自动扩缩容的实现。
 
 <figure>
-	<img src="{{ site.url }}/images/modelz/lb.png" alt="Autoscaling" height="500" width="700">
+	<img src="{{ '/images/modelz/lb.png' | relative_url }}" alt="Autoscaling" height="500" width="700">
     <figcaption>Autoscaling</figcaption>
 </figure>
 

@@ -28,7 +28,7 @@ featured: true
 举个例子，考虑这样一个情况：我们有 100 万个向量，每个向量在 3072 维空间中由 float32 值表示。如果我们使用原始的 float32 向量，存储所有向量需要约 20GB 的内存。而如果我们使用二进制向量，仅需约 600MB 的内存即可存储所有 100 万个向量。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/memusage.png" alt="pgvectors" height="500" width="700">
+	<img src="{{ '/images/binary-vector/memusage.png' | relative_url }}" alt="pgvectors" height="500" width="700">
     <figcaption>Memory Usage (1M vectors)</figcaption>
 </figure>
 
@@ -55,7 +55,7 @@ CREATE INDEX openai_vector_index_bvector ON public.openai3072 USING vectors (tex
 在建立索引之后，我们进行了向量搜索查询以评估性能。这些查询使用不同的限制进行执行，表示要检索的搜索结果数量（限制为 5、10、50、100）。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/binary-bench.avif" alt="pgvectors" height="500" width="700">
+	<img src="{{ '/images/binary-vector/binary-bench.avif' | relative_url }}" alt="pgvectors" height="500" width="700">
     <figcaption>二进制向量 Benchmark</figcaption>
 </figure>
 
@@ -71,7 +71,7 @@ CREATE INDEX openai_vector_index_bvector ON public.openai3072 USING vectors (tex
 1. 使用 KNN 查询对候选项重新排序，以获取排名前 100 的候选项。请注意，我们使用 KNN 而不是 ANN 进行重新排序。在需要处理较小集合并进行准确相似性搜索的场景中，KNN 很适用，因此在这种情况下对候选项进行重新排序是一个很好的选择。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/ar.avif" alt="adaptive-retrieval" height="500" width="700">
+	<img src="{{ '/images/binary-vector/ar.avif' | relative_url }}" alt="adaptive-retrieval" height="500" width="700">
     <figcaption>Adaptive Retrieval</figcaption>
 </figure>
 
@@ -79,7 +79,7 @@ CREATE INDEX openai_vector_index_bvector ON public.openai3072 USING vectors (tex
 结合二进制向量搜索的效率和 KNN 重新排序的准确性，我们可以在检索过程中既实现速度又提高准确性。通过引入这个重新排序步骤，我们可以显著提高准确性，潜在地达到高达 95% 的准确率。此外，系统仍然保持着高的每秒请求数（RPS），大约为 1700。此外，尽管这些改进，索引的内存使用仍然显著较小，约为原始向量表示的 30 倍。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/ar-bench.png" alt="bench" height="500" width="700">
+	<img src="{{ '/images/binary-vector/ar-bench.png' | relative_url }}" alt="bench" height="500" width="700">
     <figcaption>Adaptive Retrieval Benchmark</figcaption>
 </figure>
 
@@ -113,7 +113,7 @@ $$;
 OpenAI 最新的 embedding 模型 `text-embedding-3-large` 具有一项功能，允许用户截断向量直接使用。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/shortening-embedding.svg" alt="bench" height="500" width="700">
+	<img src="{{ '/images/binary-vector/shortening-embedding.svg' | relative_url }}" alt="bench" height="500" width="700">
     <figcaption>Shortened Vector</figcaption>
 </figure>
 
@@ -124,7 +124,7 @@ OpenAI 最新的 embedding 模型 `text-embedding-3-large` 具有一项功能，
 我们进行了类似的基准测试来与二进制向量进行比较。我们使用相同的数据集和机器类型创建了两个索引，但维度不同。一个索引有 256 维，另一个索引有 1024 维。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/first-pass.png" alt="bench" height="500" width="700">
+	<img src="{{ '/images/binary-vector/first-pass.png' | relative_url }}" alt="bench" height="500" width="700">
     <figcaption>Shortened Vector Benchmark</figcaption>
 </figure>
 
@@ -133,14 +133,14 @@ OpenAI 最新的 embedding 模型 `text-embedding-3-large` 具有一项功能，
 1024 维索引需要约 8GB 的内存，而256 维索引则使用约 2GB 的内存。相比之下，二进制向量方法在每秒 3000 个请求（RPS）的情况下实现了约 80% 的准确率，其内存使用量约为 600MB。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/memusage.png" alt="memory" height="500" width="700">
+	<img src="{{ '/images/binary-vector/memusage.png' | relative_url }}" alt="memory" height="500" width="700">
     <figcaption>Memory Usage (1M vectors)</figcaption>
 </figure>
 
 我们使用较低维度的索引实现了自适应检索。在请求速率（RPS）和准确率方面，二进制向量索引仍然优于 256 维索引，并且内存使用量更低。另一方面，自适应检索配合 1024 维索引实现了更高的准确率（99%）；然而，它的请求速率相对较低，并且与其他索引相比，内存使用量增加了 12 倍。
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/final-bench.png" alt="bench" height="500" width="700">
+	<img src="{{ '/images/binary-vector/final-bench.png' | relative_url }}" alt="bench" height="500" width="700">
     <figcaption>Benchmark</figcaption>
 </figure>
 
@@ -149,7 +149,7 @@ OpenAI 最新的 embedding 模型 `text-embedding-3-large` 具有一项功能，
 通过利用自适应检索技术，二进制向量可以在显著减少 30 倍的内存使用量的同时保持高水平的准确性。我们在表格中展示了基准指标以展示结果。需要注意的是，这些结果是特定于 OpenAI text-embedding-3-large 模型的
 
 <figure>
-	<img src="{{ site.url }}/images/binary-vector/table.png" alt="bench" height="700" width="700">
+	<img src="{{ '/images/binary-vector/table.png' | relative_url }}" alt="bench" height="700" width="700">
     <figcaption>Benchmark</figcaption>
 </figure>
 

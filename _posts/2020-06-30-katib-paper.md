@@ -46,7 +46,7 @@ TrialJob 同样是内部概念。当 Suggestion 给出参数组合后，对应�
 这四个核心概念都是以 CRD 的方式存在的。Katib 支持多种 TrialJob 的类型，比如 TFJob，PyTorchJob 等。因此 Katib 支持在单次 Trial 中使用 PyTorch 和 TensorFlow 进行分布式训练。一个示例如图所示：
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/crd.png" height="500" width="500">
+	<img src="{{ '/images/katib-paper/crd.png' | relative_url }}" height="500" width="500">
     <figcaption>核心概念</figcaption>
 </figure>
 
@@ -57,7 +57,7 @@ TrialJob 同样是内部概念。当 Suggestion 给出参数组合后，对应�
 Katib 的系统工作流程如下图所示。首先用户会创建 Experiment，随后 Katib 会为 Experiment 创建对应的 Suggestion，比如随即搜索算法，贝叶斯优化算法等。在创建好 Suggestion 后，Experiment Controller 会与 Suggestion 交互，获得新的参数组合。Experiment Controller 利用得到的新的参数组合和 Experiment 中训练任务的配置创建出对应的 Trial。Trial Controller 会为 Trial 创建出对应的 TrialJob。在 TrialJob 进行真正的模型训练时，训练指标会被记录下来，指导 Suggestion 更好地提出下一次迭代的候选参数组合。
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/crd.png" height="500" width="500">
+	<img src="{{ '/images/katib-paper/crd.png' | relative_url }}" height="500" width="500">
     <figcaption>系统流程</figcaption>
 </figure>
 
@@ -68,7 +68,7 @@ Katib 的系统工作流程如下图所示。首先用户会创建 Experiment，
 在文章中，我们对比了 katib 与其他 state-of-art 系统的特性，具体如下所示。
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/features.png" height="500" width="500">
+	<img src="{{ '/images/katib-paper/features.png' | relative_url }}" height="500" width="500">
     <figcaption>特性对比</figcaption>
 </figure>
 
@@ -89,7 +89,7 @@ Katib 也是与 NNI 一样，支持模型结构搜索的系统。另外 Katib �
 针对 Katib 的一些特性，我们进行了实验验证。
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/multi.png" height="500" width="500">
+	<img src="{{ '/images/katib-paper/multi.png' | relative_url }}" height="500" width="500">
     <figcaption>多租户</figcaption>
 </figure>
 
@@ -100,14 +100,14 @@ Katib 也是与 NNI 一样，支持模型结构搜索的系统。另外 Katib �
 接下来，我们针对 Katib 的自动扩缩容集群能力进行验证。当集群资源不够时，我们可以通过 Cluster Autoscaler，对集群进行扩缩容。下图就是实验结果。我们一共运行了 250 次搜索任务，其中每个搜索任务占用 2 核 CPU。起初集群上没有任何节点，随着任务的创建，对 CPU 资源的需求随之增加。我们通过扩容集群来支持自训练业务运行。而在训练末期，资源不再被使用，我们通过自动地缩容集群起到节约资源的作用。
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/autoscale.png" height="500" width="500">
+	<img src="{{ '/images/katib-paper/autoscale.png' | relative_url }}" height="500" width="500">
     <figcaption>集群自动扩缩容</figcaption>
 </figure>
 
 人工智能自训练技术不仅支持扩缩容，同样支持容错。在容错试验中，我们通过利用 Chaos Mesh 为 Katib，Optuna 和 NNI 注入错误。其中主要包括训练失败和训练任务被杀死两种错误。我们发现，在相似的框架的表现中，Katib 是表现最好的。
 
 <figure>
-	<img src="{{ site.url }}/images/katib-paper/ft.png" height="800" width="800">
+	<img src="{{ '/images/katib-paper/ft.png' | relative_url }}" height="800" width="800">
     <figcaption>容错</figcaption>
 </figure>
 

@@ -26,7 +26,7 @@ featured: true
 不过最近在Docker之外，被一个叫做Hyper Container的东西吸引了。他们的主页是[www.hyper.sh](https://www.hyper.sh/)，是北京的一家创业公司的产品的样子。这家公司做的[hyperd](https://github.com/hyperhq/hyperd)是一个在虚拟机上运行Docker容器的东西，跟一般意义上的，在虚拟机上运行一个Docker Daemon然后再运行容器的概念不同。
 
 <figure>
-	<img src="{{ site.url }}/images/docker/hyper.png" alt="hyper架构图" height="500" width="500">
+	<img src="{{ '/images/docker/hyper.png' | relative_url }}" alt="hyper架构图" height="500" width="500">
 	<figcaption>hyper架构图</figcaption>
 </figure>
 
