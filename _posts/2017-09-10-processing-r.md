@@ -68,12 +68,12 @@ void variableEllipse(int x, int y, int px, int py) {
 而 [Processing.R](https://github.com/gaocegege/Processing.R)，就是利用 [renjin](http://www.renjin.org/) 实现的 Processing 在 R 语言上的支持。
 
 <figure>
-	<img src="https://github.com/gaocegege/Processing.R/raw/master/raw-docs/img/editor.png" alt="Processing.R" height="500" width="500">
+	<img loading="lazy" decoding="async" src="https://github.com/gaocegege/Processing.R/raw/master/raw-docs/img/editor.png" alt="Processing.R" height="500" width="500">
 	<figcaption>Processing.R</figcaption>
 </figure>
 
 <figure>
-	<img src="https://github.com/gaocegege/Processing.R/raw/master/raw-docs/img/demo.gif" alt="Processing.R Demo" height="200" width="200">
+	<img loading="lazy" decoding="async" src="https://github.com/gaocegege/Processing.R/raw/master/raw-docs/img/demo.gif" alt="Processing.R Demo" height="200" width="200">
 	<figcaption>Processing.R Demo</figcaption>
 </figure>
 
@@ -84,7 +84,7 @@ Processing 在 R 语言上的实现，依赖了一个 JVM 上的 R 解释器，�
 Processing 本身下载和安装都特别简单，而且是多平台的，在[此处](https://processing.org/download/)即可找到适合你的版本。而在 Processing 的 Contribution Manager 中的 Modes 一栏中，可以下载 Processing.R。随后在主界面右上角的下拉框中选择 R 即可。
 
 <figure>
-	<img src="https://user-images.githubusercontent.com/5100735/29493417-df2b614e-85c7-11e7-98c5-d9f20cf780a4.PNG" alt="下载与使用" height="500" width="500">
+	<img loading="lazy" decoding="async" src="https://user-images.githubusercontent.com/5100735/29493417-df2b614e-85c7-11e7-98c5-d9f20cf780a4.PNG" alt="下载与使用" height="500" width="500">
 	<figcaption>下载与使用</figcaption>
 </figure>
 

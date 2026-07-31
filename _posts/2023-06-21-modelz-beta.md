@@ -35,21 +35,21 @@ featured: true
 - 发送请求，或访问用户界面（仅支持 Gradio 和 Streamlit）。
 
 <figure>
-	<img src="{{ '/images/modelz-beta/templates.png' | relative_url }}" height="400" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/modelz-beta/templates.png' | relative_url }}" height="400" width="800">
     <figcaption>Templates on ModelZ</figcaption>
 </figure>
 
 这是一个使用 Modelz Beta 平台和 bloomz 560M 模板创建推理部署的完整工作流程示例。创建模型服务后，可以在用户界面中获得详细信息：
 
 <figure>
-	<img src="{{ '/images/modelz-beta/detail.png' | relative_url }}" height="400" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/modelz-beta/detail.png' | relative_url }}" height="400" width="800">
     <figcaption>详细信息</figcaption>
 </figure>
 
 我们会在 UI 中显示日志、事件（例如部署的自动扩缩容事件），以及指标（例如总请求数、正在处理中的请求数等）。除此之外，您还可以获得模型的文档和使用指南。
 
 <figure>
-	<img src="{{ '/images/modelz-beta/guide.png' | relative_url }}" height="400" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/modelz-beta/guide.png' | relative_url }}" height="400" width="800">
     <figcaption>模型的文档和使用指南</figcaption>
 </figure>
 
@@ -71,12 +71,12 @@ chat_completion = openai.ChatCompletion.create(
 模型服务将在闲置一段时间后（可以在创建页面中进行配置）缩减为 0。在 UI 中可以获得自动缩放的事件和指标：
 
 <figure>
-	<img src="{{ '/images/modelz-beta/serverless.png' | relative_url }}" height="400" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/modelz-beta/serverless.png' | relative_url }}" height="400" width="800">
     <figcaption>缩放事件</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ '/images/modelz-beta/metrics.png' | relative_url }}" height="400" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/modelz-beta/metrics.png' | relative_url }}" height="400" width="800">
     <figcaption>指标</figcaption>
 </figure>
 

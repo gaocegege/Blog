@@ -24,7 +24,7 @@ There are some existing [Jupyter Notebook][] operators in Kubernetes community, 
 [Jupyter Enterprise Gateway][] could help us improve the utilization by running the notebook server processes and kernel processes separately. But there are some limitations. [Jupyter Enterprise Gateway][] is designed to be used on different resource managers, e.g. Yarn, Kubernetes, etc. Thus it is not Kubernetes native. Maintaining such a gateway and multiple notebook servers/kernels is not easy.
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/gateway.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/gateway.png' | relative_url }}" height="500" width="500">
     <figcaption>Jupyter Enterprise Gateway</figcaption>
 </figure>
 
@@ -162,7 +162,7 @@ $ kubectl port-forward deploy/jupyternotebook-elastic-with-custom-kernels 8888:8
 [elastic-jupyter-operator][] reuses the [Jupyter Enterprise Gateway][] to support remote execution of Jupyter notebooks. The request will be sent to the notebook server process first when users execute the code in the browser. But the request cannot be processed since there is no kernel to execute it. The notebook server will issue a request then to the gateway to create a new kernel. The gateway creates the `JupyterKernel` CR via our custom `KubeflowProcessProxy` in the gateway's source code. The operator watches the `JupyterKernel` CR and creates the corresponding kernel pod in Kubernetes. Then the execution result will be sent back to the notebook server via ZeroMQ.
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/uml.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/uml.png' | relative_url }}" height="500" width="500">
     <figcaption>UML sequence diagram</figcaption>
 </figure>
 

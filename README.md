@@ -37,3 +37,14 @@ git status
 ```
 
 构建产物在 `_site/`，不提交到仓库。确认页面和链接无误后，再提交并推送 `gh-pages` 分支。
+
+## 前端资源
+
+页面使用已提交的压缩资源，本地预览不需要安装 Node.js。修改 `assets/css` 或核心 JavaScript 源文件后，再执行：
+
+```bash
+npm install
+npm run build:assets
+```
+
+该命令会按页面原有的加载顺序重新生成 `site.min.css` 和 `site.min.js`；生成文件需要与源码一起提交。

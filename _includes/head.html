@@ -34,11 +34,17 @@
 <link rel="canonical" href="{{ page.url | absolute_url }}">
 <link href="{{ '/rss.xml' | relative_url }}" type="application/rss+xml" rel="alternate" title="{{ site.title }} Feed">
 
-<!-- highlight the code-->
-{% if site.highlight %}
+<!-- Code highlighting is only needed on article pages. -->
+{% if site.highlight and page.layout == 'post' %}
 <link rel="stylesheet" href="{{ '/assets/js/vendor/highlight/styles/tomorrow.css' | relative_url }}">
-<script src="{{ '/assets/js/vendor/highlight/highlight.pack.js' | relative_url }}"></script>
-<script>hljs.initHighlightingOnLoad();</script>{% endif %}
+<script defer src="{{ '/assets/js/vendor/highlight/highlight.pack.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+        window.hljs.initHighlighting();
+    }
+});
+</script>{% endif %}
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -47,12 +53,7 @@
 
 
     <!-- <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700|Open+Sans:400,600,300,800,700' rel='stylesheet' type='text/css'> -->
-	<link rel="stylesheet" href="{{ '/assets/css/font-awesome.min.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/vendor/normalize.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/vendor/foundation.min.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/vendor/nprogress.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/post.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/site.min.css' | relative_url }}">
     {% if page.chart %}
     <!-- amCharts javascript sources -->
     <script src="{{ '/assets/js/vendor/amcharts/amcharts.js' | relative_url }}"></script>

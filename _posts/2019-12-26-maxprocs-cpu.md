@@ -22,7 +22,7 @@ featured: true
 Goroutines 是 Golang 最吸引人的特性之一，它是 stackful coroutines 的一种实现。为了支持这一特性，Golang 需要一个运行时，在 Goroutines 和系统线程之间进行调度，这也就是 go-scheduler 的作用。go-scheduler 引入了三个抽象，分别是 Processor，Machine（简称 M） 和 Goroutine（简称 G）。其中 G 就是用户创建的 goroutines，而 M 则是系统线程，是负责真正执行 goroutines 的系统线程。 Processor 是类似于 CPU 核心的概念，其用来控制并发的 M 数量。
 
 <figure>
-	<img src="http://morsmachine.dk/in-motion.jpg" height="300" width="300">
+	<img loading="lazy" decoding="async" src="http://morsmachine.dk/in-motion.jpg" height="300" width="300">
     <figcaption>Credits: morsmachine.dk</figcaption>
 </figure>
 
@@ -186,7 +186,7 @@ spec:
 既然不少隔离 CPU 的方式无法限制 Go 运行时对 CPU 数量的判定，那这一问题是否会影响运行的性能，是一个值得分析的问题。利用了上游社区提供的 CPU bound 的 Benchmark [concprime](https://github.com/embano1/gotutorials/tree/master/concprime)，对不同的限制手段和 GOMAXPROCS 取值进行了详细的性能测试，得到了如下结果。
 
 <figure>
-	<img src="{{ '/images/maxprocs/gomaxprocs.png' | relative_url }}" height="700" width="700">
+	<img loading="lazy" decoding="async" src="{{ '/images/maxprocs/gomaxprocs.png' | relative_url }}" height="700" width="700">
     <figcaption>测试结果</figcaption>
 </figure>
 

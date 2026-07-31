@@ -48,7 +48,7 @@ Caused by: java.net.SocketException: Socket closed
 在原 Issue 中，这一问题通过 `-enable-webhook=false` 禁用掉 Spark 的 Mutating Webhook 后，可以被避免，但在我们遇到的问题环境中，禁用 Webhook 并不能解决问题。至于为什么在原 Issue 中禁用 Webhook 可以奏效，这里就要介绍一下 spark-on-k8s-operator 的工作流程了。
 
 <figure>
-	<img src="https://raw.githubusercontent.com/GoogleCloudPlatform/spark-on-k8s-operator/master/docs/architecture-diagram.png" height="500" width="500">
+	<img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/GoogleCloudPlatform/spark-on-k8s-operator/master/docs/architecture-diagram.png" height="500" width="500">
     <figcaption>spark-on-k8s-operator 的设计</figcaption>
 </figure>
 

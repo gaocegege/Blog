@@ -18,7 +18,7 @@ featured: true
 Jupyter Notebooks 是目前应用最为广泛的交互式开发环境，它很好地满足了数据科学、深度学习模型构建等场景的代码开发需求。不过另一方面，Jupyter Notebooks 在方便了算法工程师和数据科学家们日常开发工作的同时，也对基础架构提出了更多的挑战。
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/jupyter.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/jupyter.png' | relative_url }}" height="500" width="500">
     <figcaption>Jupyter Notebooks</figcaption>
 </figure>
 
@@ -29,14 +29,14 @@ Jupyter Notebooks 是目前应用最为广泛的交互式开发环境，它很�
 然而同一时间，并不是所有的算法工程师都在使用 GPU。在 Jupyter 中，编辑代码的过程是不需要使用计算资源的，只有在执行 Cell 中的代码片段时，才会使用 CPU 或 GPU 等硬件资源，执行并返回结果。由此可以预见，如果通过这样的部署方式会造成相当程度的资源浪费。
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/traditional.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/traditional.png' | relative_url }}" height="500" width="500">
     <figcaption>传统的使用方式</figcaption>
 </figure>
 
 造成这一问题的原因主要是原生的 Jupyter Notebooks 没有很好地适配 Kubernetes。在介绍问题原因之前，先简单概述一下 Jupyter Notebook 的技术架构。如下图所示，Jupyter Notebook 主要由三部分组成，分别是用户和浏览器端，Notebook Server 和 Kernel。
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/notebook_components.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/notebook_components.png' | relative_url }}" height="500" width="500">
     <figcaption>Jupyter Notebooks 架构</figcaption>
 </figure>
 
@@ -55,7 +55,7 @@ Jupyter Notebooks 是目前应用最为广泛的交互式开发环境，它很�
 通过这样的方式，Kernel 会在空闲时被释放。在需要时会再次被临时性地申请 GPU，运行起来。为了实现这一目的，我们在 Kubernetes 中实现了 5 个 CRD，同时为 Jupyter 引入了一个新的 KernelLauncher 实现。通过它们，用户可以在 GPU 空闲时将 Kernel 回收释放，在需要执行代码时再动态地申请 GPU 资源，创建 Kernel Pod 进行代码执行。
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/elastic.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/elastic.png' | relative_url }}" height="500" width="500">
     <figcaption>elastic-jupyter-operator</figcaption>
 </figure>
 
@@ -102,7 +102,7 @@ jupyternotebook-elastic-787d94bb4b-xdwnc      1/1     Running   0          3h10m
 ```
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/kernel.png' | relative_url }}" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/kernel.png' | relative_url }}" width="500">
     <figcaption>通过 elastic-jupyter-operator 运行在 Kubernetes 上的 Jupyter Notebook</figcaption>
 </figure>
 
@@ -113,7 +113,7 @@ jupyternotebook-elastic-787d94bb4b-xdwnc      1/1     Running   0          3h10m
 在介绍完使用方式后，我们简单介绍其设计与实现。
 
 <figure>
-	<img src="{{ '/images/elastic-jupyter/uml.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/elastic-jupyter/uml.png' | relative_url }}" height="500" width="500">
     <figcaption>时序图</figcaption>
 </figure>
 

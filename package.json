@@ -1,0 +1,13 @@
+{
+  "name": "gaocegege-blog-assets",
+  "private": true,
+  "scripts": {
+    "build:css": "node scripts/build-css.mjs",
+    "build:js:app": "terser assets/js/summer.js assets/js/vendor/nprogress.js --comments '/^!/' -c -m -o assets/js/site.min.js",
+    "build:assets": "npm run build:css && npm run build:js:app"
+  },
+  "devDependencies": {
+    "clean-css": "5.3.3",
+    "terser": "5.31.6"
+  }
+}

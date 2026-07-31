@@ -1,14 +1,46 @@
-<script src="https://giscus.app/client.js"
-        data-repo="gaocegege/blog-comments"
-        data-repo-id="R_kgDOGms1JQ"
-        data-category="General"
-        data-category-id="DIC_kwDOGms1Jc4CAfIx"
-        data-mapping="title"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-theme="light"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
+<div id="giscus-container"></div>
+<script>
+(function () {
+    var container = document.getElementById('giscus-container');
+    var loaded = false;
+
+    if (!container) {
+        return;
+    }
+
+    function loadGiscus() {
+        if (loaded) {
+            return;
+        }
+        loaded = true;
+
+        var script = document.createElement('script');
+        script.src = 'https://giscus.app/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-repo', 'gaocegege/blog-comments');
+        script.setAttribute('data-repo-id', 'R_kgDOGms1JQ');
+        script.setAttribute('data-category', 'General');
+        script.setAttribute('data-category-id', 'DIC_kwDOGms1Jc4CAfIx');
+        script.setAttribute('data-mapping', 'title');
+        script.setAttribute('data-reactions-enabled', '1');
+        script.setAttribute('data-emit-metadata', '0');
+        script.setAttribute('data-theme', 'light');
+        script.setAttribute('data-lang', 'zh-CN');
+        container.appendChild(script);
+    }
+
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+            if (entries.some(function (entry) { return entry.isIntersecting; })) {
+                observer.disconnect();
+                loadGiscus();
+            }
+        }, { rootMargin: '600px 0px' });
+        observer.observe(container);
+    } else {
+        loadGiscus();
+    }
+})();
 </script>
 <noscript>请启用 JavaScript 查看评论。</noscript>

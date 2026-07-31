@@ -66,7 +66,7 @@ featured: false
 申请真正开始于谷歌公布的 Mentoring organizations 列表，这里大致介绍下其内容。
 
 <figure>
-	<img src="{{ '/images/apply-gsoc/processing-org.png' | relative_url }}" alt="The Processing Foundation" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/apply-gsoc/processing-org.png' | relative_url }}" alt="The Processing Foundation" height="500" width="500">
 	<figcaption>The Processing Foundatin</figcaption>
 </figure>
 

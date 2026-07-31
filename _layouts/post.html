@@ -17,7 +17,7 @@ layout: default
     <button class="trigger bg-check" data-info="Read more"><span>Trigger</span></button>
     {% assign cover_image = page.imagefeature | remove_first: '/' %}
     {% capture cover_path %}/images/{{ cover_image }}{% endcapture %}
-    <img src="{{ cover_path | relative_url }}" alt="cover-image" />
+    <img src="{{ cover_path | relative_url }}" alt="cover-image" decoding="async" fetchpriority="high" />
 {% else %}
 <main id="summer-post-container-simple" class="summer-post-container-simple" role="main">
     <header class="summer-post-header-simple">
