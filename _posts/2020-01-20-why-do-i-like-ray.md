@@ -24,7 +24,7 @@ featured: true
 而 Ray 则是承载这一愿景的一个重要项目。
 
 <figure>
-	<img src="{{ '/images/opensourcehistory/ray/ray.png' | relative_url }}" height="700" width="700">
+	<img loading="lazy" decoding="async" src="{{ '/images/opensourcehistory/ray/ray.png' | relative_url }}" height="700" width="700">
     <figcaption>Ray</figcaption>
 </figure>
 
@@ -80,7 +80,7 @@ print(ray.get(futures))
 但是，只有如此底层的能力，没有上层成熟的生态，是难以与成熟的框架相抗衡的。因此，Ray 面向强化学习场景，基于分布式计算的能力支持，实现了上层的算法库 [RLLib](https://ray.readthedocs.io/en/latest/rllib.html)。
 
 <figure>
-	<img src="https://ray.readthedocs.io/en/latest/_images/rllib-stack.svg" height="400" width="400">
+	<img loading="lazy" decoding="async" src="https://ray.readthedocs.io/en/latest/_images/rllib-stack.svg" height="400" width="400">
     <figcaption>RLLib</figcaption>
 </figure>
 
@@ -93,7 +93,7 @@ tune.run(PPOTrainer, config={"env": "CartPole-v0"})
 ```
 
 <figure>
-	<img src="https://miro.medium.com/max/1200/1*jLj9SYWI7e6RElIsI3DFjg.gif" height="300" width="300">
+	<img loading="lazy" decoding="async" src="https://miro.medium.com/max/1200/1*jLj9SYWI7e6RElIsI3DFjg.gif" height="300" width="300">
     <figcaption>倒立摆 CartPole-v0</figcaption>
 </figure>
 
@@ -104,7 +104,7 @@ tune.run(PPOTrainer, config={"env": "CartPole-v0"})
 在 Ray 的论文中有对其架构的介绍，虽然演化到如今已经有了一定的不同，但可以借鉴来了解一下。
 
 <figure>
-	<img src="{{ '/images/opensourcehistory/ray/arch.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/opensourcehistory/ray/arch.png' | relative_url }}" height="500" width="500">
     <figcaption>Ray 论文中的架构图</figcaption>
 </figure>
 

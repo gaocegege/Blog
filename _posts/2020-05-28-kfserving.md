@@ -30,7 +30,7 @@ featured: true
 那么那些在机器学习推理的场景下特有的需求，应该如何解决呢？这就是 [Seldon Core][] 想要做的事情。
 
 <figure>
-	<img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/seldon-core-high-level.jpg" height="500" width="500">
+	<img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/seldon-core-high-level.jpg" height="500" width="500">
     <figcaption>Seldon Core 功能示意图</figcaption>
 </figure>
 
@@ -130,7 +130,7 @@ spec:
 在推理图功能的实现中，Seldon Core 依赖一个 Golang 实现的 Executor（之前版本中被称作 Engine，由 Java Spring Boot 实现）。
 
 <figure>
-	<img src="{{ '/images/seldon-core/workflow.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/seldon-core/workflow.png' | relative_url }}" height="500" width="500">
     <figcaption>Seldon Core Engine</figcaption>
 </figure>
 
@@ -147,7 +147,7 @@ spec:
 KFServing 是在 Kubeflow 社区开源模型服务项目，它依赖 Knative Serving 实现，也通过一个 CRD 对外提供服务。KFServing 定义了一个 CRD：InferenceService（以下简称 IS）。其中定义了两个 Endpoint：Default 和 Canary。其中 Default 是必填的，Canary 是可选的。Canary 支持金丝雀发布。
 
 <figure>
-	<img src="{{ '/images/seldon-core/kfserving.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/seldon-core/kfserving.png' | relative_url }}" height="500" width="500">
     <figcaption>KFServing CRD InferenceService</figcaption>
 </figure>
 

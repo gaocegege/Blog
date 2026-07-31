@@ -30,12 +30,12 @@ featured: true
 除了调度的问题之外，在跟非常多的 AI 相关的从业者交流后，很多工程师都对环境的构建和维护非常头疼。现在非常多团队使用 Docker 分发环境，而 Docker 本身也是非常复杂的，大部分算法工程师更倾向于用 `docker commit` 来不停地堆叠依赖，这并不是好的实践。
 
 <figure>
-	<img src="{{ '/images/tencent/1.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tencent/1.png' | relative_url }}" height="500" width="500">
     <figcaption>头疼的环境问题</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ '/images/tencent/2.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tencent/2.png' | relative_url }}" height="500" width="500">
     <figcaption>Docker 是否能解决问题</figcaption>
 </figure>
 

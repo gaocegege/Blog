@@ -20,14 +20,14 @@ featured: true
 在 Hacker News 上 [upvote 最高的评论](https://news.ycombinator.com/item?id=34986033)直指 OpenAI 在以倾销的方式推出 ChatGPT API，为了让潜在的竞争者有更高的进入门槛。
 
 <figure>
-	<img src="https://user-images.githubusercontent.com/5100735/222332989-2ddb4a4a-6aa9-4846-a2f3-fe817c0e175e.png" height="300" width="800">
+	<img loading="lazy" decoding="async" src="https://user-images.githubusercontent.com/5100735/222332989-2ddb4a4a-6aa9-4846-a2f3-fe817c0e175e.png" height="300" width="800">
     <figcaption>Hackernews</figcaption>
 </figure>
 
 这种观点在 Hacker News 上有非常多的支持者。这种观点成立的前提，是 OpenAI 在这次降价后没法保持盈利。但是我们认为这个观点是不成立的。ChatGPT 推出的时候，大家认为它的参数量在 175B 上下（原始新闻出处找不到了）。
 
 <figure>
-	<img src="https://user-images.githubusercontent.com/5100735/222334636-bcb38d00-15f5-40a4-ae30-80c4fc012177.png" height="300" width="800">
+	<img loading="lazy" decoding="async" src="https://user-images.githubusercontent.com/5100735/222334636-bcb38d00-15f5-40a4-ae30-80c4fc012177.png" height="300" width="800">
     <figcaption>成本计算</figcaption>
 </figure>
 

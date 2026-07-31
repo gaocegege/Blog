@@ -26,14 +26,14 @@ featured: true
 [ToS; DR][] 直到目前，仍然致力于此。它将用户协议和隐私条款等法律文本进行了统一的分类。虽然各个应用或者网站的用户协议仍然是千差万别的，但是它们有着一些共性。比如，几乎所有的用户协议都会写明它们会如何使用 Cookie，如何使用用户的个人信息等。针对这些共性，[ToS; DR][] 将用户协议和条款的内容总结出了一些要点。这些要点综合起来基本反应了用户协议的内容，同时这些要点又是通用的，不同的应用或网站只是在这些要点上采取了不同的措辞。这里以其中收录的 Bilibili 为例：
 
 <figure>
-	<img src="{{ '/images/tosknight/bilibili.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tosknight/bilibili.png' | relative_url }}" height="500" width="500">
     <figcaption>Bilibili Grade on ToS; DR</figcaption>
 </figure>
 
 B 站的用户协议同样非常复杂难懂，但是在 [ToS; DR][] 上它被总结为了 20 多个要点。而且我们只需要关注红色、黄色和绿色的要点即可，灰色的要点意味着它对于用户隐私而言并无过多描述或者并不重要。比如 B 站的第二点：This service can view your browser history。
 
 <figure>
-	<img src="{{ '/images/tosknight/bilibili-2.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tosknight/bilibili-2.png' | relative_url }}" height="500" width="500">
     <figcaption>This service can view your browser history</figcaption>
 </figure>
 
@@ -60,7 +60,7 @@ B 站的用户协议同样非常复杂难懂，但是在 [ToS; DR][] 上它被�
 因此围绕着这两个挑战和目标，[Tosknight][] 的架构是很这样的：
 
 <figure>
-	<img src="{{ '/images/tosknight/arch.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tosknight/arch.png' | relative_url }}" height="500" width="500">
     <figcaption>架构</figcaption>
 </figure>
 
@@ -86,12 +86,12 @@ webs:
 为了使得维护成本尽可能低，整体的设计都是围绕如何白嫖 GitHub 进行的。这一设计原则主要体现在 [Tosknight storage][2]。项目需要介质来存储用户协议的历史版本，用以比对版本之间的差异。我们选择了把它们存储在一个 GitHub repo 中，这样就不再需要为存储支付额外的费用。每次 [CLI][1] 会通过 cron 的方式在本地执行，结果会上传到 [Tosknight storage][2]。随后触发 [UI][3] 的更新。
 
 <figure>
-	<img src="{{ '/images/tosknight/demo.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tosknight/demo.png' | relative_url }}" height="500" width="500">
     <figcaption>UI</figcaption>
 </figure>
 
 <figure>
-	<img src="{{ '/images/tosknight/dji.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/tosknight/dji.png' | relative_url }}" height="500" width="500">
     <figcaption>UI</figcaption>
 </figure>
 

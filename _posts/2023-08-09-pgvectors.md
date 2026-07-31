@@ -32,7 +32,7 @@ Pgvecto.rs 具有可扩展的架构，使其能够轻松添加对新的索引类
 [基准测试](https://github.com/usamoi/pgvecto.rs-bench) 显示，pgvecto.rs 在速度上比现有的 Postgres 扩展 pgvector 有巨大的提升。在测试中，它的 HNSW 索引相对于 pgvector 的 ivfflat 索引表现出高达 25 倍的搜索性能。灵活的架构还允许使用不同的索引算法，以优化最大吞吐量或精度。我们目前正在开发量化的 HNSW，敬请期待！
 
 <figure>
-	<img src="https://hackmd.io/_uploads/SyOOvsC5n.png" height="400" width="800">
+	<img loading="lazy" decoding="async" src="https://hackmd.io/_uploads/SyOOvsC5n.png" height="400" width="800">
     <figcaption>Benchmark</figcaption>
 </figure>
 

@@ -43,7 +43,7 @@ model.fit(train_data,
 如果你只是想获得一些硬件的指标，那么有更加简单的方式：`nvidia-smi`。你可以通过 `nvidia-smi` 命令查看不同进程的 GPU 显存使用情况。通常你会希望训练进程占用了绝大多数的可用显存，这说明你的模型正在很好地使用 GPU。
 
 <figure>
-	<img src="{{ '/images/metrics-survey/smi.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/metrics-survey/smi.png' | relative_url }}" height="800" width="800">
     <figcaption>Nvidia SMI</figcaption>
 </figure>
 
@@ -56,7 +56,7 @@ model.fit(train_data,
 Nvidia [Nsight Systems](https://docs.nvidia.com/nsight-systems/UserGuide/index.html) 是用来调试和优化 GPU 程序的有力工具。针对深度学习训练任务，Nsight Systems 能够以可视化的方式分析显存使用、CUDA Kernel 执行情况等。它虽然功能非常强大，但是也有比较高的学习门槛。如果不是非常了解 Nsight 软件系列产品的工程师，或者并不追求极致优化的时候，很少会使用它来进行性能优化。
 
 <figure>
-	<img src="{{ '/images/metrics-survey/nsight.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/metrics-survey/nsight.png' | relative_url }}" height="800" width="800">
     <figcaption>Nvidia Nsight Systems</figcaption>
 </figure>
 
@@ -65,7 +65,7 @@ Nvidia [Nsight Systems](https://docs.nvidia.com/nsight-systems/UserGuide/index.h
 [DLProf](https://docs.nvidia.com/deeplearning/frameworks/dlprof-user-guide/) 是对 Nvidia Nsight 的一个封装。你可以通过 `dlprof python main.py` 来收集训练过程中的指标。它会生成两个文件：`sqlite` 和 `qdrep`，以及 `events_folder`。接下来可以使用 TensorBoard 来基于 `events_folder` 进行可视化展示。
 
 <figure>
-	<img src="{{ '/images/metrics-survey/dlprof.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/metrics-survey/dlprof.png' | relative_url }}" height="800" width="800">
     <figcaption>DLProf</figcaption>
 </figure>
 
@@ -76,7 +76,7 @@ Nvidia [Nsight Systems](https://docs.nvidia.com/nsight-systems/UserGuide/index.h
 为了能够更好地支持训练指标收集和任务的性能 profiling，我们设计了一个小规模的调查 [机器学习开发可观测性小调查](https://wenjuan.feishu.cn/m?t=sdWD9blVVpFi-yda1)，我们希望在 [envd](https://envd.tensorchord.ai/) 中支持更符合算法工程师使用需求的 profiler 功能。欢迎参与！
 
 <figure>
-	<img src="{{ '/images/metrics-survey/code.png' | relative_url }}" width="200">
+	<img loading="lazy" decoding="async" src="{{ '/images/metrics-survey/code.png' | relative_url }}" width="200">
 </figure>
 
 ## 参考文献

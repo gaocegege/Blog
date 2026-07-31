@@ -59,8 +59,8 @@ timezone:    Asia/Shanghai
 future:      true
 highlighter: rouge
 markdown:    kramdown
-# 一页显示的内容数
-paginate:    100
+# Keep the initial page light while preserving the historical archive via pagination.
+paginate:    25
 paginate_path: "page:num"
 plugins:
   - jekyll-paginate

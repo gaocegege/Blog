@@ -221,6 +221,7 @@ _site/
 .sass-cache/
 .bundle/
 vendor/bundle/
+node_modules/
 
 # user
 evil/

@@ -16,7 +16,7 @@ featured: false
 Buildkit 是 `docker build` 背后的顶梁柱，当我们在利用 docker 构建镜像时，背后就是 buildkit 的功劳。所以大家可能都是 Buildkit 的用户，尽管它的光芒大部分都被 docker 所隐藏。[tensorchord/envd](https://github.com/tensorchord/envd) 也是基于 buildkit 来实现的，为算法工程师和 AI 基础设施团队提供镜像和开发环境构建的新选择。
 
 <figure>
-	<img src="{{ '/images/envd/readme.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/readme.png' | relative_url }}" height="800" width="800">
     <figcaption>envd README</figcaption>
 </figure>
 
@@ -25,7 +25,7 @@ Buildkit 是 `docker build` 背后的顶梁柱，当我们在利用 docker 构�
 [之前的文章中](http://gaocegege.com/Blog/kubernetes/buildkit)，我们介绍了 buildkit 支持的特性与功能。在北京时间 8 月 26 日的 16:00，我们将在 TensorChord Tea Hour 上分享 buildkit 的更多设计与实现细节。分享的 slides 也[公开放送](https://docs.google.com/presentation/d/1Z8JLeNbH_pDWwO7JsOUNAgZtULxur99eMCLIyLGCTYk/edit?usp=sharing)。
 
 <figure>
-	<img src="{{ '/images/buildkit/slides.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/buildkit/slides.png' | relative_url }}" height="800" width="800">
     <figcaption>Slides</figcaption>
 </figure>
 

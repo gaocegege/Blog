@@ -92,7 +92,7 @@ CAP 恐怕要比 FLP 定理更出名一些. 甚至国内某 NewSQL 数据库厂�
 C、A、P 三者最多只能满足其中两个，和 FLP 定理一样，CAP 定理也指出了一个不可达的结果 (impossibility result)。
 
 <figure>
-	<img src="http://book.mixu.net/distsys/images/CAP.png" alt="CAP" height="500" width="500">
+	<img loading="lazy" decoding="async" src="http://book.mixu.net/distsys/images/CAP.png" alt="CAP" height="500" width="500">
 </figure>
 
 但是需要注意的是, 这里的 C 指的是强一致性, 而非一致性. 因此在现实中, 一致性的强弱与可用性是可以 trade-off 的. 那因此就存在一致性的模型.

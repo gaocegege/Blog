@@ -16,14 +16,14 @@ featured: true
 谷歌的Chrome浏览器无疑是最好用的浏览器之一，Google Native Client是Chrome浏览器的一个Feature，它的目的是解决Javascript计算能力不强的问题，解决方法是通过在浏览器中运行原生的代码的方式来做到的。
 
 <figure>
-	<img src="{{ '/images/nacl/nacl-code.png' | relative_url }}" alt="NaCl 解释图" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/nacl/nacl-code.png' | relative_url }}" alt="NaCl 解释图" height="500" width="500">
 	<figcaption>NaCl 解释图</figcaption>
 </figure>
 
 在传统的前端实现中，基本只有HTML, CSS和Javascript三种语言（算是语言么）的事情，但是随着需求的复杂化，有些时候要求网页应用有着更好的计算性能。
 
 <figure>
-	<img src="{{ '/images/nacl/performance.png' | relative_url }}" alt="运行速度图" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/nacl/performance.png' | relative_url }}" alt="运行速度图" height="500" width="500">
 	<figcaption>各语言性能对比</figcaption>
 </figure>
 
@@ -34,7 +34,7 @@ featured: true
 ## 系统架构
 
 <figure>
-	<img src="{{ '/images/nacl/arch.png' | relative_url }}" alt="架构图" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/nacl/arch.png' | relative_url }}" alt="架构图" height="500" width="500">
 	<figcaption>NaCl 架构图</figcaption>
 </figure>
 
@@ -64,7 +64,7 @@ Native Client的目标很好很强大，那它具体是用了什么方法解决�
 Native Client使用了对反汇编指令的静态分析，来保证二进制遵循由Native Client制定的各项规则。
 
 <figure>
-	<img src="{{ '/images/nacl/rules.png' | relative_url }}" alt="指令规则" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/nacl/rules.png' | relative_url }}" alt="指令规则" height="500" width="500">
 	<figcaption>NaCl 指令规则</figcaption>
 </figure>
 
@@ -75,7 +75,7 @@ SFI的概念是在93年被提出来的，它指出，一个module的fault domain
 实现SFI的方法是往原本的module中插入一些代码，来保证一些security properties的落实。
 
 <figure>
-	<img src="{{ '/images/nacl/two.png' | relative_url }}" alt="SFI 实现" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/nacl/two.png' | relative_url }}" alt="SFI 实现" height="500" width="500">
 	<figcaption>SFI 实现</figcaption>
 </figure>
 
@@ -110,6 +110,6 @@ Service Runtime部分的代码是可信的，而且它是跟前面的Inner Sandb
 有个相似技术，或者说目的一样，但是是从操作系统不同的层次上提高了javascript的性能，那就是[asm.js](http://asmjs.org/)。asm.js是通过使用llvm，先讲c++代码编译成中间代码，然后把中间代码翻译成asm.js，asm.js是javascript的一个子集，相比于原生的javascript有着更高的执行效率。asm.js可以做到，只比Native app慢一倍，已经是一个非常有吸引力的数字了。
 
 <figure>
-	<img src="https://i.imgur.com/1yoy1Fa.png" alt="asm.js实现" height="500" width="500">
+	<img loading="lazy" decoding="async" src="https://i.imgur.com/1yoy1Fa.png" alt="asm.js实现" height="500" width="500">
 	<figcaption>asm.js</figcaption>
 </figure>

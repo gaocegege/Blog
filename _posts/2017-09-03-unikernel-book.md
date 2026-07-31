@@ -78,7 +78,7 @@ Unikernel，在我看来，是另一种形式上的容器。在一个 Unikernel 
 为了能够让 Unikernel 尽快进入生产环境，有一项工作很值得关注。
 
 <figure>
-	<img src="{{ '/images/unikernel/docker-on-unikernel.png' | relative_url }}" alt="Docker on UniKernel" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/unikernel/docker-on-unikernel.png' | relative_url }}" alt="Docker on UniKernel" height="500" width="500">
 	<figcaption>Docker on Unikernel</figcaption>
 </figure>
 

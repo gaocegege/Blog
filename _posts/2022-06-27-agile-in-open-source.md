@@ -16,14 +16,14 @@ featured: true
 上周我们的项目 [envd](https://github.com/tensorchord/envd) 静悄悄地开源了。
 
 <figure>
-	<img src="{{ '/images/envd/readme.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/readme.png' | relative_url }}" height="800" width="800">
     <figcaption>envd README</figcaption>
 </figure>
 
 它希望能够帮助算法工程师更好地解决开发环境配置和管理的问题。数据科学家和算法工程师们平时经常为了配置开发环境需要跟复杂的 shell 脚本、conda 环境、CUDA 版本、Dockerfile、乃至于 Kubernetes 的配置打交道。envd 希望能够帮助算法工程师更好地解决底层基础设施带来的复杂度，让开发变得更加简单。
 
 <figure>
-	<img src="{{ '/images/envd/envd.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/envd.png' | relative_url }}" height="800" width="800">
     <figcaption>envd</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ featured: true
 后来跟素未谋面的贴心网友 [xuanwo](https://xuanwo.io/) 交流，他推荐了 [GitHub Projects Beta](https://docs.github.com/en/issues/trying-out-the-new-projects-experience/about-projects)，这也是我们最终在工具层面上的选择。相比于 [GitHub Projects Classic](https://docs.github.com/en/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards)，GitHub Projects Beta 大大地增强了扩展性。在之前的 Projects 里，只有 kanban 的可视化方式。Projects Beta 里不止支持 kanban，还可以以表格的方式展示，这样对于 product backlog 的可视化就更加友好一些。
 
 <figure>
-	<img src="{{ '/images/envd/table.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/table.png' | relative_url }}" height="800" width="800">
     <figcaption>Projects</figcaption>
 </figure>
 
@@ -83,14 +83,14 @@ featured: true
 那么，在我们精简化的 Retro 会议上，我们首先会回顾上一个 sprint 完成的 issue。目前我们通过 GitHub Discussion 来跟踪这个过程。比如 [Weekly update on envd (2022.06.13-2022.06.17)](https://github.com/tensorchord/envd/discussions/492)：
 
 <figure>
-	<img src="{{ '/images/envd/update.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/update.png' | relative_url }}" height="800" width="800">
     <figcaption>Retro 回顾</figcaption>
 </figure>
 
 这个过程会花费大约 5-10 分钟的时间。接下来，我们会就这一次迭代中遇到的问题和风险进行讨论。这就是标准的 Retro 实践了。我们会统计一下完成的故事点的情况，随后总结一下过程里的问题。👇🏻下面是一个示例：
 
 <figure>
-	<img src="{{ '/images/envd/retro.png' | relative_url }}" height="500" width="500">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/retro.png' | relative_url }}" height="500" width="500">
     <figcaption>Retro 反思</figcaption>
 </figure>
 
@@ -101,7 +101,7 @@ featured: true
 - 最后是工程师觉得我们应该做的事情。除了社区和企业用户的需求外，还有不少功能是需要项目维护者去思考设计的。
 
 <figure>
-	<img src="{{ '/images/envd/up.png' | relative_url }}" height="800" width="800">
+	<img loading="lazy" decoding="async" src="{{ '/images/envd/up.png' | relative_url }}" height="800" width="800">
     <figcaption>社区反馈</figcaption>
 </figure>
 
