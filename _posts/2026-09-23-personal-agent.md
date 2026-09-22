@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Personal Agent，与入口"
+title: "Personal Agent，与赛博朋克"
 headline:
 modified: 2026-02-17
 category: genai
