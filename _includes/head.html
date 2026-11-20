@@ -1,4 +1,11 @@
 <meta charset="utf-8">
+<!-- Google tag -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=G-QKG9RYFPSS"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+</script>
 <title>{% if page.title %}{{ page.title | upcase }} &vert; {% endif %}{{ site.title | upcase }}</title>
 <meta name="description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ site.description | escape }}{% endif %}">
 {% if page.tags %}<meta name="keywords" content="{{ page.tags | join: ', ' }}">{% endif %}
